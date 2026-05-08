@@ -49,7 +49,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-[80px] group-hover:bg-blue-500/20 transition-all duration-500"></div>
 
       <div className="relative z-10 flex flex-col h-full">
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-4 min-h-[4rem]">
           <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300 leading-tight">
             {project.title}
           </h3>
@@ -83,7 +83,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         </div>
 
         <div className="mt-auto space-y-6">
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap content-start gap-2 min-h-[3.5rem]">
             {project.tech.map((tech, techIndex) => (
               <span
                 key={techIndex}

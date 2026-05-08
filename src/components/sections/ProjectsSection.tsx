@@ -545,7 +545,7 @@ const ProjectsSection: React.FC = () => {
           {currentProjects.map((project: Project, index: number) => (
             <div
               key={`page-${currentPage}-${index}`}
-              className="transform transition-all duration-300 hover:scale-[1.02] will-change-transform"
+              className="transform transition-all duration-300 hover:scale-[1.02] will-change-transform h-full"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <ProjectCard project={project} />
