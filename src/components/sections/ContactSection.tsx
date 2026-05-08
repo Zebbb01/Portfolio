@@ -101,7 +101,7 @@ const ContactSection = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-400 transition-colors"
+                  className="w-full px-4 py-3 bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-400 transition-colors"
                 />
               </div>
               <div>
@@ -112,7 +112,7 @@ const ContactSection = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-400 transition-colors"
+                  className="w-full px-4 py-3 bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-400 transition-colors"
                 />
               </div>
               <div>
@@ -123,7 +123,7 @@ const ContactSection = () => {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-400 transition-colors resize-none"
+                  className="w-full px-4 py-3 bg-gray-800/50 text-white placeholder-gray-400 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-400 transition-colors resize-none"
                 ></textarea>
               </div>
               <button

@@ -1,0 +1,171 @@
+import React from 'react';
+import Link from 'next/link';
+import { ArrowLeft, ExternalLink, CheckCircle2, Server, Database, Bot, CreditCard } from 'lucide-react';
+import Image from 'next/image';
+
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'ProfitView Accounting Case Study | Gerald Villaceran',
+  description: 'A deep dive into ProfitView Accounting, a next-generation SaaS financial operations platform built with Next.js, Supabase, Stripe, and AI Agents.',
+};
+
+export default function ProfitViewCaseStudy() {
+  return (
+    <div className="min-h-screen bg-gray-950 text-gray-100 font-sans selection:bg-blue-500/30">
+      {/* Background Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-purple-600/10 blur-[120px] rounded-full"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-6 py-12 lg:py-20">
+        
+        {/* Navigation */}
+        <Link 
+          href="/#projects" 
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-12 group"
+        >
+          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+          <span>Back to Portfolio</span>
+        </Link>
+
+        {/* Header Section */}
+        <header className="mb-16">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-sm font-semibold tracking-wide uppercase">
+              SaaS Platform
+            </span>
+            <span className="px-4 py-1.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-sm font-semibold tracking-wide uppercase">
+              Fintech
+            </span>
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-500">
+            ProfitView Accounting
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-gray-400 max-w-3xl leading-relaxed mb-10">
+            A next-generation financial operations platform combining multi-tenant architecture with AI-driven insights to automate and scale modern accounting.
+          </p>
+
+          <a 
+            href="https://profit-view-swart.vercel.app/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-gray-950 font-bold hover:bg-gray-200 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.1)]"
+          >
+            Visit Live Project <ExternalLink size={20} />
+          </a>
+        </header>
+
+        {/* Hero Image */}
+        <div className="relative aspect-[21/9] rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 shadow-2xl mb-20 group">
+          <Image 
+            src="https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-images/profitview.png" 
+            alt="ProfitView Dashboard" 
+            fill 
+            className="object-cover group-hover:scale-105 transition-transform duration-1000"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent"></div>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+          
+          {/* Left Column: Details */}
+          <div className="lg:col-span-2 space-y-16">
+            
+            <section>
+              <h2 className="text-3xl font-bold mb-6 text-white flex items-center gap-3">
+                <span className="w-8 h-1 bg-blue-500 rounded-full"></span>
+                Project Overview
+              </h2>
+              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+                <p>
+                  ProfitView was built to solve the fragmentation in modern accounting workflows. Traditional systems require manual data entry, complex reconciliation processes, and lack proactive insights. 
+                </p>
+                <p>
+                  This platform centralizes financial operations into a single, highly scalable dashboard. By leveraging advanced OCR for receipt capture and an AI Agent for financial analysis, ProfitView reduces manual bookkeeping hours by up to 80% while providing real-time financial health indicators.
+                </p>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-3xl font-bold mb-6 text-white flex items-center gap-3">
+                <span className="w-8 h-1 bg-purple-500 rounded-full"></span>
+                Key Features
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                  "Multi-Tenant SaaS Architecture",
+                  "Real-time Invoicing & Billing",
+                  "OCR Expense Data Extraction",
+                  "Automated Bank Reconciliation",
+                  "AI-Driven Proactive Financial Alerts",
+                  "Role-Based Access Control (RBAC)"
+                ].map((feature, i) => (
+                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-gray-900/50 border border-gray-800">
+                    <CheckCircle2 className="text-blue-400 shrink-0 mt-0.5" size={20} />
+                    <span className="text-gray-200 font-medium">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          {/* Right Column: Tech Stack */}
+          <div className="space-y-8">
+            <div className="p-8 rounded-2xl bg-gray-900/80 border border-gray-800 backdrop-blur-sm sticky top-8">
+              <h3 className="text-xl font-bold text-white mb-6 border-b border-gray-800 pb-4">Technology Stack</h3>
+              
+              <ul className="space-y-6">
+                <li className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-gray-800 text-gray-300">
+                    <Server size={24} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-white">Next.js 15 (App Router)</p>
+                    <p className="text-sm text-gray-400">Frontend & Server Actions</p>
+                  </div>
+                </li>
+                
+                <li className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-emerald-500/10 text-emerald-400">
+                    <Database size={24} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-white">Supabase / PostgreSQL</p>
+                    <p className="text-sm text-gray-400">Auth, Database & RLS</p>
+                  </div>
+                </li>
+
+                <li className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400">
+                    <Bot size={24} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-white">AI Agents</p>
+                    <p className="text-sm text-gray-400">LLM Integration & OCR</p>
+                  </div>
+                </li>
+
+                <li className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400">
+                    <CreditCard size={24} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-white">Stripe Integration</p>
+                    <p className="text-sm text-gray-400">Subscription & Payments</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}

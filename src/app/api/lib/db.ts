@@ -1,18 +1,13 @@
 // src/app/api/lib/db.ts
-import { PrismaClient } from '../../../generated/prisma'; // Adjust path if needed
+import { createClient } from '@supabase/supabase-js';
 
-const prismaClientSingleton = () => {
-  return new PrismaClient();
-};
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-declare global {
-  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error('Missing Supabase environment variables');
 }
 
-const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
+export const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-export default prisma;
-
-if (process.env.NODE_ENV !== 'production') {
-  globalThis.prismaGlobal = prisma;
-}
+export default supabase;

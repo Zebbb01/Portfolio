@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^6.11.1",
+    "@supabase/supabase-js": "^2.105.3",
     "lucide-react": "^0.525.0",
     "next": "15.3.5",
     "nodemailer": "^7.0.5",
@@ -28,7 +28,6 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "postcss": "^8.5.6",
-    "prisma": "^6.11.1",
     "tailwindcss": "^4.1.11",
     "ts-node": "^10.9.2",
     "typescript": "^5"

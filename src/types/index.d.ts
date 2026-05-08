@@ -8,6 +8,7 @@ export interface Project {
     tech: string[];
     github: string;
     live: string;
+    detailsUrl?: string;
 }
 
 export interface TechItem {

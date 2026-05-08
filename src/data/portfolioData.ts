@@ -1,64 +1,84 @@
 // src/data/portfolioData.ts
-import { Code, Database, Cloud, Server, Github, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { 
+  Code, 
+  Database, 
+  Cloud, 
+  Server, 
+  Github, 
+  Linkedin, 
+  Mail, 
+  Cpu, 
+  Zap, 
+  Globe, 
+  Layout, 
+  ShieldCheck,
+  Bot
+} from 'lucide-react';
 import { Project } from '../types';
 
 export const sections = ['home', 'expertise', 'projects', 'contact'];
 
 export const techStack = {
-  frontend: [
-    { name: 'JavaScript ES6+', icon: Code },
-    { name: 'Next.js', icon: Code },
-    { name: 'React', icon: Code }
+  webDevelopment: [
+    { name: 'Next.js 15', icon: Code },
+    { name: 'React 19', icon: Layout },
+    { name: 'TypeScript', icon: Code },
+    { name: 'Tailwind CSS', icon: Layout },
+    { name: 'Radix UI', icon: Layout }
   ],
-  backend: [
-    { name: 'Python', icon: Server },
-    { name: 'Laravel', icon: Server },
-    { name: 'PHP', icon: Server }
+  backendData: [
+    { name: 'Supabase', icon: Database },
+    { name: 'PostgreSQL', icon: Database },
+    { name: 'API Integration', icon: Server },
+    { name: 'Zod Validation', icon: ShieldCheck }
   ],
-  database: [
-    { name: 'MySQL', icon: Database },
-    { name: 'PostgreSQL', icon: Database }
+  automationAI: [
+    { name: 'n8n / Make', icon: Zap },
+    { name: 'AI Prompt Engineering', icon: Bot },
+    { name: 'Antigravity / ChatGPT', icon: Cpu },
+    { name: 'GHL Marketing Systems', icon: Globe }
   ],
-  cloud: [
-    { name: 'Amazon AWS', icon: Cloud },
-    { name: 'EC2', icon: Cloud },
-    { name: 'Docker', icon: Cloud },
-    { name: 'RDS', icon: Cloud },
-    { name: 'Github', icon: Github }
+  tools: [
+    { name: 'Github', icon: Github },
+    { name: 'Stripe Payments', icon: Cloud },
+    { name: 'Resend Email', icon: Mail },
+    { name: 'WordPress', icon: Layout }
   ]
 };
 
-
 export const projects: Project[] = [
   {
-    title: "E-Commerce Platform",
+    title: "ProfitView Accounting",
     isFeatured: true,
     mediaType: 'image',
-    mediaSrc: "/images/test.jpg", // Path to your image
-    description: "Full-stack e-commerce solution built with Next.js and Laravel API, featuring user authentication, payment integration, and an admin dashboard.",
-    tech: ["Next.js", "Laravel", "MySQL", "AWS"],
+    mediaSrc: "https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-images/profitview.png", 
+    description: "A sophisticated web-based accounting and finance operations platform. Features multi-tenant isolation, real-time invoicing, expense capture with OCR data extraction, banking reconciliation, and AI-driven financial proactive alerts.",
+    tech: ["Next.js 15", "Supabase", "Stripe", "AI Agent", "PostgreSQL"],
     github: "#",
-    live: "#"
+    live: "https://profit-view-swart.vercel.app/",
+    detailsUrl: "/projects/profitview"
   },
   {
-    title: "OSCA MANAGEMENT INFORMATION SYSTEM",
-    isFeatured: false, // Example of a non-featured project
-    mediaType: 'video',
-    mediaSrc: "/videos/vid-test.mkv", // Path to your video
-    description: "A secure and efficient management information system for the Office of Senior Citizen Affairs (OSCA), streamlining record-keeping, benefit distribution, and financial tracking for enhanced service delivery.",
-    tech: ["React", "Python", "PostgreSQL", "Docker"],
-    github: "https://github.com/johnkristanf/__OSCA__",
-    live: "#"
-  },
-  {
-    title: "Portfolio Website",
+    title: "GHL Customize Website w/ Animations",
     isFeatured: true,
     mediaType: 'image',
-    mediaSrc: "/images/test.jpg",
-    description: "Modern portfolio website with smooth animations and responsive design, showcasing projects and technical skills.",
-    tech: ["Next.js", "TypeScript", "Tailwind CSS"],
+    mediaSrc: "https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-images/ghl-website.png",
+    description: "Custom-built marketing websites and funnels using GoHighLevel. Implemented advanced CSS animations, CRM integrations, and SEO-optimized structures to maximize lead conversion and user engagement.",
+    tech: ["GHL", "CSS Animations", "CRM Integration", "JavaScript"],
     github: "#",
-    live: "#"
+    live: "https://drive.google.com/drive/folders/1coWZYw95pb4Vw3TTaCIvqRtwKS3k3mux?usp=drive_link",
+    detailsUrl: "https://drive.google.com/drive/folders/1coWZYw95pb4Vw3TTaCIvqRtwKS3k3mux?usp=drive_link"
+  },
+  {
+    title: "Growth Systems & Workflow Automation",
+    isFeatured: true,
+    mediaType: 'image',
+    mediaSrc: "https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-images/automation.png",
+    description: "End-to-end automation systems that reduce manual accounting work and streamline operations. Leveraged n8n, Make, and Google Sheets to improve business response times by over 70%.",
+    tech: ["n8n", "Make", "API Integration", "Google Sheets"],
+    github: "#",
+    live: "https://drive.google.com/drive/folders/15apEURviJiMWK-FJGsWkkPnysu8Fw02f?usp=sharing",
+    detailsUrl: "https://drive.google.com/drive/folders/15apEURviJiMWK-FJGsWkkPnysu8Fw02f?usp=sharing"
   }
 ];
 
@@ -75,4 +95,4 @@ export const contactInfo = {
     },
     { name: "Gmail", icon: Mail, href: "https://mail.google.com/mail/u/0/?view=cm&fs=1&to=geraldvillaceran01@gmail.com" }
   ]
-};
+};

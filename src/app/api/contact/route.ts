@@ -1,6 +1,5 @@
-// src/app/api/contact/route.ts
 import { NextResponse } from 'next/server';
-import prisma from '../../api/lib/db'; // Import the shared Prisma client
+import supabase from '../../api/lib/db'; // Import the shared Supabase client
 import { sendContactEmail } from '../../api/lib/mail'; // Import the email sending function
 
 export async function POST(request: Request) {
@@ -28,16 +27,19 @@ export async function POST(request: Request) {
     }
 
     let dbSaveSuccessful = false;
-    // 1. Save to Database (Prisma)
+    // 1. Save to Database (Supabase)
     try {
       console.log('Attempting to save to database...');
-      await prisma.contactMessage.create({
-        data: {
+      const { error: dbError } = await supabase.from('contact_messages').insert([
+        {
           name,
           email,
           message,
         },
-      });
+      ]);
+      
+      if (dbError) throw dbError;
+      
       console.log('Contact message saved to database successfully.');
       dbSaveSuccessful = true;
     } catch (dbError: any) {
@@ -45,6 +47,7 @@ export async function POST(request: Request) {
       // Decide if you want to stop here or proceed with email even if DB fails
       // For now, we'll continue but log the error
     }
+
 
     // 2. Send Email (Nodemailer)
     try {
@@ -74,7 +77,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   } finally {
     console.log('--- API Call End (finally block) ---');
-    // We no longer need prisma.$disconnect() here because of the singleton pattern
-    // The connection is managed by the shared `prisma` instance.
   }
 }
