@@ -42,8 +42,8 @@ export async function POST(request: Request) {
       
       console.log('Contact message saved to database successfully.');
       dbSaveSuccessful = true;
-    } catch (dbError: any) {
-      console.error('Failed to save message to database:', dbError.message || dbError);
+    } catch (dbError) {
+      console.error('Failed to save message to database:', dbError instanceof Error ? dbError.message : dbError);
       // Decide if you want to stop here or proceed with email even if DB fails
       // For now, we'll continue but log the error
     }
@@ -62,8 +62,8 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'Message sent successfully (email sent, but DB save failed)!' }, { status: 200 });
       }
 
-    } catch (emailError: any) {
-      console.error('Failed to send email:', emailError.message || emailError);
+    } catch (emailError) {
+      console.error('Failed to send email:', emailError instanceof Error ? emailError.message : emailError);
       // If email fails, and DB also failed or was skipped
       if (!dbSaveSuccessful) {
          return NextResponse.json({ message: 'Failed to send message (both email and DB failed). Please try again later.' }, { status: 500 });
@@ -72,8 +72,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Failed to send email, but message was saved to database. Please check server logs.' }, { status: 500 });
     }
 
-  } catch (error: any) {
-    console.error('API Route execution caught an unexpected error:', error.message || error);
+  } catch (error) {
+    console.error('API Route execution caught an unexpected error:', error instanceof Error ? error.message : error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   } finally {
     console.log('--- API Call End (finally block) ---');

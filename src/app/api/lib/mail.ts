@@ -64,8 +64,8 @@ export async function sendContactEmail({ name, email, message }: SendEmailParams
     await transporter.sendMail(mailOptions);
     console.log('Email sent successfully.');
     return { success: true };
-  } catch (error: any) {
-    console.error('Failed to send email:', error.message || error);
-    throw new Error(`Failed to send email: ${error.message || 'Unknown error'}`);
+  } catch (error) {
+    console.error('Failed to send email:', error instanceof Error ? error.message : error);
+    throw new Error(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }

@@ -4,7 +4,7 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { projects } from '../../data/portfolioData';
 import ProjectCard from '../ui/ProjectCard';
-import { ChevronLeft, ChevronRight, X, Grid, List, Play, Image as ImageIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Grid, List, Play } from 'lucide-react';
 import type { Project } from '../../types';
 import Image from 'next/image';
 
@@ -53,12 +53,10 @@ VideoPlaceholder.displayName = 'VideoPlaceholder';
 const LazyVideo = React.memo(({
   src,
   className,
-  title,
   onClose
 }: {
   src: string;
   className: string;
-  title: string;
   onClose: () => void;
 }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -81,12 +79,13 @@ const LazyVideo = React.memo(({
   }, []);
 
   useEffect(() => {
+    const video = videoRef.current;
     // Cleanup when component unmounts
     return () => {
-      if (videoRef.current) {
-        videoRef.current.pause();
-        videoRef.current.src = '';
-        videoRef.current.load();
+      if (video) {
+        video.pause();
+        video.src = '';
+        video.load();
       }
     };
   }, []);
@@ -161,7 +160,6 @@ const ModalProjectItem = React.memo(({
   isVisible?: boolean;
 }) => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleVideoClick = useCallback((videoSrc: string) => {
     setActiveVideo(videoSrc);
@@ -202,7 +200,6 @@ const ModalProjectItem = React.memo(({
               <LazyVideo
                 src={project.mediaSrc}
                 className="w-full h-32 md:h-24 object-cover"
-                title={project.title}
                 onClose={handleVideoClose}
               />
             ) : project.mediaType === 'image' ? (

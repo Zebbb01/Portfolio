@@ -60,10 +60,10 @@ const ContactSection = () => {
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-6">
             <h3 className="text-2xl font-semibold text-blue-400 mb-6">
-              Let's Connect
+              Let&apos;s Connect
             </h3>
             <p className="text-gray-300 mb-6">
-              I'm always open to discussing new opportunities, collaborations, or just having a chat about web development. Feel free to reach out!
+              I&apos;m always open to discussing new opportunities, collaborations, or just having a chat about web development. Feel free to reach out!
             </p>
             <div className="space-y-4">
               <div className="flex items-center space-x-3">

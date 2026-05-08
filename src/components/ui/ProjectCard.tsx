@@ -1,6 +1,6 @@
 // src/components/ui/ProjectCard.tsx
 import React, { useState } from 'react';
-import { Github, ExternalLink, GitForkIcon, ArrowUpRight } from 'lucide-react';
+import { Github, ExternalLink, ArrowUpRight } from 'lucide-react';
 import { Project } from '../../types';
 import Image from 'next/image';
 import Link from 'next/link';
