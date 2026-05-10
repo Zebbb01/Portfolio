@@ -12,11 +12,11 @@ export const metadata: Metadata = {
 
 export default function ProfitViewCaseStudy() {
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 font-sans selection:bg-blue-500/30">
+    <div className="min-h-screen bg-gray-950 text-gray-100 font-sans selection:bg-brand-cyan/30">
       {/* Background Effects */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-purple-600/10 blur-[120px] rounded-full"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand-cyan/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-brand-cyan/10 blur-[120px] rounded-full"></div>
       </div>
 
       <div className="relative z-10 container mx-auto px-6 py-12 lg:py-20">
@@ -24,7 +24,7 @@ export default function ProfitViewCaseStudy() {
         {/* Navigation */}
         <Link 
           href="/#projects" 
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-12 group"
+          className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-white transition-colors mb-12 group"
         >
           <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
           <span>Back to Portfolio</span>
@@ -33,10 +33,10 @@ export default function ProfitViewCaseStudy() {
         {/* Header Section */}
         <header className="mb-16">
           <div className="flex items-center gap-4 mb-6">
-            <span className="px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-sm font-semibold tracking-wide uppercase">
+            <span className="px-4 py-1.5 rounded-full bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 text-sm font-semibold tracking-wide uppercase">
               SaaS Platform
             </span>
-            <span className="px-4 py-1.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-sm font-semibold tracking-wide uppercase">
+            <span className="px-4 py-1.5 rounded-full bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 text-sm font-semibold tracking-wide uppercase">
               Fintech
             </span>
           </div>
@@ -45,7 +45,7 @@ export default function ProfitViewCaseStudy() {
             ProfitView Accounting
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-400 max-w-3xl leading-relaxed mb-10">
+          <p className="text-xl md:text-2xl text-brand-muted max-w-3xl leading-relaxed mb-10">
             A next-generation financial operations platform combining multi-tenant architecture with AI-driven insights to automate and scale modern accounting.
           </p>
 
@@ -60,7 +60,7 @@ export default function ProfitViewCaseStudy() {
         </header>
 
         {/* Hero Image */}
-        <div className="relative aspect-[21/9] rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 shadow-2xl mb-20 group">
+        <div className="relative aspect-[21/9] rounded-2xl overflow-hidden bg-brand-black border border-brand-teal shadow-2xl mb-20 group">
           <Image 
             src="https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-images/profitview.png" 
             alt="ProfitView Dashboard" 
@@ -77,11 +77,11 @@ export default function ProfitViewCaseStudy() {
           <div className="lg:col-span-2 space-y-16">
             
             <section>
-              <h2 className="text-3xl font-bold mb-6 text-white flex items-center gap-3">
-                <span className="w-8 h-1 bg-blue-500 rounded-full"></span>
+              <h2 className="text-3xl font-bold mb-6 text-brand-white flex items-center gap-3">
+                <span className="w-8 h-1 bg-brand-cyan rounded-full"></span>
                 Project Overview
               </h2>
-              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
+              <div className="space-y-6 text-lg text-brand-muted leading-relaxed">
                 <p>
                   ProfitView was built to solve the fragmentation in modern accounting workflows. Traditional systems require manual data entry, complex reconciliation processes, and lack proactive insights. 
                 </p>
@@ -92,8 +92,8 @@ export default function ProfitViewCaseStudy() {
             </section>
 
             <section>
-              <h2 className="text-3xl font-bold mb-6 text-white flex items-center gap-3">
-                <span className="w-8 h-1 bg-purple-500 rounded-full"></span>
+              <h2 className="text-3xl font-bold mb-6 text-brand-white flex items-center gap-3">
+                <span className="w-8 h-1 bg-brand-cyan rounded-full"></span>
                 Key Features
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -105,8 +105,8 @@ export default function ProfitViewCaseStudy() {
                   "AI-Driven Proactive Financial Alerts",
                   "Role-Based Access Control (RBAC)"
                 ].map((feature, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-gray-900/50 border border-gray-800">
-                    <CheckCircle2 className="text-blue-400 shrink-0 mt-0.5" size={20} />
+                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-brand-black/50 border border-brand-teal">
+                    <CheckCircle2 className="text-brand-cyan shrink-0 mt-0.5" size={20} />
                     <span className="text-gray-200 font-medium">{feature}</span>
                   </div>
                 ))}
@@ -116,17 +116,17 @@ export default function ProfitViewCaseStudy() {
 
           {/* Right Column: Tech Stack */}
           <div className="space-y-8">
-            <div className="p-8 rounded-2xl bg-gray-900/80 border border-gray-800 backdrop-blur-sm sticky top-8">
-              <h3 className="text-xl font-bold text-white mb-6 border-b border-gray-800 pb-4">Technology Stack</h3>
+            <div className="p-8 rounded-2xl bg-brand-black/80 border border-brand-teal backdrop-blur-sm sticky top-8">
+              <h3 className="text-xl font-bold text-brand-white mb-6 border-b border-brand-teal pb-4">Technology Stack</h3>
               
               <ul className="space-y-6">
                 <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-gray-800 text-gray-300">
+                  <div className="p-3 rounded-lg bg-brand-teal/20 text-brand-muted">
                     <Server size={24} />
                   </div>
                   <div>
-                    <p className="font-bold text-white">Next.js 15 (App Router)</p>
-                    <p className="text-sm text-gray-400">Frontend & Server Actions</p>
+                    <p className="font-bold text-brand-white">Next.js 15 (App Router)</p>
+                    <p className="text-sm text-brand-muted">Frontend & Server Actions</p>
                   </div>
                 </li>
                 
@@ -135,28 +135,28 @@ export default function ProfitViewCaseStudy() {
                     <Database size={24} />
                   </div>
                   <div>
-                    <p className="font-bold text-white">Supabase / PostgreSQL</p>
-                    <p className="text-sm text-gray-400">Auth, Database & RLS</p>
+                    <p className="font-bold text-brand-white">Supabase / PostgreSQL</p>
+                    <p className="text-sm text-brand-muted">Auth, Database & RLS</p>
                   </div>
                 </li>
 
                 <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400">
+                  <div className="p-3 rounded-lg bg-brand-cyan/10 text-brand-cyan">
                     <Bot size={24} />
                   </div>
                   <div>
-                    <p className="font-bold text-white">AI Agents</p>
-                    <p className="text-sm text-gray-400">LLM Integration & OCR</p>
+                    <p className="font-bold text-brand-white">AI Agents</p>
+                    <p className="text-sm text-brand-muted">LLM Integration & OCR</p>
                   </div>
                 </li>
 
                 <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400">
+                  <div className="p-3 rounded-lg bg-brand-cyan/10 text-brand-cyan">
                     <CreditCard size={24} />
                   </div>
                   <div>
-                    <p className="font-bold text-white">Stripe Integration</p>
-                    <p className="text-sm text-gray-400">Subscription & Payments</p>
+                    <p className="font-bold text-brand-white">Stripe Integration</p>
+                    <p className="text-sm text-brand-muted">Subscription & Payments</p>
                   </div>
                 </li>
               </ul>

@@ -7,6 +7,7 @@ import ProjectCard from '../ui/ProjectCard';
 import { ChevronLeft, ChevronRight, X, Grid, List, Play } from 'lucide-react';
 import type { Project } from '../../types';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 // Ultra-lightweight video placeholder that doesn't load anything
 const VideoPlaceholder = React.memo(({
@@ -20,7 +21,7 @@ const VideoPlaceholder = React.memo(({
 }) => {
   return (
     <div
-      className={`${className} bg-gradient-to-br from-gray-700 to-gray-800 cursor-pointer group relative overflow-hidden rounded-lg border border-gray-600/30`}
+      className={`${className} bg-gradient-to-br from-gray-700 to-brand-teal/40 cursor-pointer group relative overflow-hidden rounded-lg border border-gray-600/30`}
       onClick={onClick}
     >
       {/* Background pattern */}
@@ -32,14 +33,14 @@ const VideoPlaceholder = React.memo(({
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 group-hover:scale-105 transition-transform duration-200">
-        <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center group-hover:bg-blue-500/30 transition-all duration-200 backdrop-blur-sm border border-blue-400/20">
-          <Play className="w-8 h-8 text-blue-400 ml-1" />
+        <div className="w-16 h-16 bg-brand-cyan/20 rounded-full flex items-center justify-center group-hover:bg-brand-cyan/30 transition-all duration-200 backdrop-blur-sm border border-brand-cyan/20">
+          <Play className="w-8 h-8 text-brand-cyan ml-1" />
         </div>
         <div className="text-center px-4">
-          <p className="text-white font-medium text-sm mb-1">Video Preview</p>
-          <p className="text-gray-400 text-xs line-clamp-1">{title}</p>
+          <p className="text-brand-white font-medium text-sm mb-1">Video Preview</p>
+          <p className="text-brand-muted text-xs line-clamp-1">{title}</p>
         </div>
-        <div className="text-xs text-gray-500 bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm">
+        <div className="text-xs text-brand-teal bg-transparent relative z-10/20 px-3 py-1 rounded-full backdrop-blur-sm">
           Click to load & play
         </div>
       </div>
@@ -98,7 +99,7 @@ const LazyVideo = React.memo(({
           <p className="text-red-400 text-sm">Failed to load video</p>
           <button
             onClick={onClose}
-            className="text-gray-400 text-xs mt-1 hover:text-white transition-colors"
+            className="text-brand-muted text-xs mt-1 hover:text-brand-white transition-colors"
           >
             Click to close
           </button>
@@ -110,10 +111,10 @@ const LazyVideo = React.memo(({
   return (
     <div className={`${className} relative rounded-lg overflow-hidden`}>
       {isLoading && (
-        <div className="absolute inset-0 bg-gray-800 flex items-center justify-center z-10">
+        <div className="absolute inset-0 bg-brand-teal/20 flex items-center justify-center z-10">
           <div className="flex flex-col items-center space-y-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-400 border-t-transparent"></div>
-            <p className="text-gray-400 text-sm">Loading video...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-brand-cyan border-t-transparent"></div>
+            <p className="text-brand-muted text-sm">Loading video...</p>
           </div>
         </div>
       )}
@@ -139,9 +140,9 @@ const LazyVideo = React.memo(({
       {/* Close button */}
       <button
         onClick={onClose}
-        className="absolute top-2 right-2 w-8 h-8 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-all duration-200 z-20 backdrop-blur-sm"
+        className="absolute top-2 right-2 w-8 h-8 bg-transparent relative z-10/50 hover:bg-transparent relative z-10/70 rounded-full flex items-center justify-center transition-all duration-200 z-20 backdrop-blur-sm"
       >
-        <X className="w-4 h-4 text-white" />
+        <X className="w-4 h-4 text-brand-white" />
       </button>
     </div>
   );
@@ -172,7 +173,7 @@ const ModalProjectItem = React.memo(({
   // Return skeleton if not visible
   if (!isVisible) {
     return (
-      <div className="h-48 bg-gray-800/30 rounded-xl animate-pulse border border-gray-700/30">
+      <div className="h-48 bg-brand-teal/20/30 rounded-xl animate-pulse border border-brand-teal/30">
         <div className="flex h-full p-6 gap-6">
           <div className="w-48 h-32 bg-gray-700/50 rounded-lg flex-shrink-0"></div>
           <div className="flex-1 space-y-3">
@@ -191,7 +192,7 @@ const ModalProjectItem = React.memo(({
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-200">
+    <div className="bg-gradient-to-br from-brand-teal/40/50 to-brand-black/50 backdrop-blur-sm rounded-xl p-6 border border-brand-teal/50 hover:border-brand-cyan/50 transition-all duration-200">
       <div className="flex flex-col md:flex-row gap-6">
         {/* Project Media */}
         {project.mediaSrc && (
@@ -203,7 +204,7 @@ const ModalProjectItem = React.memo(({
                 onClose={handleVideoClose}
               />
             ) : project.mediaType === 'image' ? (
-              <div className="relative overflow-hidden rounded-lg bg-gray-800">
+              <div className="relative overflow-hidden rounded-lg bg-brand-teal/20">
                 <Image
                   src={project.mediaSrc}
                   alt={project.title}
@@ -228,29 +229,29 @@ const ModalProjectItem = React.memo(({
         {/* Project Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
-            <h4 className="text-xl font-semibold text-blue-400 truncate">
+            <h4 className="text-xl font-semibold text-brand-cyan truncate">
               {project.title}
             </h4>
             {project.isFeatured && (
-              <span className="px-2 py-1 text-xs font-medium text-purple-300 bg-purple-500/20 rounded-full flex-shrink-0">
+              <span className="px-2 py-1 text-xs font-medium text-purple-300 bg-brand-cyan/20 rounded-full flex-shrink-0">
                 Featured
               </span>
             )}
           </div>
-          <p className="text-gray-300 text-sm mb-3 line-clamp-3 leading-relaxed">
+          <p className="text-brand-muted text-sm mb-3 line-clamp-3 leading-relaxed">
             {project.description}
           </p>
           <div className="flex flex-wrap gap-2 mb-3">
             {project.tech.slice(0, 5).map((tech: string, techIndex: number) => (
               <span
                 key={`${index}-${techIndex}`}
-                className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-medium"
+                className="px-2 py-1 bg-brand-cyan/20 text-brand-cyan rounded-full text-xs font-medium"
               >
                 {tech}
               </span>
             ))}
             {project.tech.length > 5 && (
-              <span className="px-2 py-1 bg-gray-500/20 text-gray-400 rounded-full text-xs">
+              <span className="px-2 py-1 bg-gray-500/20 text-brand-muted rounded-full text-xs">
                 +{project.tech.length - 5}
               </span>
             )}
@@ -258,7 +259,7 @@ const ModalProjectItem = React.memo(({
           <div className="flex space-x-4">
             <a
               href={project.github}
-              className="text-gray-400 hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+              className="text-brand-muted hover:text-brand-cyan transition-colors duration-200 text-sm font-medium"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -267,7 +268,7 @@ const ModalProjectItem = React.memo(({
             {project.live && project.live !== '#' && (
               <a
                 href={project.live}
-                className="text-gray-400 hover:text-purple-400 transition-colors duration-200 text-sm font-medium"
+                className="text-brand-muted hover:text-brand-cyan transition-colors duration-200 text-sm font-medium"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -377,22 +378,22 @@ const ProjectModal = React.memo(({
       onClick={handleClose}
     >
       <div
-        className={`w-full max-w-7xl max-h-[90vh] bg-gradient-to-br from-gray-900/95 to-slate-900/95 backdrop-blur-md rounded-xl border border-gray-700/50 flex flex-col transition-all duration-200 transform ${isAnimating ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
+        className={`w-full max-w-7xl max-h-[90vh] bg-gradient-to-br from-brand-black/95 to-slate-900/95 backdrop-blur-md rounded-xl border border-brand-teal/50 flex flex-col transition-all duration-200 transform ${isAnimating ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
           }`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-700/50 bg-gray-900/50">
+        <div className="flex items-center justify-between p-6 border-b border-brand-teal/50 bg-transparent relative z-10/50">
           <div className="flex items-center space-x-4">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h3 className="text-2xl font-bold text-brand-white">
               All Projects ({modalProjects.length})
             </h3>
-            <div className="flex items-center space-x-1 bg-gray-800/50 rounded-lg p-1">
+            <div className="flex items-center space-x-1 bg-brand-teal/20/50 rounded-lg p-1">
               <button
                 onClick={toggleViewMode}
                 className={`p-2 rounded-md transition-all duration-200 ${viewMode === 'grid'
-                    ? 'bg-blue-500/20 text-blue-400 shadow-sm'
-                    : 'text-gray-400 hover:text-gray-300'
+                    ? 'bg-brand-cyan/20 text-brand-cyan shadow-sm'
+                    : 'text-brand-muted hover:text-brand-muted'
                   }`}
                 title="Grid View"
               >
@@ -401,15 +402,15 @@ const ProjectModal = React.memo(({
               <button
                 onClick={toggleViewMode}
                 className={`p-2 rounded-md transition-all duration-200 ${viewMode === 'list'
-                    ? 'bg-blue-500/20 text-blue-400 shadow-sm'
-                    : 'text-gray-400 hover:text-gray-300'
+                    ? 'bg-brand-cyan/20 text-brand-cyan shadow-sm'
+                    : 'text-brand-muted hover:text-brand-muted'
                   }`}
                 title="List View (Recommended)"
               >
                 <List className="w-4 h-4" />
               </button>
             </div>
-            <span className="text-xs text-gray-500 bg-gray-800/30 px-2 py-1 rounded-full">
+            <span className="text-xs text-brand-teal bg-brand-teal/20/30 px-2 py-1 rounded-full">
               List view recommended for performance
             </span>
           </div>
@@ -458,9 +459,9 @@ const ProjectModal = React.memo(({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-6 border-t border-gray-700/50 bg-gray-900/30">
+        <div className="p-6 border-t border-brand-teal/50 bg-transparent relative z-10/30">
           <div className="flex justify-between items-center">
-            <p className="text-gray-400 text-sm">
+            <p className="text-brand-muted text-sm">
               {modalProjects.length} projects total • {featuredCount} featured
               {viewMode === 'list' && (
                 <span className="ml-2 text-green-400">• Optimized view active</span>
@@ -468,7 +469,7 @@ const ProjectModal = React.memo(({
             </p>
             <button
               onClick={handleClose}
-              className="px-4 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-lg hover:from-blue-500/30 hover:to-purple-500/30 transition-all duration-200 font-medium"
+              className="px-4 py-2 bg-gradient-to-r from-brand-cyan/20 to-brand-cyan/20 border border-brand-cyan/30 rounded-lg hover:from-brand-cyan/30 hover:to-brand-cyan/30 transition-all duration-200 font-medium"
             >
               Close
             </button>
@@ -530,28 +531,43 @@ const ProjectsSection: React.FC = () => {
   return (
     <section id="projects" className="py-20">
       <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+        <h2 className="text-4xl font-bold text-center mb-4 text-brand-white">
           Featured Projects
         </h2>
 
         <div className="text-center mb-8">
-          <p className="text-gray-400 text-sm">
+          <p className="text-brand-muted text-sm">
             Showing {startIndex + 1}-{endIndex} of {displayProjects.length} projects
           </p>
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.2 }
+            }
+          }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8 items-start"
+        >
           {currentProjects.map((project: Project, index: number) => (
-            <div
+            <motion.div
               key={`page-${currentPage}-${index}`}
-              className="transform transition-all duration-300 hover:scale-[1.02] will-change-transform h-full"
-              style={{ animationDelay: `${index * 100}ms` }}
+              variants={{
+                hidden: { opacity: 0, y: 50 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+              }}
+              className="transform transition-all duration-300 hover:scale-[1.02] will-change-transform"
             >
               <ProjectCard project={project} />
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
@@ -559,8 +575,8 @@ const ProjectsSection: React.FC = () => {
             <button
               onClick={goToPrevPage}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 ${currentPage === 0
-                  ? 'bg-gray-700/30 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 hover:from-blue-500/40 hover:to-purple-500/40 text-white hover:shadow-lg'
+                  ? 'bg-gray-700/30 text-brand-teal cursor-not-allowed'
+                  : 'bg-gradient-to-r from-brand-cyan/20 to-brand-cyan/20 border border-brand-cyan/30 hover:from-brand-cyan/40 hover:to-brand-cyan/40 text-brand-white hover:shadow-lg'
                 }`}
               disabled={currentPage === 0}
             >
@@ -575,14 +591,14 @@ const ProjectsSection: React.FC = () => {
                     key={i}
                     onClick={() => goToPage(i)}
                     className={`w-3 h-3 rounded-full transition-all duration-200 transform hover:scale-125 ${currentPage === i
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 scale-125 shadow-lg'
+                        ? 'bg-gradient-to-r from-brand-cyan to-brand-cyan scale-125 shadow-lg'
                         : 'bg-gray-600 hover:bg-gray-500'
                       }`}
                     aria-label={`Go to page ${i + 1}`}
                   />
                 ))}
               </div>
-              <span className="text-gray-400 text-sm font-medium">
+              <span className="text-brand-muted text-sm font-medium">
                 {currentPage + 1} / {totalPages}
               </span>
             </div>
@@ -590,8 +606,8 @@ const ProjectsSection: React.FC = () => {
             <button
               onClick={goToNextPage}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 ${currentPage === totalPages - 1
-                  ? 'bg-gray-700/30 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 hover:from-blue-500/40 hover:to-purple-500/40 text-white hover:shadow-lg'
+                  ? 'bg-gray-700/30 text-brand-teal cursor-not-allowed'
+                  : 'bg-gradient-to-r from-brand-cyan/20 to-brand-cyan/20 border border-brand-cyan/30 hover:from-brand-cyan/40 hover:to-brand-cyan/40 text-brand-white hover:shadow-lg'
                 }`}
               disabled={currentPage === totalPages - 1}
             >
@@ -606,7 +622,7 @@ const ProjectsSection: React.FC = () => {
           <div className="text-center mt-8">
             <button
               onClick={openModal}
-              className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-lg hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300 transform hover:scale-105 font-semibold hover:shadow-xl"
+              className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-brand-cyan/20 to-pink-500/20 border border-brand-cyan/30 rounded-lg hover:from-brand-cyan/30 hover:to-pink-500/30 transition-all duration-300 transform hover:scale-105 font-semibold hover:shadow-xl"
             >
               <Grid className="w-4 h-4" />
               <span>View All Projects ({projects.length})</span>

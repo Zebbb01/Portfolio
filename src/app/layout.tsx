@@ -26,6 +26,9 @@ export const metadata: Metadata = {
     default: 'Gerald Villaceran | Web Developer & Growth Systems Builder',
     template: '%s | Gerald Villaceran'
   },
+  icons: {
+    icon: 'https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-images/logo.svg',
+  },
   description: 'Portfolio of Gerald Villaceran - Web Developer, Growth Systems Builder, and AI Prompt Engineer specializing in scalable SaaS platforms and automated workflows.',
   keywords: ['Gerald Villaceran', 'Web Developer', 'Software Engineer', 'Growth Systems Builder', 'SaaS', 'Next.js', 'React', 'TypeScript', 'AI Prompt Engineer'],
   authors: [{ name: 'Gerald Villaceran' }],
@@ -62,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ scrollBehavior: 'smooth' }}>
       <body className={inter.className}>
         <script
           type="application/ld+json"

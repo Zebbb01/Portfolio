@@ -67,7 +67,7 @@ export const projects: Project[] = [
     tech: ["GHL", "CSS Animations", "CRM Integration", "JavaScript"],
     github: "#",
     live: "https://drive.google.com/drive/folders/1coWZYw95pb4Vw3TTaCIvqRtwKS3k3mux?usp=drive_link",
-    detailsUrl: "https://drive.google.com/drive/folders/1coWZYw95pb4Vw3TTaCIvqRtwKS3k3mux?usp=drive_link"
+    detailsUrl: "/projects/ghl-website"
   },
   {
     title: "Growth Systems & Workflow Automation",
@@ -78,7 +78,7 @@ export const projects: Project[] = [
     tech: ["n8n", "Make", "API Integration", "Google Sheets"],
     github: "#",
     live: "https://drive.google.com/drive/folders/15apEURviJiMWK-FJGsWkkPnysu8Fw02f?usp=sharing",
-    detailsUrl: "https://drive.google.com/drive/folders/15apEURviJiMWK-FJGsWkkPnysu8Fw02f?usp=sharing"
+    detailsUrl: "/projects/growth-systems"
   }
 ];
 
