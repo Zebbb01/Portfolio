@@ -14,12 +14,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const descriptionWords = project.description.split(' ').filter(word => word.length > 0);
   const shouldTruncate = descriptionWords.length > 25;
 
-  const displayedDescription = showFullDescription
-    ? project.description
-    : shouldTruncate
-    ? descriptionWords.slice(0, 25).join(' ') + '...'
-    : project.description;
-
   const detailsHref = project.detailsUrl || project.live;
   const isInternalLink = detailsHref?.startsWith('/');
 
@@ -69,17 +63,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         )}
 
         <div className="flex-grow">
-          <p className="text-gray-400 mb-6 text-sm leading-relaxed">
-            {displayedDescription}
+          <div className="relative mb-6">
+            <p className={`text-gray-400 text-sm leading-relaxed ${!showFullDescription && shouldTruncate ? 'line-clamp-4' : ''}`}>
+              {project.description}
+            </p>
             {shouldTruncate && (
               <button
                 onClick={() => setShowFullDescription(!showFullDescription)}
-                className="text-blue-400 hover:text-blue-300 ml-1 font-medium transition-colors"
+                className="text-blue-400 hover:text-blue-300 font-medium transition-colors mt-2 text-sm inline-block"
               >
                 {showFullDescription ? 'Read Less' : 'Read More'}
               </button>
             )}
-          </p>
+          </div>
         </div>
 
         <div className="mt-auto space-y-6">
