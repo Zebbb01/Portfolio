@@ -110,7 +110,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                 rel="noopener noreferrer"
               >
                 <ExternalLink className="w-4 h-4 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-transform" />
-                <span className="text-sm font-bold tracking-wide">View Project</span>
+                <span className="text-sm font-bold tracking-wide">View Case Study</span>
               </a>
             )}
           </div>

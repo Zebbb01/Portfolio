@@ -1,3 +1,4 @@
+
 -- Create contact_messages table
 CREATE TABLE IF NOT EXISTS public.contact_messages (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -23,3 +24,4 @@ CREATE POLICY "Allow service role to read" ON public.contact_messages
 
 -- Add comments for documentation
 COMMENT ON TABLE public.contact_messages IS 'Storage for portfolio contact form submissions';
+

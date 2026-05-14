@@ -1,3 +1,4 @@
+
 -- Create a new public storage bucket named "portfolio-images"
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('portfolio-images', 'portfolio-images', true)
@@ -12,3 +13,4 @@ USING (bucket_id = 'portfolio-images');
 CREATE POLICY "Auth Insert"
 ON storage.objects FOR INSERT
 WITH CHECK (bucket_id = 'portfolio-images');
+

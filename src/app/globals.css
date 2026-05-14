@@ -3,28 +3,49 @@
 
 @theme {
   --animate-progress: progress 2s ease-in-out infinite;
+  --animate-pulse-slow: pulse-slow 4s ease-in-out infinite;
 
   @keyframes progress {
     0% { transform: scaleX(0); opacity: 0; }
     50% { opacity: 1; }
     100% { transform: scaleX(1); opacity: 0; }
   }
+
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
 }
 
-/* Add these CSS rules to hide scrollbars */
-/* For WebKit browsers (Chrome, Safari, Edge, Opera) */
+/* Hide scrollbars but keep functionality */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
     width: 0;
     height: 0;
 }
 
-/* For Firefox */
 .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
 
+/* Custom Scrollbar for premium feel */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00E5FF33;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00E5FF;
+}
 
 :root {
   --background: #000000;
@@ -39,27 +60,42 @@
   --color-brand-muted: #4DB8B8;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000;
-    --foreground: #FFFFFF;
-  }
+body {
+  background: #030303;
+  color: var(--foreground);
+  overflow-x: hidden;
+  position: relative;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Cinematic Grain Overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 50;
+  mix-blend-mode: overlay;
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior removed to allow JS control */
+  background: radial-gradient(circle at 100% 0%, rgba(0, 229, 255, 0.05), transparent 50%),
+              radial-gradient(circle at 0% 100%, rgba(0, 92, 122, 0.05), transparent 50%),
+              #030303;
 }
 
 .bg-grid-pattern {
-  background-size: 40px 40px;
-  background-image: linear-gradient(to right, rgba(0, 92, 122, 0.1) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(0, 92, 122, 0.1) 1px, transparent 1px);
-  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  background-size: 50px 50px;
+  background-image: linear-gradient(to right, rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+  color: transparent;
 }

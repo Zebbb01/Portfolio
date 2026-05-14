@@ -1,206 +1,185 @@
-'use client';
+"use client";
 
-import React, { useState, useRef } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, ExternalLink, CheckCircle2, Globe, Sparkles, Database, Code, Play } from 'lucide-react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { projects, projectScreenshots } from '../../../data/portfolioData';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { 
+  ArrowLeft, 
+  Globe, 
+  Layout, 
+  CheckCircle2, 
+  Box,
+  Layers,
+  Sparkles,
+  Monitor,
+  Zap,
+  MousePointer2
+} from 'lucide-react';
 import Image from 'next/image';
-import { Metadata } from 'next';
-
-// Removed metadata as this is now a client component
+import { ImageGallery } from '../../../components/ui/ImageGallery';
 
 export default function GHLWebsiteCaseStudy() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const router = useRouter();
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const project = projects.find(p => p.detailsUrl === '/projects/ghl-website');
+  
+  const { scrollYProgress } = useScroll();
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.4], [1, 1.1]);
+  const heroBlur = useTransform(scrollYProgress, [0, 0.4], [0, 10]);
 
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
+  if (!project) return null;
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.3 } }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } }
   };
 
   return (
-    <div className="min-h-screen bg-brand-black text-gray-100 font-sans selection:bg-brand-cyan/30">
-      {/* Background Effects */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern opacity-50"></div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand-cyan/10 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-brand-cyan/10 blur-[120px] rounded-full"></div>
-      </div>
+    <div className="relative bg-brand-black min-h-screen text-brand-white selection:bg-brand-cyan selection:text-brand-black">
+      {/* Cinematic Back Button */}
+      <motion.button
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        onClick={() => router.push('/#projects')}
+        className="fixed top-8 left-8 z-[100] flex items-center gap-3 px-6 py-3 rounded-2xl bg-brand-black/40 backdrop-blur-xl border border-brand-white/10 text-brand-white hover:border-brand-cyan hover:text-brand-cyan transition-all group shadow-2xl hover:shadow-brand-cyan/20"
+      >
+        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+        <span className="text-xs font-black uppercase tracking-widest">Back to Portfolio</span>
+      </motion.button>
 
-      <div className="relative z-10 container mx-auto px-6 py-12 lg:py-20">
-        
-        {/* Navigation */}
-        <Link 
-          href="/#projects" 
-          className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-white transition-colors mb-12 group"
+      {/* Hero Section */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <motion.div 
+          style={{ opacity: heroOpacity, scale: heroScale, filter: `blur(${heroBlur}px)` }}
+          className="absolute inset-0 z-0"
         >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Portfolio</span>
-        </Link>
+          {project.mediaType === 'video' ? (
+            <video
+              src={project.mediaSrc}
+              className="w-full h-full object-cover opacity-40 brightness-50"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <Image 
+              src={project.mediaSrc}
+              alt={project.title}
+              fill
+              sizes="100vw"
+              className="object-cover opacity-40 brightness-50"
+              priority
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-black/20 via-brand-black/60 to-brand-black" />
+        </motion.div>
 
-        {/* Header Section */}
-        <header className="mb-16">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="px-4 py-1.5 rounded-full bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 text-sm font-semibold tracking-wide uppercase">
-              Web Design
-            </span>
-            <span className="px-4 py-1.5 rounded-full bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 text-sm font-semibold tracking-wide uppercase">
-              Marketing Funnel
-            </span>
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-brand-white">
-            GHL Custom Website & Animations
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-brand-muted max-w-3xl leading-relaxed mb-10">
-            A seamless blend of aesthetics and backend functionality, engineered to maximize lead conversion and user engagement through advanced CSS animations and dynamic CRM integrations.
-          </p>
-
-          <a 
-            href="https://drive.google.com/drive/folders/1coWZYw95pb4Vw3TTaCIvqRtwKS3k3mux?usp=drive_link" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-gray-950 font-bold hover:bg-gray-200 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.1)]"
-          >
-            View Live Project <ExternalLink size={20} />
-          </a>
-        </header>
-
-        {/* Media Presentation: Video */}
-        <div className="mb-20">
-          <div className="relative aspect-video rounded-2xl overflow-hidden bg-brand-black border border-brand-teal shadow-2xl group flex items-center justify-center cursor-pointer" onClick={togglePlay}>
-            <video 
-              ref={videoRef}
-              className="w-full h-full object-cover"
-              poster="https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-images/ghl-website.png"
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              onEnded={() => setIsPlaying(false)}
-              controls={isPlaying} // Only show native controls when playing
-            >
-              <source src="https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-videos/shoe.mkv" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-            
-            {/* Custom Play Button Overlay */}
-            {!isPlaying && (
-              <div className="absolute inset-0 bg-brand-black/40 flex items-center justify-center transition-all duration-300 group-hover:bg-brand-black/20">
-                <div className="w-20 h-20 bg-brand-cyan/20 backdrop-blur-md rounded-full flex items-center justify-center border border-brand-cyan/50 transform transition-transform duration-300 group-hover:scale-110 shadow-[0_0_30px_rgba(0,229,255,0.3)]">
-                  <Play className="w-10 h-10 text-brand-white ml-2" fill="currentColor" />
-                </div>
-              </div>
-            )}
-          </div>
+        <div className="container mx-auto px-6 relative z-10 text-center">
+          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2 }}>
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-[10px] font-black uppercase tracking-[0.3em] mb-8">
+              <Sparkles className="w-3 h-3" /> Creative Development
+            </div>
+            <h1 className="text-6xl md:text-9xl font-black text-brand-white tracking-tighter mb-8 italic uppercase leading-[0.9]">
+              Custom <span className="text-brand-cyan">Marketing</span> Website
+            </h1>
+            <div className="flex flex-wrap justify-center gap-4">
+              <button 
+                onClick={() => setIsGalleryOpen(true)}
+                className="px-8 py-4 rounded-full bg-brand-cyan text-brand-black font-black uppercase tracking-widest hover:scale-105 transition-transform flex items-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.4)]"
+              >
+                <Monitor className="w-5 h-5" /> Explore Gallery
+              </button>
+            </div>
+          </motion.div>
         </div>
+      </section>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-          
-          {/* Left Column: Details */}
-          <div className="lg:col-span-2 space-y-16">
-            
-            <section>
-              <h2 className="text-3xl font-bold mb-6 text-brand-white flex items-center gap-3">
-                <span className="w-8 h-1 bg-brand-cyan rounded-full"></span>
-                Project Overview
-              </h2>
-              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
-                <p>
-                  When looking for the best web developer for custom ecommerce sites, clients often need a seamless blend of aesthetics and backend functionality.
+      {/* Content */}
+      <section className="py-24 md:py-40">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+            <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-7 space-y-24">
+              <motion.div variants={itemVariants}>
+                <h2 className="text-3xl md:text-5xl font-black text-brand-white uppercase italic mb-10 flex items-center gap-4">
+                  <Monitor className="w-7 h-7 text-brand-cyan" /> The Vision
+                </h2>
+                <p className="text-brand-muted text-xl md:text-2xl leading-relaxed font-medium">
+                  {project.description}
                 </p>
-                <p>
-                  For this project, I engineered custom-built marketing websites and highly optimized sales funnels using GoHighLevel (GHL). The objective was to maximize lead conversion and user engagement through advanced CSS animations, dynamic CRM integrations, and SEO-optimized DOM structures.
-                </p>
-                <p>
-                  I completely overhauled the user experience by implementing interactive micro-animations that guide the user&apos;s attention toward primary call-to-action buttons. By leveraging custom JavaScript and GHL&apos;s API, I ensured that every lead captured was instantly synced with the client&apos;s CRM, triggering a personalized follow-up sequence.
-                </p>
-                <p>
-                  This approach not only elevated the brand&apos;s visual identity but also resulted in a 35% increase in conversion rates within the first month of deployment, proving the massive impact of combining premium UI/UX design with robust marketing infrastructure.
-                </p>
-              </div>
-            </section>
+              </motion.div>
 
-            <section>
-              <h2 className="text-3xl font-bold mb-6 text-brand-white flex items-center gap-3">
-                <span className="w-8 h-1 bg-brand-cyan rounded-full"></span>
-                Key Features
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[
-                  "Premium UI/UX Design",
-                  "Advanced CSS Micro-Animations",
-                  "Dynamic GHL CRM Integrations",
-                  "SEO-Optimized DOM Structures",
-                  "Automated Follow-up Sequences",
-                  "Conversion-Focused Layouts"
-                ].map((feature, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-brand-black/50 border border-brand-teal">
-                    <CheckCircle2 className="text-brand-cyan shrink-0 mt-0.5" size={20} />
-                    <span className="text-gray-200 font-medium">{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
+              <motion.div variants={itemVariants}>
+                <h3 className="text-2xl font-black text-brand-white uppercase tracking-widest mb-12 flex items-center gap-4">
+                  <Layers className="w-6 h-6 text-brand-cyan" /> Design & Interaction
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    { title: "Fluid Animations", desc: "Advanced CSS and GSAP micro-animations for an immersive user journey.", icon: Sparkles },
+                    { title: "Conversion Optimized", desc: "Strategically placed CTAs and layout flow designed to maximize leads.", icon: MousePointer2 },
+                    { title: "GHL Integration", desc: "Seamless CRM and marketing automation wiring for instant lead sync.", icon: Zap },
+                    { title: "Mobile Premium", desc: "Fully responsive, ultra-fast loading experience across all devices.", icon: Layout }
+                  ].map((feature, i) => (
+                    <div key={i} className="p-8 rounded-3xl bg-brand-white/5 border border-brand-white/10">
+                      <feature.icon className="w-10 h-10 text-brand-cyan mb-6" />
+                      <h4 className="text-lg font-black text-brand-white uppercase mb-3">{feature.title}</h4>
+                      <p className="text-brand-muted text-sm">{feature.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
 
-          {/* Right Column: Tech Stack */}
-          <div className="space-y-8">
-            <div className="p-8 rounded-2xl bg-brand-black/80 border border-brand-teal backdrop-blur-sm sticky top-8">
-              <h3 className="text-xl font-bold text-brand-white mb-6 border-b border-brand-teal pb-4">Technology Stack</h3>
-              
-              <ul className="space-y-6">
-                <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400">
-                    <Globe size={24} />
-                  </div>
+            <div className="lg:col-span-5 lg:sticky lg:top-32">
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="p-10 rounded-[2.5rem] bg-gradient-to-br from-brand-white/10 to-transparent border border-brand-white/10 backdrop-blur-2xl">
+                <h3 className="text-2xl font-black text-brand-white uppercase italic tracking-widest mb-12 border-b border-brand-white/10 pb-6">Project Meta</h3>
+                <div className="space-y-12">
                   <div>
-                    <p className="font-bold text-brand-white">GoHighLevel (GHL)</p>
-                    <p className="text-sm text-brand-muted">Platform & Hosting</p>
+                    <div className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-cyan mb-6">Technologies</div>
+                    <div className="flex flex-wrap gap-3">
+                      {project.tech.map(t => (
+                        <span key={t} className="px-4 py-2 bg-brand-black/60 rounded-xl text-xs text-brand-white font-bold border border-brand-white/10">{t}</span>
+                      ))}
+                    </div>
                   </div>
-                </li>
-                
-                <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-pink-500/10 text-pink-400">
-                    <Sparkles size={24} />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-6 rounded-2xl bg-brand-black/40 border border-brand-white/5">
+                      <CheckCircle2 className="w-6 h-6 text-brand-cyan mb-4" />
+                      <div className="text-[9px] font-black uppercase text-brand-muted mb-1">Impact</div>
+                      <div className="text-xs font-bold text-brand-white">+35% Conversion</div>
+                    </div>
+                    <div className="p-6 rounded-2xl bg-brand-black/40 border border-brand-white/5">
+                      <Zap className="w-6 h-6 text-brand-cyan mb-4" />
+                      <div className="text-[9px] font-black uppercase text-brand-muted mb-1">Performance</div>
+                      <div className="text-xs font-bold text-brand-white">Ultra Fast</div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-bold text-brand-white">CSS Animations</p>
-                    <p className="text-sm text-brand-muted">Micro-interactions</p>
-                  </div>
-                </li>
-
-                <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-brand-cyan/10 text-brand-cyan">
-                    <Database size={24} />
-                  </div>
-                  <div>
-                    <p className="font-bold text-brand-white">CRM Integration</p>
-                    <p className="text-sm text-brand-muted">Automated Workflows</p>
-                  </div>
-                </li>
-
-                <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-yellow-500/10 text-yellow-400">
-                    <Code size={24} />
-                  </div>
-                  <div>
-                    <p className="font-bold text-brand-white">JavaScript</p>
-                    <p className="text-sm text-brand-muted">Custom Logic & Tracking</p>
-                  </div>
-                </li>
-              </ul>
+                  <button 
+                    onClick={() => setIsGalleryOpen(true)}
+                    className="w-full flex items-center justify-center p-5 rounded-2xl bg-brand-cyan text-brand-black font-black text-xs uppercase tracking-[0.2em] shadow-[0_10px_40px_rgba(0,229,255,0.3)]"
+                  >
+                    <Monitor className="w-4 h-4 mr-2" /> Explore Gallery
+                  </button>
+                </div>
+              </motion.div>
             </div>
           </div>
-
         </div>
+      </section>
 
-      </div>
+      <ImageGallery 
+        images={projectScreenshots[project.title] || []}
+        isOpen={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+        title={project.title}
+      />
     </div>
   );
 }

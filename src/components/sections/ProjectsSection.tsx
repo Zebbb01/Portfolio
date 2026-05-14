@@ -1,643 +1,256 @@
-// src/components/sections/ProjectsSection.tsx
-'use client';
+"use client";
 
-import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { projects } from '../../data/portfolioData';
-import ProjectCard from '../ui/ProjectCard';
-import { ChevronLeft, ChevronRight, X, Grid, List, Play } from 'lucide-react';
-import type { Project } from '../../types';
+import React, { useRef, useState, useMemo, memo } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { projects, projectScreenshots } from '../../data/portfolioData';
+import { SectionHeading } from '../ui/SectionHeading';
+import { ExternalLink, Github, ArrowUpRight, Code2, ChevronDown, ChevronUp, Play, Globe } from 'lucide-react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { ImageGallery } from '../ui/ImageGallery';
 
-// Ultra-lightweight video placeholder that doesn't load anything
-const VideoPlaceholder = React.memo(({
-  title,
-  className,
-  onClick
-}: {
-  title: string;
-  className: string;
-  onClick: () => void;
+
+
+const ProjectCard = memo(({ 
+  project, 
+  index, 
+  onViewDemo 
+}: { 
+  project: any, 
+  index: number, 
+  onViewDemo: (project: any) => void 
 }) => {
-  return (
-    <div
-      className={`${className} bg-gradient-to-br from-gray-700 to-brand-teal/40 cursor-pointer group relative overflow-hidden rounded-lg border border-gray-600/30`}
-      onClick={onClick}
-    >
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="w-full h-full" style={{
-          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)`
-        }} />
-      </div>
+  const shouldReduceMotion = useReducedMotion();
+  const container = useRef(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ['start end', 'start start']
+  });
 
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 group-hover:scale-105 transition-transform duration-200">
-        <div className="w-16 h-16 bg-brand-cyan/20 rounded-full flex items-center justify-center group-hover:bg-brand-cyan/30 transition-all duration-200 backdrop-blur-sm border border-brand-cyan/20">
-          <Play className="w-8 h-8 text-brand-cyan ml-1" />
-        </div>
-        <div className="text-center px-4">
-          <p className="text-brand-white font-medium text-sm mb-1">Video Preview</p>
-          <p className="text-brand-muted text-xs line-clamp-1">{title}</p>
-        </div>
-        <div className="text-xs text-brand-teal bg-transparent relative z-10/20 px-3 py-1 rounded-full backdrop-blur-sm">
-          Click to load & play
-        </div>
-      </div>
-    </div>
-  );
-});
-
-VideoPlaceholder.displayName = 'VideoPlaceholder';
-
-// Actual video component that only renders when activated
-const LazyVideo = React.memo(({
-  src,
-  className,
-  onClose
-}: {
-  src: string;
-  className: string;
-  onClose: () => void;
-}) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const handleLoadedData = useCallback(() => {
-    setIsLoading(false);
-    // Auto-play when loaded
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Ignore play errors (common on mobile)
-      });
-    }
-  }, []);
-
-  const handleError = useCallback(() => {
-    setIsLoading(false);
-    setHasError(true);
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    // Cleanup when component unmounts
-    return () => {
-      if (video) {
-        video.pause();
-        video.src = '';
-        video.load();
-      }
-    };
-  }, []);
-
-  if (hasError) {
-    return (
-      <div className={`${className} bg-red-900/20 border border-red-500/30 rounded-lg flex items-center justify-center`}>
-        <div className="text-center p-4">
-          <X className="w-8 h-8 text-red-400 mx-auto mb-2" />
-          <p className="text-red-400 text-sm">Failed to load video</p>
-          <button
-            onClick={onClose}
-            className="text-brand-muted text-xs mt-1 hover:text-brand-white transition-colors"
-          >
-            Click to close
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  const cardScale = shouldReduceMotion ? 1 : scale;
+  
+  const truncatedDescription = project.description.slice(0, 120) + (project.description.length > 120 ? '...' : '');
 
   return (
-    <div className={`${className} relative rounded-lg overflow-hidden`}>
-      {isLoading && (
-        <div className="absolute inset-0 bg-brand-teal/20 flex items-center justify-center z-10">
-          <div className="flex flex-col items-center space-y-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-brand-cyan border-t-transparent"></div>
-            <p className="text-brand-muted text-sm">Loading video...</p>
-          </div>
-        </div>
-      )}
-
-      <video
-        ref={videoRef}
-        src={src}
-        className={className}
-        controls
-        muted
-        playsInline
-        preload="metadata"
-        onLoadedData={handleLoadedData}
-        onError={handleError}
-        style={{
-          opacity: isLoading ? 0 : 1,
-          transition: 'opacity 0.3s ease'
-        }}
+    <div ref={container} className="relative h-screen flex items-center justify-center sticky top-0 px-4 md:px-0">
+      <motion.div 
+        style={{ scale: cardScale, willChange: "transform" }}
+        className="w-full max-w-6xl h-[85vh] md:h-[80vh] bg-brand-black/40 backdrop-blur-3xl border border-brand-white/10 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden relative flex flex-col lg:flex-row group shadow-2xl"
       >
-        Your browser does not support the video tag.
-      </video>
+        {/* Project Media (Image or Video) */}
+        <div className="lg:w-3/5 h-1/3 lg:h-full relative overflow-hidden">
+          <div className="absolute inset-0 bg-brand-cyan/10 group-hover:bg-transparent transition-colors z-10" />
+          
+          {project.mediaType === 'video' ? (
+            <video
+              src={project.mediaSrc}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+            />
+          ) : (
+            <Image
+              src={project.mediaSrc}
+              alt={project.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 800px"
+              className="object-cover transition-transform duration-700 group-hover:scale-110"
+              priority={index === 0}
+            />
+          )}
 
-      {/* Close button */}
-      <button
-        onClick={onClose}
-        className="absolute top-2 right-2 w-8 h-8 bg-transparent relative z-10/50 hover:bg-transparent relative z-10/70 rounded-full flex items-center justify-center transition-all duration-200 z-20 backdrop-blur-sm"
-      >
-        <X className="w-4 h-4 text-brand-white" />
-      </button>
-    </div>
-  );
-});
+          <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8 z-20 flex flex-wrap gap-2">
+             {project.tech.map((t: string) => (
+                <span key={t} className="px-2 py-1 md:px-3 md:py-1 rounded-full bg-brand-black/80 border border-brand-white/10 text-[8px] md:text-[10px] font-bold text-brand-white uppercase tracking-widest backdrop-blur-md">
+                  {t}
+                </span>
+             ))}
+          </div>
 
-LazyVideo.displayName = 'LazyVideo';
-
-// Optimized project item for modal list view
-const ModalProjectItem = React.memo(({
-  project,
-  index,
-  isVisible = true
-}: {
-  project: Project;
-  index: number;
-  isVisible?: boolean;
-}) => {
-  const [activeVideo, setActiveVideo] = useState<string | null>(null);
-
-  const handleVideoClick = useCallback((videoSrc: string) => {
-    setActiveVideo(videoSrc);
-  }, []);
-
-  const handleVideoClose = useCallback(() => {
-    setActiveVideo(null);
-  }, []);
-
-  // Return skeleton if not visible
-  if (!isVisible) {
-    return (
-      <div className="h-48 bg-brand-teal/20/30 rounded-xl animate-pulse border border-brand-teal/30">
-        <div className="flex h-full p-6 gap-6">
-          <div className="w-48 h-32 bg-gray-700/50 rounded-lg flex-shrink-0"></div>
-          <div className="flex-1 space-y-3">
-            <div className="h-6 bg-gray-700/50 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-700/30 rounded w-full"></div>
-            <div className="h-4 bg-gray-700/30 rounded w-5/6"></div>
-            <div className="flex gap-2">
-              <div className="h-6 w-16 bg-gray-700/30 rounded-full"></div>
-              <div className="h-6 w-20 bg-gray-700/30 rounded-full"></div>
-              <div className="h-6 w-12 bg-gray-700/30 rounded-full"></div>
-            </div>
+          {/* Hover Play Button Visual */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
+            <button 
+              onClick={() => onViewDemo(project)}
+              className="w-20 h-20 rounded-full bg-brand-cyan/20 backdrop-blur-md border border-brand-cyan/50 flex items-center justify-center text-brand-cyan hover:scale-110 transition-transform shadow-[0_0_30px_rgba(0,229,255,0.3)]"
+            >
+              <Play className="w-8 h-8 fill-brand-cyan" />
+            </button>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="bg-gradient-to-br from-brand-teal/40/50 to-brand-black/50 backdrop-blur-sm rounded-xl p-6 border border-brand-teal/50 hover:border-brand-cyan/50 transition-all duration-200">
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* Project Media */}
-        {project.mediaSrc && (
-          <div className="md:w-48 flex-shrink-0">
-            {activeVideo === project.mediaSrc ? (
-              <LazyVideo
-                src={project.mediaSrc}
-                className="w-full h-32 md:h-24 object-cover"
-                onClose={handleVideoClose}
-              />
-            ) : project.mediaType === 'image' ? (
-              <div className="relative overflow-hidden rounded-lg bg-brand-teal/20">
-                <Image
-                  src={project.mediaSrc}
-                  alt={project.title}
-                  width={192} // 192px is 48 * 4, adjust as needed
-                  height={96} // 96px is 24 * 4, adjust as needed
-                  className="w-full h-32 md:h-24 object-cover"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,..." // You would generate this
-                />
-              </div>
-            ) : (
-              <VideoPlaceholder
-                title={project.title}
-                className="w-full h-32 md:h-24"
-                onClick={() => handleVideoClick(project.mediaSrc)}
-              />
-            )}
-          </div>
-        )}
 
         {/* Project Info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
-            <h4 className="text-xl font-semibold text-brand-cyan truncate">
+        <div className="lg:w-2/5 p-6 md:p-12 flex flex-col justify-between relative bg-gradient-to-br from-brand-white/5 to-transparent overflow-y-auto scrollbar-hide">
+          <div className="relative z-10">
+            <div className="flex items-center space-x-2 text-brand-cyan mb-4">
+              <Code2 className="w-4 h-4" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em]">Project {index + 1}</span>
+            </div>
+            <h3 className="text-2xl md:text-5xl font-black text-brand-white mb-4 md:mb-6 leading-tight group-hover:text-brand-cyan transition-colors">
               {project.title}
-            </h4>
-            {project.isFeatured && (
-              <span className="px-2 py-1 text-xs font-medium text-purple-300 bg-brand-cyan/20 rounded-full flex-shrink-0">
-                Featured
-              </span>
-            )}
-          </div>
-          <p className="text-brand-muted text-sm mb-3 line-clamp-3 leading-relaxed">
-            {project.description}
-          </p>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {project.tech.slice(0, 5).map((tech: string, techIndex: number) => (
-              <span
-                key={`${index}-${techIndex}`}
-                className="px-2 py-1 bg-brand-cyan/20 text-brand-cyan rounded-full text-xs font-medium"
-              >
-                {tech}
-              </span>
-            ))}
-            {project.tech.length > 5 && (
-              <span className="px-2 py-1 bg-gray-500/20 text-brand-muted rounded-full text-xs">
-                +{project.tech.length - 5}
-              </span>
-            )}
-          </div>
-          <div className="flex space-x-4">
-            <a
-              href={project.github}
-              className="text-brand-muted hover:text-brand-cyan transition-colors duration-200 text-sm font-medium"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Code
-            </a>
-            {project.live && project.live !== '#' && (
-              <a
-                href={project.live}
-                className="text-brand-muted hover:text-brand-cyan transition-colors duration-200 text-sm font-medium"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Live Demo
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-});
-
-ModalProjectItem.displayName = 'ModalProjectItem';
-
-// Optimized Modal with virtual scrolling and no video pre-loading
-const ProjectModal = React.memo(({
-  isOpen,
-  onClose,
-  projects: modalProjects,
-  featuredCount
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  projects: Project[];
-  featuredCount: number;
-}) => {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list'); // Default to list for better performance
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 10 });
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const ITEM_HEIGHT = 200;
-  const OVERSCAN = 5; // Number of items to render outside viewport
-
-  // Virtual scrolling optimization
-  useEffect(() => {
-    if (!isOpen || viewMode !== 'list') return;
-
-    const handleScroll = () => {
-      const container = scrollContainerRef.current;
-      if (!container) return;
-
-      const scrollTop = container.scrollTop;
-      const containerHeight = container.clientHeight;
-
-      const startIndex = Math.max(0, Math.floor(scrollTop / ITEM_HEIGHT) - OVERSCAN);
-      const visibleCount = Math.ceil(containerHeight / ITEM_HEIGHT);
-      const endIndex = Math.min(modalProjects.length - 1, startIndex + visibleCount + OVERSCAN * 2);
-
-      setVisibleRange({ start: startIndex, end: endIndex });
-    };
-
-    const container = scrollContainerRef.current;
-    if (container) {
-      handleScroll(); // Initial calculation
-      container.addEventListener('scroll', handleScroll, { passive: true });
-      return () => container.removeEventListener('scroll', handleScroll);
-    }
-  }, [isOpen, viewMode, modalProjects.length]);
-
-  const toggleViewMode = useCallback(() => {
-    setViewMode(prev => prev === 'grid' ? 'list' : 'grid');
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setIsAnimating(true);
-
-    // Force cleanup of any active videos
-    const videos = document.querySelectorAll('video');
-    videos.forEach(video => {
-      video.pause();
-      video.src = '';
-      video.load();
-    });
-
-    setTimeout(() => {
-      onClose();
-      setIsAnimating(false);
-      setVisibleRange({ start: 0, end: 10 }); // Reset range
-    }, 200);
-  }, [onClose]);
-
-  // Handle escape key and prevent body scroll
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose();
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, handleClose]);
-
-  if (!isOpen) return null;
-
-  return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-200 ${isAnimating ? 'opacity-0' : 'opacity-100'
-        }`}
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
-      onClick={handleClose}
-    >
-      <div
-        className={`w-full max-w-7xl max-h-[90vh] bg-gradient-to-br from-brand-black/95 to-slate-900/95 backdrop-blur-md rounded-xl border border-brand-teal/50 flex flex-col transition-all duration-200 transform ${isAnimating ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
-          }`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Modal Header */}
-        <div className="flex items-center justify-between p-6 border-b border-brand-teal/50 bg-transparent relative z-10/50">
-          <div className="flex items-center space-x-4">
-            <h3 className="text-2xl font-bold text-brand-white">
-              All Projects ({modalProjects.length})
             </h3>
-            <div className="flex items-center space-x-1 bg-brand-teal/20/50 rounded-lg p-1">
-              <button
-                onClick={toggleViewMode}
-                className={`p-2 rounded-md transition-all duration-200 ${viewMode === 'grid'
-                    ? 'bg-brand-cyan/20 text-brand-cyan shadow-sm'
-                    : 'text-brand-muted hover:text-brand-muted'
-                  }`}
-                title="Grid View"
-              >
-                <Grid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={toggleViewMode}
-                className={`p-2 rounded-md transition-all duration-200 ${viewMode === 'list'
-                    ? 'bg-brand-cyan/20 text-brand-cyan shadow-sm'
-                    : 'text-brand-muted hover:text-brand-muted'
-                  }`}
-                title="List View (Recommended)"
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-            <span className="text-xs text-brand-teal bg-brand-teal/20/30 px-2 py-1 rounded-full">
-              List view recommended for performance
-            </span>
-          </div>
-          <button
-            onClick={handleClose}
-            className="p-2 rounded-lg bg-gray-700/50 hover:bg-red-500/20 hover:text-red-400 transition-all duration-200"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Modal Content */}
-        <div
-          ref={scrollContainerRef}
-          className="flex-1 overflow-y-auto"
-          style={{ scrollBehavior: 'smooth' }}
-        >
-          {viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-              {modalProjects.map((project: Project, index: number) => (
-                <div key={`modal-grid-${index}`} className="transform transition-all duration-200 hover:scale-[1.02]">
-                  <ProjectCard project={project} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div
-              className="relative"
-              style={{ height: modalProjects.length * ITEM_HEIGHT }}
-            >
-              <div className="p-6 space-y-4">
-                {modalProjects.map((project: Project, index: number) => {
-                  const isVisible = index >= visibleRange.start && index <= visibleRange.end;
-                  return (
-                    <ModalProjectItem
-                      key={`modal-list-${index}`}
-                      project={project}
-                      index={index}
-                      isVisible={isVisible}
-                    />
-                  );
-                })}
+            
+            <div className="relative mb-6 md:mb-8">
+              <div className="p-4 md:p-6 rounded-2xl bg-brand-cyan/10 border border-brand-cyan/20 mb-6 group/impact">
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-cyan mb-2">Business Impact</div>
+                <p className="text-brand-white text-xs md:text-sm font-bold leading-tight">
+                  {project.impact}
+                </p>
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* Modal Footer */}
-        <div className="p-6 border-t border-brand-teal/50 bg-transparent relative z-10/30">
-          <div className="flex justify-between items-center">
-            <p className="text-brand-muted text-sm">
-              {modalProjects.length} projects total • {featuredCount} featured
-              {viewMode === 'list' && (
-                <span className="ml-2 text-green-400">• Optimized view active</span>
+              <p className="text-brand-muted text-xs md:text-base leading-relaxed">
+                {isExpanded ? project.description : truncatedDescription}
+              </p>
+              {project.description.length > 120 && (
+                <button 
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="mt-2 text-brand-cyan text-[10px] md:text-xs font-bold uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all"
+                >
+                  {isExpanded ? (
+                    <>Show Less <ChevronUp className="w-3 h-3" /></>
+                  ) : (
+                    <>Read More <ChevronDown className="w-3 h-3" /></>
+                  )}
+                </button>
               )}
-            </p>
-            <button
-              onClick={handleClose}
-              className="px-4 py-2 bg-gradient-to-r from-brand-cyan/20 to-brand-cyan/20 border border-brand-cyan/30 rounded-lg hover:from-brand-cyan/30 hover:to-brand-cyan/30 transition-all duration-200 font-medium"
+            </div>
+          </div>
+
+          <div className="flex flex-col space-y-3 md:space-y-4 relative z-10">
+            <div className="flex items-center space-x-6">
+              <button 
+                onClick={() => onViewDemo(project)}
+                className="flex items-center space-x-2 text-brand-white hover:text-brand-cyan transition-colors group/link"
+              >
+                <span className="font-bold text-xs md:text-sm">Explore Gallery</span>
+                <ExternalLink className="w-3 h-3 md:w-4 md:h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
+              </button>
+              {project.live && project.live !== "" && project.live !== "#" && (
+                <a 
+                  href={project.live} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 text-brand-white hover:text-brand-cyan transition-colors group/link"
+                >
+                  <span className="font-bold text-xs md:text-sm">Live Demo</span>
+                  <Globe className="w-3 h-3 md:w-4 md:h-4" />
+                </a>
+              )}
+              {project.github !== "#" && (
+                <a 
+                  href={project.github} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 text-brand-white hover:text-brand-cyan transition-colors group/link"
+                >
+                  <span className="font-bold text-xs md:text-sm">Source Code</span>
+                  <Github className="w-3 h-3 md:w-4 md:h-4" />
+                </a>
+              )}
+            </div>
+            
+            <Link 
+              href={project.detailsUrl} 
+              className="inline-flex items-center justify-between w-full p-3 md:p-4 rounded-xl md:rounded-2xl bg-brand-white/5 border border-brand-white/10 hover:bg-brand-cyan hover:text-brand-black transition-all group/btn"
             >
-              Close
-            </button>
+              <span className="font-black text-[10px] md:text-xs uppercase tracking-widest">View Case Study</span>
+              <ArrowUpRight className="w-4 h-4 md:w-5 md:h-5 group-hover/btn:rotate-45 transition-transform" />
+            </Link>
           </div>
         </div>
-      </div>
+        
+        {/* Large Index Number Background */}
+        <div className="absolute top-0 right-0 text-[10rem] md:text-[20rem] font-black text-brand-white/5 select-none pointer-events-none translate-x-1/4 -translate-y-1/4">
+          {index + 1}
+        </div>
+      </motion.div>
     </div>
   );
 });
 
-ProjectModal.displayName = 'ProjectModal';
+ProjectCard.displayName = "ProjectCard";
 
-const ProjectsSection: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [showAllModal, setShowAllModal] = useState<boolean>(false);
+const ProjectsSection = () => {
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-  const projectsPerPage: number = 6;
-
-  // Memoized calculations
-  const { featuredProjects, displayProjects, totalPages, currentProjects } = useMemo(() => {
-    const featured: Project[] = projects.filter((project: Project) => project.isFeatured);
-    const display: Project[] = featured.length > 0 ? featured : projects;
-    const pages: number = Math.ceil(display.length / projectsPerPage);
-
-    const startIndex: number = currentPage * projectsPerPage;
-    const current: Project[] = display.slice(startIndex, startIndex + projectsPerPage);
-
-    return {
-      featuredProjects: featured,
-      displayProjects: display,
-      totalPages: pages,
-      currentProjects: current
-    };
-  }, [currentPage, projectsPerPage]);
-
-  const goToNextPage = useCallback(() => {
-    setCurrentPage((prev) => (prev + 1) % totalPages);
-  }, [totalPages]);
-
-  const goToPrevPage = useCallback(() => {
-    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
-  }, [totalPages]);
-
-  const goToPage = useCallback((page: number) => {
-    setCurrentPage(page);
-  }, []);
-
-  const openModal = useCallback(() => {
-    setShowAllModal(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setShowAllModal(false);
-  }, []);
-
-  const startIndex: number = currentPage * projectsPerPage;
-  const endIndex: number = Math.min(startIndex + projectsPerPage, displayProjects.length);
+  const handleViewDemo = (project: any) => {
+    setSelectedProject(project);
+    setIsGalleryOpen(true);
+  };
 
   return (
-    <section id="projects" className="py-20">
+    <section id="projects" className="relative bg-brand-black pb-24 overflow-hidden">
+      {/* Background blobs for depth */}
+      <motion.div 
+        animate={{ 
+          x: [0, 50, 0],
+          y: [0, -30, 0],
+        }}
+        transition={{ duration: 15, repeat: Infinity, ease: "linear" as const }}
+        className="absolute top-1/4 -left-20 w-96 h-96 bg-brand-cyan/5 rounded-full blur-[120px] pointer-events-none"
+      />
+      <motion.div 
+        animate={{ 
+          x: [0, -50, 0],
+          y: [0, 30, 0],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" as const }}
+        className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] bg-brand-teal/5 rounded-full blur-[150px] pointer-events-none"
+      />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-cyan/[0.02] rounded-full blur-[160px] pointer-events-none" />
+
       <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center mb-4 text-brand-white">
-          Featured Projects
-        </h2>
-
-        <div className="text-center mb-8">
-          <p className="text-brand-muted text-sm">
-            Showing {startIndex + 1}-{endIndex} of {displayProjects.length} projects
-          </p>
+        <div className="pt-24 md:pt-32">
+          <SectionHeading 
+            number="03"
+            subtitle="Selected Works"
+            title="Digital Products & Systems"
+            align="left"
+          />
         </div>
-
-        {/* Projects Grid */}
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.2 }
-            }
-          }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8 items-start"
-        >
-          {currentProjects.map((project: Project, index: number) => (
-            <motion.div
-              key={`page-${currentPage}-${index}`}
-              variants={{
-                hidden: { opacity: 0, y: 50 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-              }}
-              className="transform transition-all duration-300 hover:scale-[1.02] will-change-transform"
-            >
-              <ProjectCard project={project} />
-            </motion.div>
+        
+        <div className="relative min-h-screen">
+          {projects.map((project, index) => (
+            <ProjectCard 
+              key={project.title} 
+              project={project} 
+              index={index}
+              onViewDemo={handleViewDemo}
+            />
           ))}
-        </motion.div>
-
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center space-x-4">
-            <button
-              onClick={goToPrevPage}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 ${currentPage === 0
-                  ? 'bg-gray-700/30 text-brand-teal cursor-not-allowed'
-                  : 'bg-gradient-to-r from-brand-cyan/20 to-brand-cyan/20 border border-brand-cyan/30 hover:from-brand-cyan/40 hover:to-brand-cyan/40 text-brand-white hover:shadow-lg'
-                }`}
-              disabled={currentPage === 0}
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Prev</span>
-            </button>
-
-            <div className="flex items-center space-x-3">
-              <div className="flex space-x-1">
-                {Array.from({ length: totalPages }, (_, i: number) => (
-                  <button
-                    key={i}
-                    onClick={() => goToPage(i)}
-                    className={`w-3 h-3 rounded-full transition-all duration-200 transform hover:scale-125 ${currentPage === i
-                        ? 'bg-gradient-to-r from-brand-cyan to-brand-cyan scale-125 shadow-lg'
-                        : 'bg-gray-600 hover:bg-gray-500'
-                      }`}
-                    aria-label={`Go to page ${i + 1}`}
-                  />
-                ))}
-              </div>
-              <span className="text-brand-muted text-sm font-medium">
-                {currentPage + 1} / {totalPages}
-              </span>
-            </div>
-
-            <button
-              onClick={goToNextPage}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 ${currentPage === totalPages - 1
-                  ? 'bg-gray-700/30 text-brand-teal cursor-not-allowed'
-                  : 'bg-gradient-to-r from-brand-cyan/20 to-brand-cyan/20 border border-brand-cyan/30 hover:from-brand-cyan/40 hover:to-brand-cyan/40 text-brand-white hover:shadow-lg'
-                }`}
-              disabled={currentPage === totalPages - 1}
-            >
-              <span className="hidden sm:inline">Next</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-
-        {/* View All Projects Button */}
-        {featuredProjects.length > 0 && featuredProjects.length < projects.length && (
-          <div className="text-center mt-8">
-            <button
-              onClick={openModal}
-              className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-brand-cyan/20 to-pink-500/20 border border-brand-cyan/30 rounded-lg hover:from-brand-cyan/30 hover:to-pink-500/30 transition-all duration-300 transform hover:scale-105 font-semibold hover:shadow-xl"
-            >
-              <Grid className="w-4 h-4" />
-              <span>View All Projects ({projects.length})</span>
-            </button>
-          </div>
-        )}
-
-        {/* Modal */}
-        <ProjectModal
-          isOpen={showAllModal}
-          onClose={closeModal}
-          projects={projects}
-          featuredCount={featuredProjects.length}
-        />
+        </div>
       </div>
+      
+      {/* Visual connection to next section */}
+      <div className="h-screen flex items-center justify-center text-center px-6 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className="max-w-2xl"
+        >
+          <h4 className="text-3xl md:text-5xl font-bold text-brand-white mb-8 italic tracking-tight">Ready to accelerate your business?</h4>
+          <Link href="/#contact" className="inline-flex items-center space-x-4 group">
+             <span className="text-brand-cyan text-xl md:text-2xl font-black uppercase tracking-widest border-b-2 border-brand-cyan pb-2 transition-all group-hover:tracking-[0.2em]">Let's talk</span>
+             <div className="w-12 h-12 rounded-full border-2 border-brand-cyan flex items-center justify-center group-hover:bg-brand-cyan transition-all">
+                <ArrowUpRight className="w-6 h-6 text-brand-cyan group-hover:text-brand-black transition-transform group-hover:rotate-45" />
+             </div>
+          </Link>
+        </motion.div>
+      </div>
+
+      {/* Image Gallery Modal */}
+      {selectedProject && (
+        <ImageGallery 
+          images={projectScreenshots[selectedProject.title] || []}
+          isOpen={isGalleryOpen}
+          onClose={() => setIsGalleryOpen(false)}
+          title={selectedProject.title}
+        />
+      )}
     </section>
   );
 };

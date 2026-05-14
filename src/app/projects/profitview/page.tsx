@@ -1,171 +1,171 @@
+"use client";
+
 import React from 'react';
-import Link from 'next/link';
-import { ArrowLeft, ExternalLink, CheckCircle2, Server, Database, Bot, CreditCard } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { projects } from '../../../data/portfolioData';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { 
+  ArrowLeft, 
+  Globe, 
+  Github, 
+  Shield, 
+  Zap, 
+  Layout, 
+  CheckCircle2, 
+  Box,
+  Layers,
+  Cpu,
+  Monitor
+} from 'lucide-react';
 import Image from 'next/image';
 
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'ProfitView Accounting Case Study | Gerald Villaceran',
-  description: 'A deep dive into ProfitView Accounting, a next-generation SaaS financial operations platform built with Next.js, Supabase, Stripe, and AI Agents.',
-};
-
 export default function ProfitViewCaseStudy() {
+  const router = useRouter();
+  const project = projects.find(p => p.detailsUrl === '/projects/profitview');
+  
+  const { scrollYProgress } = useScroll();
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.4], [1, 1.1]);
+  const heroBlur = useTransform(scrollYProgress, [0, 0.4], [0, 10]);
+
+  if (!project) return null;
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.3 } }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any } }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 font-sans selection:bg-brand-cyan/30">
-      {/* Background Effects */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand-cyan/10 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-brand-cyan/10 blur-[120px] rounded-full"></div>
-      </div>
+    <div className="relative bg-brand-black min-h-screen text-brand-white selection:bg-brand-cyan selection:text-brand-black">
+      {/* Cinematic Back Button */}
+      <motion.button
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        onClick={() => router.push('/#projects')}
+        className="fixed top-8 left-8 z-[100] flex items-center gap-3 px-6 py-3 rounded-2xl bg-brand-black/40 backdrop-blur-xl border border-brand-white/10 text-brand-white hover:border-brand-cyan hover:text-brand-cyan transition-all group shadow-2xl hover:shadow-brand-cyan/20"
+      >
+        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+        <span className="text-xs font-black uppercase tracking-widest">Back to Portfolio</span>
+      </motion.button>
 
-      <div className="relative z-10 container mx-auto px-6 py-12 lg:py-20">
-        
-        {/* Navigation */}
-        <Link 
-          href="/#projects" 
-          className="inline-flex items-center gap-2 text-brand-muted hover:text-brand-white transition-colors mb-12 group"
+      {/* Hero Section */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <motion.div 
+          style={{ opacity: heroOpacity, scale: heroScale, filter: `blur(${heroBlur}px)` }}
+          className="absolute inset-0 z-0"
         >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Portfolio</span>
-        </Link>
+          {project.mediaType === 'video' ? (
+            <video
+              src={project.mediaSrc}
+              className="w-full h-full object-cover opacity-40 grayscale-[0.3] brightness-50"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <Image 
+              src={project.mediaSrc}
+              alt={project.title}
+              fill
+              sizes="100vw"
+              className="object-cover opacity-40 grayscale-[0.3] brightness-50"
+              priority
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-black/20 via-brand-black/60 to-brand-black" />
+        </motion.div>
 
-        {/* Header Section */}
-        <header className="mb-16">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="px-4 py-1.5 rounded-full bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 text-sm font-semibold tracking-wide uppercase">
-              SaaS Platform
-            </span>
-            <span className="px-4 py-1.5 rounded-full bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 text-sm font-semibold tracking-wide uppercase">
-              Fintech
-            </span>
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-500">
-            ProfitView Accounting
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-brand-muted max-w-3xl leading-relaxed mb-10">
-            A next-generation financial operations platform combining multi-tenant architecture with AI-driven insights to automate and scale modern accounting.
-          </p>
-
-          <a 
-            href="https://profit-view-swart.vercel.app/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-gray-950 font-bold hover:bg-gray-200 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.1)]"
-          >
-            Visit Live Project <ExternalLink size={20} />
-          </a>
-        </header>
-
-        {/* Hero Image */}
-        <div className="relative aspect-[21/9] rounded-2xl overflow-hidden bg-brand-black border border-brand-teal shadow-2xl mb-20 group">
-          <Image 
-            src="https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-images/profitview.png" 
-            alt="ProfitView Dashboard" 
-            fill 
-            className="object-cover group-hover:scale-105 transition-transform duration-1000"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent"></div>
+        <div className="container mx-auto px-6 relative z-10 text-center">
+          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2 }}>
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan text-[10px] font-black uppercase tracking-[0.3em] mb-8">
+              <Box className="w-3 h-3" /> Case Study
+            </div>
+            <h1 className="text-6xl md:text-9xl font-black text-brand-white tracking-tighter mb-8 italic uppercase leading-[0.9]">
+              ProfitView <span className="text-brand-cyan">Accounting</span>
+            </h1>
+            <div className="flex flex-wrap justify-center gap-4">
+              <a href={project.live} target="_blank" rel="noopener noreferrer" className="px-8 py-4 rounded-full bg-brand-cyan text-brand-black font-black uppercase tracking-widest hover:scale-105 transition-transform flex items-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.4)]">
+                <Globe className="w-5 h-5" /> Launch Live Demo
+              </a>
+            </div>
+          </motion.div>
         </div>
+      </section>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-          
-          {/* Left Column: Details */}
-          <div className="lg:col-span-2 space-y-16">
-            
-            <section>
-              <h2 className="text-3xl font-bold mb-6 text-brand-white flex items-center gap-3">
-                <span className="w-8 h-1 bg-brand-cyan rounded-full"></span>
-                Project Overview
-              </h2>
-              <div className="space-y-6 text-lg text-brand-muted leading-relaxed">
-                <p>
-                  ProfitView was built to solve the fragmentation in modern accounting workflows. Traditional systems require manual data entry, complex reconciliation processes, and lack proactive insights. 
+      {/* Content */}
+      <section className="py-24 md:py-40">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+            <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-7 space-y-24">
+              <motion.div variants={itemVariants}>
+                <h2 className="text-3xl md:text-5xl font-black text-brand-white uppercase italic mb-10 flex items-center gap-4">
+                  <Monitor className="w-7 h-7 text-brand-cyan" /> The Challenge
+                </h2>
+                <p className="text-brand-muted text-xl md:text-2xl leading-relaxed font-medium">
+                  {project.description}
                 </p>
-                <p>
-                  This platform centralizes financial operations into a single, highly scalable dashboard. By leveraging advanced OCR for receipt capture and an AI Agent for financial analysis, ProfitView reduces manual bookkeeping hours by up to 80% while providing real-time financial health indicators.
-                </p>
-              </div>
-            </section>
+              </motion.div>
 
-            <section>
-              <h2 className="text-3xl font-bold mb-6 text-brand-white flex items-center gap-3">
-                <span className="w-8 h-1 bg-brand-cyan rounded-full"></span>
-                Key Features
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[
-                  "Multi-Tenant SaaS Architecture",
-                  "Real-time Invoicing & Billing",
-                  "OCR Expense Data Extraction",
-                  "Automated Bank Reconciliation",
-                  "AI-Driven Proactive Financial Alerts",
-                  "Role-Based Access Control (RBAC)"
-                ].map((feature, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-brand-black/50 border border-brand-teal">
-                    <CheckCircle2 className="text-brand-cyan shrink-0 mt-0.5" size={20} />
-                    <span className="text-gray-200 font-medium">{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
+              <motion.div variants={itemVariants}>
+                <h3 className="text-2xl font-black text-brand-white uppercase tracking-widest mb-12 flex items-center gap-4">
+                  <Layers className="w-6 h-6 text-brand-cyan" /> Key Features
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    { title: "SaaS Architecture", desc: "Multi-tenant system with strict data isolation and enterprise security.", icon: Shield },
+                    { title: "AI Automation", desc: "Intelligent expense capture and financial alerts powered by AI agents.", icon: Cpu },
+                    { title: "Real-time Operations", desc: "Live invoicing, banking recon, and instant financial reporting.", icon: Zap },
+                    { title: "Modern Stack", desc: "Engineered with Next.js 15, Supabase, and Stripe for maximum scale.", icon: Layout }
+                  ].map((feature, i) => (
+                    <div key={i} className="p-8 rounded-3xl bg-brand-white/5 border border-brand-white/10">
+                      <feature.icon className="w-10 h-10 text-brand-cyan mb-6" />
+                      <h4 className="text-lg font-black text-brand-white uppercase mb-3">{feature.title}</h4>
+                      <p className="text-brand-muted text-sm">{feature.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
 
-          {/* Right Column: Tech Stack */}
-          <div className="space-y-8">
-            <div className="p-8 rounded-2xl bg-brand-black/80 border border-brand-teal backdrop-blur-sm sticky top-8">
-              <h3 className="text-xl font-bold text-brand-white mb-6 border-b border-brand-teal pb-4">Technology Stack</h3>
-              
-              <ul className="space-y-6">
-                <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-brand-teal/20 text-brand-muted">
-                    <Server size={24} />
-                  </div>
+            <div className="lg:col-span-5 lg:sticky lg:top-32">
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="p-10 rounded-[2.5rem] bg-gradient-to-br from-brand-white/10 to-transparent border border-brand-white/10 backdrop-blur-2xl">
+                <h3 className="text-2xl font-black text-brand-white uppercase italic tracking-widest mb-12 border-b border-brand-white/10 pb-6">Project Meta</h3>
+                <div className="space-y-12">
                   <div>
-                    <p className="font-bold text-brand-white">Next.js 15 (App Router)</p>
-                    <p className="text-sm text-brand-muted">Frontend & Server Actions</p>
+                    <div className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-cyan mb-6">Tech Stack</div>
+                    <div className="flex flex-wrap gap-3">
+                      {project.tech.map(t => (
+                        <span key={t} className="px-4 py-2 bg-brand-black/60 rounded-xl text-xs text-brand-white font-bold border border-brand-white/10">{t}</span>
+                      ))}
+                    </div>
                   </div>
-                </li>
-                
-                <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-emerald-500/10 text-emerald-400">
-                    <Database size={24} />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-6 rounded-2xl bg-brand-black/40 border border-brand-white/5">
+                      <CheckCircle2 className="w-6 h-6 text-brand-cyan mb-4" />
+                      <div className="text-[9px] font-black uppercase text-brand-muted mb-1">Status</div>
+                      <div className="text-xs font-bold text-brand-white">Production</div>
+                    </div>
+                    <div className="p-6 rounded-2xl bg-brand-black/40 border border-brand-white/5">
+                      <Zap className="w-6 h-6 text-brand-cyan mb-4" />
+                      <div className="text-[9px] font-black uppercase text-brand-muted mb-1">Scale</div>
+                      <div className="text-xs font-bold text-brand-white">Enterprise</div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-bold text-brand-white">Supabase / PostgreSQL</p>
-                    <p className="text-sm text-brand-muted">Auth, Database & RLS</p>
-                  </div>
-                </li>
-
-                <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-brand-cyan/10 text-brand-cyan">
-                    <Bot size={24} />
-                  </div>
-                  <div>
-                    <p className="font-bold text-brand-white">AI Agents</p>
-                    <p className="text-sm text-brand-muted">LLM Integration & OCR</p>
-                  </div>
-                </li>
-
-                <li className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-brand-cyan/10 text-brand-cyan">
-                    <CreditCard size={24} />
-                  </div>
-                  <div>
-                    <p className="font-bold text-brand-white">Stripe Integration</p>
-                    <p className="text-sm text-brand-muted">Subscription & Payments</p>
-                  </div>
-                </li>
-              </ul>
+                  <a href={project.live} target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center p-5 rounded-2xl bg-brand-cyan text-brand-black font-black text-xs uppercase tracking-[0.2em] shadow-[0_10px_40px_rgba(0,229,255,0.3)]">
+                    <Globe className="w-4 h-4 mr-2" /> Live Preview
+                  </a>
+                </div>
+              </motion.div>
             </div>
           </div>
-
         </div>
-
-      </div>
+      </section>
     </div>
   );
 }

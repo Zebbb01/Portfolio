@@ -27,16 +27,18 @@ export async function POST(request: Request) {
     }
 
     let dbSaveSuccessful = false;
-    // 1. Save to Database (Supabase)
+    // 1. Save to Database (Supabase) with Timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     try {
       console.log('Attempting to save to database...');
-      const { error: dbError } = await supabase.from('contact_messages').insert([
-        {
-          name,
-          email,
-          message,
-        },
-      ]);
+      // Note: If using supabase-js v2, standard .insert doesn't take signal in the method call
+      // But we can check for timeout in the catch block if the promise hangs
+      const { error: dbError } = await Promise.race([
+        supabase.from('contact_messages').insert([{ name, email, message }]),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000))
+      ]) as any;
       
       if (dbError) throw dbError;
       
@@ -44,8 +46,8 @@ export async function POST(request: Request) {
       dbSaveSuccessful = true;
     } catch (dbError) {
       console.error('Failed to save message to database:', dbError instanceof Error ? dbError.message : dbError);
-      // Decide if you want to stop here or proceed with email even if DB fails
-      // For now, we'll continue but log the error
+    } finally {
+      clearTimeout(timeoutId);
     }
 
 
