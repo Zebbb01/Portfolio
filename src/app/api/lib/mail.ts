@@ -69,3 +69,58 @@ export async function sendContactEmail({ name, email, message }: SendEmailParams
     throw new Error(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
+
+export async function sendChatNotificationEmail({ name, email, roomId }: { name: string; email: string; roomId: string }) {
+  if (!process.env.YOUR_GMAIL_ADDRESS || !process.env.GMAIL_APP_PASSWORD) {
+    console.error('Nodemailer environment variables are NOT SET. Cannot send email.');
+    return;
+  }
+
+  const adminChatUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://portfolio-five-ruddy-49.vercel.app'}/admin/chat`;
+
+  const mailOptions = {
+    from: process.env.YOUR_GMAIL_ADDRESS,
+    to: process.env.RECIPIENT_EMAIL, // Recipient (your email)
+    subject: `💬 New Live Chat Lead: ${name}`,
+    html: `
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; padding: 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+          <div style="background-color: #D4AF37; color: #060606; padding: 25px 30px; text-align: center;">
+            <h1 style="margin: 0; font-size: 24px; font-weight: 700;">New Chat Session Started!</h1>
+          </div>
+
+          <div style="padding: 30px;">
+            <p style="font-size: 16px; margin-bottom: 20px;">A visitor is waiting to chat with you on your portfolio website.</p>
+
+            <h3 style="font-size: 18px; color: #D4AF37; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Guest Details:</h3>
+            <ul style="list-style-type: none; padding: 0; margin: 0; font-size: 15px;">
+              <li style="margin-bottom: 8px;">
+                <strong>Name:</strong> <span style="color: #555;">${name}</span>
+              </li>
+              <li style="margin-bottom: 8px;">
+                <strong>Email:</strong> <a href="mailto:${email}" style="color: #007bff; text-decoration: none;">${email}</a>
+              </li>
+            </ul>
+
+            <div style="margin-top: 30px; text-align: center;">
+              <a href="${adminChatUrl}" style="background-color: #D4AF37; color: #060606; text-decoration: none; padding: 12px 25px; font-size: 15px; font-weight: 700; border-radius: 6px; display: inline-block; box-shadow: 0 4px 10px rgba(212,175,55,0.25);">
+                Open Admin Chat Console
+              </a>
+            </div>
+
+            <p style="font-size: 12px; color: #777; margin-top: 30px; text-align: center;">
+              This notification was generated automatically from your Next.js portfolio server.
+            </p>
+          </div>
+        </div>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Chat notification email sent successfully.');
+  } catch (error) {
+    console.error('Failed to send chat notification email:', error);
+  }
+}
