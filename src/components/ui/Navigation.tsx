@@ -1,151 +1,288 @@
-"use client";
+// src/components/ui/Navigation.tsx
+'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { sections } from '../../data/portfolioData';
-import { Menu, X, ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { sections } from '@/src/data/portfolioData';
+import useScrollSpy from '@/src/components/hooks/useScrollSpy';
 
-interface NavigationProps {
-  activeSection: string;
-  isScrolled: boolean;
-  scrollToSection: (sectionId: string) => void;
-}
+// ---------------------------------------------------------------------------
+// Navigation link labels mapped from section IDs
+// ---------------------------------------------------------------------------
+const navLinks: { id: string; label: string }[] = [
+  { id: 'home', label: 'Home' },
+  { id: 'services', label: 'Services' },
+  { id: 'projects', label: 'Work' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'expertise', label: 'About' },
+  { id: 'contact', label: 'Contact' },
+];
 
-const Navigation: React.FC<NavigationProps> = ({ activeSection, isScrolled, scrollToSection }) => {
+// ---------------------------------------------------------------------------
+// Animation variants
+// ---------------------------------------------------------------------------
+const overlayVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.3, ease: 'easeOut' as const },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.25, ease: 'easeIn' as const },
+  },
+};
+
+const mobileNavVariants = {
+  hidden: { x: '100%' },
+  visible: {
+    x: 0,
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const },
+  },
+  exit: {
+    x: '100%',
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const mobileLinkVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: 0.15 + i * 0.06,
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  }),
+  exit: { opacity: 0, y: 10, transition: { duration: 0.15 } },
+};
+
+
+// ---------------------------------------------------------------------------
+// Navigation Component
+// ---------------------------------------------------------------------------
+export default function Navigation() {
+  const activeSection = useScrollSpy(sections, 100);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  // Track scroll position for background transition
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    handleScroll(); // Set initial state
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  const handleSectionClick = (e: React.MouseEvent, sectionId: string) => {
-    e.preventDefault();
-    scrollToSection(sectionId);
-    setIsMobileMenuOpen(false);
-    
-    // Update URL hash without jumping
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
+  // Smooth-scroll to a section by ID
+  const scrollToSection = useCallback((sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+
+    // Update URL hash silently
     if (typeof window !== 'undefined') {
       window.history.pushState(null, '', `#${sectionId}`);
     }
-  };
+  }, []);
+
+  // Handle nav link click (desktop + mobile)
+  const handleNavClick = useCallback(
+    (e: React.MouseEvent, sectionId: string) => {
+      e.preventDefault();
+      setIsMobileMenuOpen(false);
+
+      // Small delay so mobile menu closes before scroll calculation
+      setTimeout(() => scrollToSection(sectionId), 80);
+    },
+    [scrollToSection],
+  );
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
-      isScrolled 
-        ? 'bg-brand-black/70 backdrop-blur-md border-b border-brand-white/10 py-4' 
-        : 'bg-transparent py-8'
-    }`}>
-      <div className="container mx-auto px-6 flex justify-between items-center">
-        <Link 
-          href="/#home"
-          onClick={(e) => handleSectionClick(e, 'home')}
-          className="cursor-pointer group flex items-center space-x-3 z-10" 
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled
+          ? 'bg-[#060606]/80 backdrop-blur-xl border-b border-[#1F1F1F]'
+          : 'bg-transparent border-b border-transparent'
+      }`}
+    >
+      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16 md:h-20">
+        {/* ----------------------------------------------------------------
+            Logo: Personal Brand Mark
+        ----------------------------------------------------------------- */}
+        <a
+          href="#home"
+          onClick={(e) => handleNavClick(e, 'home')}
+          className="relative z-10 group"
         >
-          <div className="relative">
-            <Image 
-              src="https://vddymvngjbcgnmaaklpe.supabase.co/storage/v1/object/public/portfolio-images/logo.png" 
-              alt="Logo" 
-              width={40} 
-              height={40}
-              className="w-10 h-10 group-hover:scale-110 transition-transform duration-500"
-            />
-            <div className="absolute -inset-2 bg-brand-cyan/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-          </div>
-          <span className="text-brand-white font-black tracking-tighter text-xl hidden sm:block">
-            GERALD<span className="text-brand-cyan">.</span>V
-          </span>
-        </Link>
+          <img
+            src="/images/logo-gv.svg"
+            alt="Gerald Villaceran"
+            className="h-10 md:h-11 w-auto transition-opacity duration-300 group-hover:opacity-80"
+          />
+        </a>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-1">
-          {sections.map((section) => (
-            <Link
-              key={section}
-              href={`/#${section}`}
-              onClick={(e) => handleSectionClick(e, section)}
-              className={`relative px-6 py-2 capitalize text-sm font-bold tracking-widest transition-all group overflow-hidden ${
-                activeSection === section ? 'text-brand-cyan' : 'text-brand-muted hover:text-brand-white'
-              }`}
-            >
-              <span className="relative z-10">{section}</span>
-              {activeSection === section && (
-                <motion.div 
-                  layoutId="nav-active"
-                  className="absolute bottom-0 left-6 right-6 h-0.5 bg-brand-cyan shadow-[0_0_10px_rgba(0,229,255,0.8)]"
-                  transition={{ type: "spring" as const, stiffness: 380, damping: 30 }}
-                />
-              )}
-              <span className="absolute inset-0 bg-brand-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-            </Link>
-          ))}
-          
-          <div className="pl-6">
-            <Link 
-              href="/#contact"
-              onClick={(e) => handleSectionClick(e, 'contact')}
-              className="px-6 py-2.5 bg-brand-cyan text-brand-black rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(0,229,255,0.4)]"
-            >
-              HIRE ME
-            </Link>
-          </div>
+        {/* ----------------------------------------------------------------
+            Desktop Navigation Links (hidden below lg)
+        ----------------------------------------------------------------- */}
+        <div className="hidden lg:flex items-center gap-1">
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.id;
+            return (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                onClick={(e) => handleNavClick(e, link.id)}
+                className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 ${
+                  isActive
+                    ? 'text-[#D4AF37]'
+                    : 'text-[#A09882] hover:text-[#F5F0E8]'
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden z-10">
-          <button 
-            onClick={toggleMobileMenu} 
-            className="w-12 h-12 flex items-center justify-center rounded-xl bg-brand-white/5 border border-brand-white/10 text-brand-white focus:outline-none"
+        {/* ----------------------------------------------------------------
+            Desktop CTA Button (hidden below lg)
+        ----------------------------------------------------------------- */}
+        <div className="hidden lg:block">
+          <a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, 'contact')}
+            className="inline-flex items-center gap-2 bg-[#D4AF37] text-[#060606] text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 hover:bg-[#E8D48B] hover:-translate-y-0.5 active:translate-y-0"
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            Start a Project
+            <ArrowUpRight size={16} strokeWidth={2} />
+          </a>
         </div>
+
+        {/* ----------------------------------------------------------------
+            Mobile Hamburger (hidden above lg)
+        ----------------------------------------------------------------- */}
+        <button
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+          className="relative z-10 lg:hidden flex items-center justify-center w-10 h-10 rounded-full border border-[#1F1F1F] bg-[#0E0E0E] text-[#F5F0E8] transition-colors duration-200 hover:border-[#D4AF37]/30"
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+        >
+          {isMobileMenuOpen ? (
+            <X size={20} strokeWidth={1.5} />
+          ) : (
+            <Menu size={20} strokeWidth={1.5} />
+          )}
+        </button>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* ------------------------------------------------------------------
+          Mobile Full-screen Overlay (hidden above lg)
+      ------------------------------------------------------------------- */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-brand-black/95 backdrop-blur-2xl border-b border-brand-white/10 overflow-hidden"
-          >
-            <div className="container mx-auto px-6 py-12 flex flex-col space-y-6">
-              {sections.map((section, i) => (
-                <motion.div
-                  key={section}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              variants={overlayVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="fixed inset-0 bg-[#060606]/60 backdrop-blur-sm lg:hidden"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+
+            {/* Slide-in panel */}
+            <motion.div
+              key="mobile-nav"
+              variants={mobileNavVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="fixed inset-y-0 right-0 w-full sm:w-[380px] bg-[#060606] border-l border-[#1F1F1F] lg:hidden flex flex-col"
+            >
+              {/* Header area (matches main nav height) */}
+              <div className="flex items-center justify-between h-16 md:h-20 px-6 border-b border-[#1F1F1F]">
+                <span className="font-heading font-bold text-xl tracking-tight text-[#D4AF37]">
+                  G<span className="text-[#F5F0E8]">.</span>V
+                </span>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center w-10 h-10 rounded-full border border-[#1F1F1F] bg-[#0E0E0E] text-[#F5F0E8]"
+                  aria-label="Close menu"
                 >
-                  <div
-                    onClick={(e) => handleSectionClick(e, section)}
-                    className={`flex items-center justify-between group py-2 border-b border-brand-white/5 cursor-pointer ${
-                      activeSection === section ? 'text-brand-cyan' : 'text-brand-white'
-                    }`}
-                  >
-                    <span className="text-3xl font-black uppercase tracking-tighter italic">
-                      {section}
-                    </span>
-                    <ArrowRight className={`w-6 h-6 transition-transform group-hover:translate-x-2 ${
-                      activeSection === section ? 'opacity-100' : 'opacity-0'
-                    }`} />
-                  </div>
-                </motion.div>
-              ))}
-              
-               <div 
-                onClick={(e) => handleSectionClick(e, 'contact')}
-                className="mt-8 w-full py-5 bg-brand-cyan text-brand-black rounded-2xl font-black text-lg uppercase tracking-widest flex items-center justify-center cursor-pointer hover:scale-[1.02] transition-transform"
-              >
-                START A PROJECT
+                  <X size={20} strokeWidth={1.5} />
+                </button>
               </div>
-            </div>
-          </motion.div>
+
+              {/* Nav links */}
+              <div className="flex-1 flex flex-col justify-center px-8 gap-2">
+                {navLinks.map((link, i) => {
+                  const isActive = activeSection === link.id;
+                  return (
+                    <motion.a
+                      key={link.id}
+                      href={`#${link.id}`}
+                      onClick={(e) => handleNavClick(e, link.id)}
+                      variants={mobileLinkVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      custom={i}
+                      className={`group flex items-center justify-between py-4 border-b border-[#1F1F1F]/50 transition-colors duration-300 ${
+                        isActive
+                          ? 'text-[#D4AF37]'
+                          : 'text-[#F5F0E8] hover:text-[#D4AF37]'
+                      }`}
+                    >
+                      <span className="font-heading text-3xl md:text-4xl font-semibold tracking-tight">
+                        {link.label}
+                      </span>
+                      <ArrowUpRight
+                        size={20}
+                        strokeWidth={1.5}
+                        className={`transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
+                          isActive ? 'opacity-100 text-[#D4AF37]' : 'opacity-0 group-hover:opacity-60'
+                        }`}
+                      />
+                    </motion.a>
+                  );
+                })}
+              </div>
+
+              {/* Mobile CTA */}
+              <div className="px-8 pb-10">
+                <motion.a
+                  href="#contact"
+                  onClick={(e) => handleNavClick(e, 'contact')}
+                  variants={mobileLinkVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  custom={navLinks.length}
+                  className="flex items-center justify-center gap-2 w-full py-4 bg-[#D4AF37] text-[#060606] font-semibold text-base rounded-full transition-all duration-300 hover:bg-[#E8D48B] active:scale-[0.98]"
+                >
+                  Start a Project
+                  <ArrowUpRight size={18} strokeWidth={2} />
+                </motion.a>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>
   );
-};
-
-export default Navigation;
+}

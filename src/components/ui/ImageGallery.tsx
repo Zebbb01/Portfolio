@@ -1,8 +1,9 @@
+// src/components/ui/ImageGallery.tsx
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, Maximize2, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Minimize2 } from 'lucide-react';
 import Image from 'next/image';
 
 interface ImageGalleryProps {
@@ -12,196 +13,252 @@ interface ImageGalleryProps {
   title: string;
 }
 
+const isVideo = (src: string) =>
+  src.toLowerCase().endsWith('.mkv') || src.toLowerCase().endsWith('.mp4');
+
 export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onClose, title }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const thumbnailStripRef = useRef<HTMLDivElement>(null);
 
-  // Reset zoom when changing images
-  useEffect(() => {
+  const goTo = useCallback((index: number) => {
+    setCurrentIndex(index);
     setZoomLevel(1);
-  }, [currentIndex]);
+  }, []);
 
-  // Prevent scroll when lightbox is open
+  const next = useCallback(() => {
+    setCurrentIndex((i) => (i + 1) % images.length);
+    setZoomLevel(1);
+  }, [images.length]);
+
+  const prev = useCallback(() => {
+    setCurrentIndex((i) => (i - 1 + images.length) % images.length);
+    setZoomLevel(1);
+  }, [images.length]);
+
+  // Reset on open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    if (isOpen) { setCurrentIndex(0); setZoomLevel(1); }
   }, [isOpen]);
 
-  const nextImage = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  };
+  // Lock body scroll
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
 
-  const prevImage = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
+  // Keyboard
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isOpen, onClose, next, prev]);
 
-  const handleZoomIn = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setZoomLevel(prev => Math.min(prev + 0.5, 3));
-  };
+  // Scroll thumbnail into view
+  useEffect(() => {
+    const strip = thumbnailStripRef.current;
+    if (!strip) return;
+    const thumb = strip.children[currentIndex] as HTMLElement;
+    if (thumb) thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }, [currentIndex]);
 
-  const handleZoomOut = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setZoomLevel(prev => Math.max(prev - 0.5, 1));
-  };
+  // Fullscreen
+  const toggleFullscreen = useCallback(() => {
+    if (!document.fullscreenElement && galleryRef.current) {
+      galleryRef.current.requestFullscreen();
+      setIsFullscreen(true);
+    } else if (document.fullscreenElement) {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  }, []);
 
-  const resetZoom = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setZoomLevel(1);
-  };
-
-  if (!isOpen) return null;
+  if (!isOpen || images.length === 0) return null;
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={galleryRef}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[999] flex items-center justify-center p-4 md:p-8 bg-brand-black/95 backdrop-blur-2xl"
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[999] flex flex-col bg-[#030303]/98 backdrop-blur-xl"
           onClick={onClose}
         >
-          {/* Close Button */}
-          <div className="absolute top-6 right-6 z-[1000] flex items-center space-x-4">
-            {/* Zoom Controls (Images only) */}
-            {!images[currentIndex].toLowerCase().endsWith('.mkv') && !images[currentIndex].toLowerCase().endsWith('.mp4') && (
-              <div className="flex items-center space-x-2 bg-brand-white/10 border border-brand-white/20 rounded-full p-1">
-                <button
-                  onClick={handleZoomOut}
-                  disabled={zoomLevel === 1}
-                  className="p-2 rounded-full hover:bg-brand-white/10 text-brand-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                  aria-label="Zoom Out"
-                >
-                  <ZoomOut className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={resetZoom}
-                  disabled={zoomLevel === 1}
-                  className="p-2 rounded-full hover:bg-brand-white/10 text-brand-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                  aria-label="Reset Zoom"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={handleZoomIn}
-                  disabled={zoomLevel === 3}
-                  className="p-2 rounded-full hover:bg-brand-white/10 text-brand-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                  aria-label="Zoom In"
-                >
-                  <ZoomIn className="w-5 h-5" />
-                </button>
-              </div>
-            )}
-
-            <button
-              onClick={onClose}
-              className="p-3 rounded-full bg-brand-white/10 border border-brand-white/20 text-brand-white hover:bg-brand-cyan hover:text-brand-black transition-all group"
-            >
-              <X className="w-6 h-6 group-hover:rotate-90 transition-transform" />
-            </button>
-          </div>
-
-          {/* Title */}
-          <div className="absolute top-8 left-8 z-[1000] hidden md:block">
-            <h3 className="text-brand-white font-black uppercase tracking-[0.3em] text-sm italic">{title}</h3>
-            <p className="text-brand-cyan text-xs font-bold mt-1">
-              {images[currentIndex].toLowerCase().endsWith('.mkv') || images[currentIndex].toLowerCase().endsWith('.mp4') ? 'Video' : 'Image'} {currentIndex + 1} of {images.length}
-            </p>
-          </div>
-
-          {/* Navigation Arrows */}
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={prevImage}
-                className="absolute left-6 z-[1000] p-4 rounded-full bg-brand-white/5 border border-brand-white/10 text-brand-white hover:border-brand-cyan hover:text-brand-cyan transition-all hidden md:block"
-              >
-                <ChevronLeft className="w-8 h-8" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-6 z-[1000] p-4 rounded-full bg-brand-white/5 border border-brand-white/10 text-brand-white hover:border-brand-cyan hover:text-brand-cyan transition-all hidden md:block"
-              >
-                <ChevronRight className="w-8 h-8" />
-              </button>
-            </>
-          )}
-
-          {/* Main Content (Image or Video) */}
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ type: "spring" as const, damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-6xl aspect-video rounded-2xl overflow-hidden shadow-2xl shadow-brand-cyan/20 border border-brand-white/10"
+          {/* ── Top Bar ─────────────────────────────────────────────── */}
+          <div
+            className="flex items-center justify-between px-5 md:px-8 py-4 shrink-0 z-10"
             onClick={(e) => e.stopPropagation()}
           >
-            <div 
-              className={`w-full h-full ${zoomLevel > 1 ? 'overflow-auto cursor-zoom-out' : 'overflow-hidden cursor-zoom-in'}`}
-              onClick={(e) => zoomLevel > 1 ? resetZoom(e) : handleZoomIn(e)}
-            >
-              <div 
-                className="relative w-full h-full transition-transform duration-300 ease-out flex items-center justify-center"
-                style={{ 
-                  transform: `scale(${zoomLevel})`,
-                  transformOrigin: 'center center',
-                  minWidth: '100%',
-                  minHeight: '100%'
-                }}
+            <div className="flex items-center gap-3">
+              <h3 className="text-[#F5F0E8] font-heading font-semibold text-xs md:text-sm tracking-[0.12em] uppercase">
+                {title}
+              </h3>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/20 text-[10px] text-[#D4AF37] font-medium tracking-wider">
+                {currentIndex + 1} / {images.length}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1">
+              {!isVideo(images[currentIndex]) && (
+                <div className="hidden md:flex items-center gap-0.5 mr-1">
+                  <button
+                    onClick={() => setZoomLevel((z) => Math.max(z - 0.5, 1))}
+                    disabled={zoomLevel <= 1}
+                    className="p-2 rounded-lg text-[#6B6355] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 disabled:opacity-20 transition-all"
+                  >
+                    <ZoomOut size={15} strokeWidth={1.5} />
+                  </button>
+                  <span className="text-[10px] text-[#6B6355] font-mono w-9 text-center select-none">
+                    {Math.round(zoomLevel * 100)}%
+                  </span>
+                  <button
+                    onClick={() => setZoomLevel((z) => Math.min(z + 0.5, 3))}
+                    disabled={zoomLevel >= 3}
+                    className="p-2 rounded-lg text-[#6B6355] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 disabled:opacity-20 transition-all"
+                  >
+                    <ZoomIn size={15} strokeWidth={1.5} />
+                  </button>
+                </div>
+              )}
+              <button
+                onClick={toggleFullscreen}
+                className="hidden md:flex p-2 rounded-lg text-[#6B6355] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-all"
               >
-                {images[currentIndex].toLowerCase().endsWith('.mkv') || images[currentIndex].toLowerCase().endsWith('.mp4') ? (
-                  <video
-                    src={images[currentIndex]}
-                    className="w-full h-full object-contain bg-black"
-                    controls
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                  />
-                ) : (
-                  <Image
-                    src={images[currentIndex]}
-                    alt={`${title} screenshot ${currentIndex + 1}`}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                    priority
-                    onError={(e) => {
-                      // Fallback for 404 images
-                      const target = e.target as HTMLImageElement;
-                      target.src = "https://placehold.co/1200x800/101010/00E5FF?text=Preview+Coming+Soon";
-                    }}
-                  />
-                )}
+                {isFullscreen ? <Minimize2 size={15} strokeWidth={1.5} /> : <Maximize2 size={15} strokeWidth={1.5} />}
+              </button>
+              <button
+                onClick={onClose}
+                className="p-2 rounded-lg text-[#6B6355] hover:text-[#F5F0E8] hover:bg-[#F5F0E8]/5 transition-all ml-1"
+              >
+                <X size={18} strokeWidth={1.5} />
+              </button>
+            </div>
+          </div>
+
+          {/* ── Main Viewport ───────────────────────────────────────── */}
+          <div
+            className="flex-1 relative flex items-center justify-center min-h-0 px-4 md:px-16"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Arrows */}
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={prev}
+                  className="absolute left-2 md:left-5 z-10 p-2.5 rounded-full bg-[#0E0E0E]/70 border border-[#1F1F1F]/50 text-[#6B6355] hover:text-[#D4AF37] hover:border-[#D4AF37]/25 transition-all backdrop-blur-sm"
+                >
+                  <ChevronLeft size={20} strokeWidth={1.5} />
+                </button>
+                <button
+                  onClick={next}
+                  className="absolute right-2 md:right-5 z-10 p-2.5 rounded-full bg-[#0E0E0E]/70 border border-[#1F1F1F]/50 text-[#6B6355] hover:text-[#D4AF37] hover:border-[#D4AF37]/25 transition-all backdrop-blur-sm"
+                >
+                  <ChevronRight size={20} strokeWidth={1.5} />
+                </button>
+              </>
+            )}
+
+            {/* Image / Video — simple crossfade, no stacking */}
+            <div className="relative w-full h-full max-w-6xl max-h-[72vh] rounded-xl overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute inset-0"
+                >
+                  <div
+                    className={`w-full h-full ${zoomLevel > 1 ? 'overflow-auto cursor-zoom-out' : 'overflow-hidden cursor-zoom-in'}`}
+                    onClick={() => setZoomLevel((z) => (z > 1 ? 1 : Math.min(z + 0.5, 3)))}
+                  >
+                    <div
+                      className="relative w-full h-full transition-transform duration-200 ease-out"
+                      style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'center center' }}
+                    >
+                      {isVideo(images[currentIndex]) ? (
+                        <video
+                          src={images[currentIndex]}
+                          className="w-full h-full object-contain bg-[#060606]"
+                          controls
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                        />
+                      ) : (
+                        <Image
+                          src={images[currentIndex]}
+                          alt={`${title} - ${currentIndex + 1}`}
+                          fill
+                          className="object-contain"
+                          sizes="(max-width: 768px) 100vw, 1200px"
+                          priority
+                        />
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* ── Thumbnail Filmstrip ─────────────────────────────────── */}
+          {images.length > 1 && (
+            <div
+              className="shrink-0 py-3 md:py-4 px-4 md:px-8 z-10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="max-w-2xl mx-auto">
+                <div className="flex items-center justify-center gap-1.5 p-1.5 rounded-xl bg-[#0E0E0E]/60 border border-[#1F1F1F]/40 backdrop-blur-lg overflow-hidden">
+                  <div
+                    ref={thumbnailStripRef}
+                    className="flex items-center gap-1.5 overflow-x-auto px-1"
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                  >
+                    {images.map((img, i) => (
+                      <button
+                        key={i}
+                        onClick={() => goTo(i)}
+                        className={`relative shrink-0 rounded-lg overflow-hidden transition-all duration-200 ${
+                          i === currentIndex
+                            ? 'ring-2 ring-[#D4AF37] w-16 h-11 md:w-20 md:h-13 opacity-100 scale-105'
+                            : 'w-12 h-8 md:w-16 md:h-10 opacity-35 hover:opacity-60'
+                        }`}
+                      >
+                        {isVideo(img) ? (
+                          <div className="w-full h-full bg-[#161616] flex items-center justify-center">
+                            <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
+                              <path d="M1 1.5V12.5L11 7L1 1.5Z" fill="#D4AF37" />
+                            </svg>
+                          </div>
+                        ) : (
+                          <Image
+                            src={img}
+                            alt=""
+                            fill
+                            className="object-cover"
+                            sizes="80px"
+                          />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-          </motion.div>
-
-          {/* Mobile Navigation */}
-          <div className="absolute bottom-10 left-0 right-0 flex justify-center gap-6 md:hidden">
-            <button
-              onClick={prevImage}
-              className="p-4 rounded-full bg-brand-white/10 text-brand-white"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-              onClick={nextImage}
-              className="p-4 rounded-full bg-brand-white/10 text-brand-white"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

@@ -1,165 +1,273 @@
-"use client";
+// src/components/sections/HeroSection.tsx
+'use client';
 
 import React from 'react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { ChevronDown, MousePointer2 } from 'lucide-react';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import { trustMetrics } from '@/src/data/portfolioData';
+import AnimatedBackground from '@/src/components/ui/AnimatedBackground';
 
-const HeroSection = () => {
-  const shouldReduceMotion = useReducedMotion();
-  const { scrollY } = useScroll();
-  
-  // Use narrower ranges for better performance
-  const y1 = useTransform(scrollY, [0, 300], [0, 100]);
-  const y2 = useTransform(scrollY, [0, 300], [0, -75]);
-  const opacity = useTransform(scrollY, [0, 200], [1, 0]);
-  const scale = useTransform(scrollY, [0, 200], [1, 0.95]);
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+const scrollToSection = (id: string) => {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+};
 
-  const y1Value = shouldReduceMotion ? 0 : y1;
-  const y2Value = shouldReduceMotion ? 0 : y2;
-  const scaleValue = shouldReduceMotion ? 1 : scale;
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
+});
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const titleVariants = {
-    hidden: { y: 100, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1, 
-      transition: { 
-        duration: 1, 
-        ease: [0.16, 1, 0.3, 1] as any
-      } 
-    },
-  };
-
-  const fadeUpVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1, 
-      transition: { 
-        duration: 0.8, 
-        ease: "easeOut" as const
-      } 
-    },
-  };
-
+// ---------------------------------------------------------------------------
+// Hero Section
+// ---------------------------------------------------------------------------
+export default function HeroSection() {
   return (
-    <section id="home" className="h-[100vh] flex items-center justify-center relative overflow-hidden bg-brand-black">
-      {/* Cinematic Background */}
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center overflow-hidden bg-[#060606]"
+    >
+      {/* ── Background image ───────────────────────────────────── */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,229,255,0.05),transparent_70%)]" />
-        <motion.div 
-          style={{ y: y1Value, willChange: "transform" }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-cyan/10 rounded-full blur-[120px]" 
+        <Image
+          src="/images/hero-bg.webp"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+          quality={85}
         />
-        <motion.div 
-          style={{ y: y2Value, willChange: "transform" }}
-          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-brand-teal/5 rounded-full blur-[150px]" 
-        />
-        
-        {/* Placeholder for abstract shape */}
-        <div 
-          className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none"
-          data-placeholder="Hero background image – abstract futuristic gradient or dark fluid shape"
-        >
-          <div className="w-[80vw] h-[80vh] border border-brand-cyan/10 rounded-full animate-pulse-slow motion-reduce:animate-none" />
+        {/* Left-to-right gradient for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#060606] via-[#060606]/80 to-[#060606]/40" />
+        {/* Top and bottom fade */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060606] via-transparent to-[#060606]/70" />
+      </div>
+
+      {/* ── Animated Background ─────────────────────────────────── */}
+      <AnimatedBackground />
+
+      {/* ── Subtle grid overlay ─────────────────────────────────── */}
+      <div
+        className="absolute inset-0 opacity-[0.025] pointer-events-none z-[1]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(212,175,55,0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(212,175,55,0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '80px 80px',
+        }}
+      />
+
+      {/* ── Vertical accent line ────────────────────────────────── */}
+      <motion.div
+        initial={{ scaleY: 0 }}
+        animate={{ scaleY: 1 }}
+        transition={{ delay: 1.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute right-[38%] top-0 w-px h-[55vh] bg-gradient-to-b from-[#D4AF37]/15 via-[#D4AF37]/5 to-transparent origin-top hidden lg:block z-[1]"
+      />
+
+      {/* ── Main Content ─────────────────────────────────────────── */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-16 pt-32 pb-16 md:pt-32 md:pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+          {/* ── Left: Text ──────────────────────────────────────── */}
+          <div className="lg:col-span-7">
+            {/* Label */}
+            <motion.p
+              {...fadeUp(0.1)}
+              className="section-label mb-4"
+            >
+              Full-Stack Engineer &amp; Systems Architect
+            </motion.p>
+
+            {/* Heading */}
+            <motion.h1
+              {...fadeUp(0.2)}
+              className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-[#F5F0E8] leading-[1.08] tracking-[-0.02em]"
+            >
+              I Build
+              <br />
+              <span className="relative inline-block">
+                <span className="text-[#D4AF37]">Systems</span>
+                <motion.span
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.8, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute bottom-1 left-0 right-0 h-[3px] bg-[#D4AF37]/30 origin-left rounded-full"
+                />
+              </span>
+              {' '}That
+              <br />
+              Scale Businesses.
+            </motion.h1>
+
+            {/* Subtitle */}
+            <motion.p
+              {...fadeUp(0.35)}
+              className="text-base md:text-lg text-[#A09882] max-w-lg mt-5 leading-relaxed"
+            >
+              Specializing in enterprise platforms, SaaS products, and
+              automation systems that drive measurable business outcomes.
+            </motion.p>
+
+            {/* CTA */}
+            <motion.div
+              {...fadeUp(0.45)}
+              className="flex flex-col sm:flex-row items-start gap-4 mt-8"
+            >
+              <button
+                onClick={() => scrollToSection('projects')}
+                className="btn-primary group inline-flex items-center gap-2"
+              >
+                View My Work
+                <ArrowRight size={16} strokeWidth={2} className="transition-transform group-hover:translate-x-1" />
+              </button>
+              <button
+                onClick={() => scrollToSection('contact')}
+                className="btn-secondary"
+              >
+                Let&apos;s Talk
+              </button>
+            </motion.div>
+
+            {/* Trust metrics */}
+            <motion.div
+              {...fadeUp(0.55)}
+              className="flex items-center gap-6 md:gap-8 mt-10 pt-6 border-t border-[#1F1F1F]"
+            >
+              {trustMetrics.map((metric, i) => (
+                <React.Fragment key={metric.label}>
+                  {i > 0 && (
+                    <div className="hidden sm:block w-px h-10 bg-[#1F1F1F]" />
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-xl md:text-2xl font-bold text-[#F5F0E8] font-heading tracking-tight">
+                      {metric.value}
+                    </span>
+                    <span className="text-[10px] text-[#6B6355] uppercase tracking-[0.1em] mt-1">
+                      {metric.label}
+                    </span>
+                  </div>
+                </React.Fragment>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* ── Right: Code card ─────────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden lg:flex lg:col-span-5 items-center justify-center relative"
+          >
+            <div className="relative w-full max-w-sm">
+              {/* Glow */}
+              <div className="absolute -inset-8 bg-[#D4AF37]/[0.03] rounded-3xl blur-3xl" />
+
+              {/* Card */}
+              <div className="relative bg-[#0A0A0A]/80 border border-[#1A1A1A] rounded-2xl p-6 backdrop-blur-md">
+                {/* Window dots */}
+                <div className="flex items-center gap-1.5 mb-5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]/60" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]/60" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F]/60" />
+                  <span className="ml-3 text-[10px] text-[#6B6355] font-mono tracking-wide">systems.ts</span>
+                </div>
+
+                {/* Code */}
+                <div className="font-mono text-[13px] leading-[1.8] space-y-0.5">
+                  <p>
+                    <span className="text-[#D4AF37]/60">const</span>{' '}
+                    <span className="text-[#F5F0E8]">engineer</span>{' '}
+                    <span className="text-[#6B6355]">=</span>{' '}
+                    <span className="text-[#6B6355]">{'{'}</span>
+                  </p>
+                  <p className="pl-4">
+                    <span className="text-[#A09882]">name</span>
+                    <span className="text-[#6B6355]">:</span>{' '}
+                    <span className="text-[#D4AF37]/80">&quot;Gerald Villaceran&quot;</span>
+                    <span className="text-[#6B6355]">,</span>
+                  </p>
+                  <p className="pl-4">
+                    <span className="text-[#A09882]">role</span>
+                    <span className="text-[#6B6355]">:</span>{' '}
+                    <span className="text-[#D4AF37]/80">&quot;Full-Stack Engineer&quot;</span>
+                    <span className="text-[#6B6355]">,</span>
+                  </p>
+                  <p className="pl-4">
+                    <span className="text-[#A09882]">stack</span>
+                    <span className="text-[#6B6355]">:</span>{' '}
+                    <span className="text-[#6B6355]">[</span>
+                    <span className="text-[#D4AF37]/80">&quot;Next.js&quot;</span>
+                    <span className="text-[#6B6355]">,</span>{' '}
+                    <span className="text-[#D4AF37]/80">&quot;React&quot;</span>
+                    <span className="text-[#6B6355]">,</span>{' '}
+                    <span className="text-[#D4AF37]/80">&quot;TS&quot;</span>
+                    <span className="text-[#6B6355]">],</span>
+                  </p>
+                  <p className="pl-4">
+                    <span className="text-[#A09882]">building</span>
+                    <span className="text-[#6B6355]">:</span>{' '}
+                    <span className="text-[#D4AF37]/80">&quot;scalable systems&quot;</span>
+                  </p>
+                  <p>
+                    <span className="text-[#6B6355]">{'}'}</span>
+                    <span className="text-[#6B6355]">;</span>
+                  </p>
+                </div>
+
+                {/* Cursor */}
+                <div className="mt-3 flex items-center gap-1">
+                  <span className="text-[#D4AF37]/40 font-mono text-xs">{'>'}</span>
+                  <div className="w-2 h-4 bg-[#D4AF37]/50 animate-pulse" />
+                </div>
+              </div>
+
+              {/* Floating badge — top right */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.2, duration: 0.5 }}
+                className="absolute -top-4 -right-4 bg-[#0E0E0E]/90 border border-[#1F1F1F] rounded-xl px-4 py-2.5 shadow-lg backdrop-blur-sm"
+              >
+                <p className="text-[10px] text-[#6B6355] uppercase tracking-wider mb-0.5">Projects</p>
+                <p className="text-lg font-bold text-[#F5F0E8] font-heading">15+</p>
+              </motion.div>
+
+              {/* Floating badge — bottom left */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.4, duration: 0.5 }}
+                className="absolute -bottom-4 -left-4 bg-[#0E0E0E]/90 border border-[#D4AF37]/15 rounded-xl px-4 py-2.5 shadow-lg backdrop-blur-sm"
+              >
+                <p className="text-[10px] text-[#6B6355] uppercase tracking-wider mb-0.5">Production</p>
+                <p className="text-lg font-bold text-[#D4AF37] font-heading">5 Apps</p>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </div>
 
-      <motion.div 
-        style={{ opacity, scale: scaleValue, willChange: "opacity, transform" }}
-        className="container mx-auto px-6 relative z-10 text-center"
-      >
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div variants={fadeUpVariants} className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-brand-white/5 border border-brand-white/10 mb-8 backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-brand-cyan opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-cyan"></span>
-            </span>
-            <span className="text-xs font-bold tracking-widest uppercase text-brand-cyan">Available for high-impact projects</span>
-          </motion.div>
-
-          <div className="overflow-hidden mb-6">
-            <motion.h1 
-              variants={titleVariants}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold text-brand-white tracking-tighter leading-none"
-            >
-              GERALD<br className="md:hidden" /> VILLACERAN
-            </motion.h1>
-          </div>
-
-          <motion.p 
-            variants={fadeUpVariants}
-            className="text-base md:text-lg text-brand-muted max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
-          >
-            I help businesses scale with <span className="text-brand-white font-bold">high-performance web systems</span> - from concept to revenue.
-          </motion.p>
-
-          <motion.div 
-            variants={fadeUpVariants}
-            className="flex flex-col md:flex-row justify-center items-center gap-6"
-          >
-            <motion.a 
-              href="#projects" 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group relative w-full md:w-auto overflow-hidden bg-brand-cyan text-brand-black px-12 py-5 rounded-2xl font-black text-lg transition-all shadow-[0_0_40px_rgba(0,229,255,0.2)] hover:shadow-[0_0_60px_rgba(0,229,255,0.4)]"
-            >
-              <span className="relative z-10">VIEW MY WORK</span>
-              <motion.div 
-                className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"
-              />
-            </motion.a>
-            <motion.a 
-              href="#contact" 
-              whileHover={{ scale: 1.05, backgroundColor: "rgba(0, 229, 255, 0.1)" }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full md:w-auto border-2 border-brand-teal text-brand-white px-12 py-5 rounded-2xl font-black text-lg backdrop-blur-sm transition-colors flex items-center justify-center space-x-2"
-            >
-              <span>GET IN TOUCH</span>
-              <MousePointer2 className="w-5 h-5" />
-            </motion.a>
-          </motion.div>
-        </motion.div>
-      </motion.div>
-
-      <motion.div 
+      {/* ── Scroll Indicator ────────────────────────────────────── */}
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-2 opacity-50"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
       >
-        <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-brand-muted">Scroll to explore</span>
-        <motion.div 
+        <span className="text-[10px] text-[#6B6355] uppercase tracking-widest">Scroll to explore</span>
+        <motion.div
           animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <ChevronDown className="w-5 h-5 text-brand-cyan" />
+          <ChevronDown size={16} className="text-[#D4AF37]/70" />
         </motion.div>
       </motion.div>
 
-      {/* Side Decorative Text */}
-      <div className="absolute right-10 top-1/2 -translate-y-1/2 hidden xl:block">
-        <span className="rotate-90 block text-[10px] font-bold tracking-[1em] uppercase text-brand-muted/20 origin-right">
-          BASED IN PHILIPPINES // GMT+8
-        </span>
-      </div>
     </section>
   );
-};
-
-export default HeroSection;
+}

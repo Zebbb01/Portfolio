@@ -1,11 +1,14 @@
 "use client";
 
-import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import { Cpu, Database, Brain, Zap, CheckCircle2, TrendingUp, Clock, MousePointer2 } from 'lucide-react';
-import { techStack, aboutData } from '../../data/portfolioData';
-import { SectionHeading } from '../ui/SectionHeading';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { expertiseCategories } from "@/src/data/portfolioData";
+import GeometricShape from "@/src/components/ui/GeometricShape";
 
+// ---------------------------------------------------------------------------
+// Animation Variants
+// ---------------------------------------------------------------------------
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -18,127 +21,122 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { 
-      duration: 0.6, 
-      ease: [0.16, 1, 0.3, 1] as any
-    } 
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1] as any,
+    },
   },
 };
 
-const statIcons = [Clock, MousePointer2, TrendingUp];
-
+// ---------------------------------------------------------------------------
+// ExpertiseSection Component
+// ---------------------------------------------------------------------------
 const ExpertiseSection = () => {
-  const shouldReduceMotion = useReducedMotion();
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
+  /** Toggle expand -- only one card open at a time */
+  const handleToggle = (index: number) => {
+    setExpandedIndex((prev) => (prev === index ? null : index));
+  };
 
   return (
-    <section id="expertise" className="py-12 md:py-16 relative overflow-hidden bg-brand-black">
-      {/* Background Subtle Glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-cyan/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-teal/5 rounded-full blur-[100px] pointer-events-none" />
-      
-      <div className="container mx-auto px-6 relative z-10">
-        <SectionHeading 
-          number="02"
-          subtitle="Expertise"
-          title="Technical Core & Business Impact"
-          align="center"
-        />
+    <section id="expertise" className="relative overflow-hidden py-24 md:py-32 lg:py-40">
+      <GeometricShape variant="diamond" position="top-right" size={320} opacity={0.1} />
+      <GeometricShape variant="corner-accent" position="bottom-left" size={350} opacity={0.08} />
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-16"
+        >
+          <span className="section-label">Expertise</span>
+          <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold text-[#F5F0E8] mt-4">
+            Technical Capabilities
+          </h2>
+          <p className="text-[#A09882] mt-4 max-w-2xl">
+            Capabilities that bridge engineering excellence with business outcomes.
+          </p>
+        </motion.div>
 
-        {/* Impact Metrics Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-          {aboutData.stats.map((stat, idx) => {
-            const Icon = statIcons[idx];
-            return (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 flex items-center space-x-4 group hover:border-brand-cyan/30 transition-all"
-              >
-                <div className="w-12 h-12 rounded-xl bg-brand-cyan/10 flex items-center justify-center text-brand-cyan group-hover:scale-110 transition-transform">
-                  <Icon size={24} />
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-brand-white leading-none mb-1">{stat.value}</div>
-                  <div className="text-[10px] uppercase tracking-widest text-brand-muted font-bold leading-tight">{stat.label}</div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Technical Core Grid */}
-        <motion.div 
+        {/* Expertise Columns — masonry-style so each column flows independently */}
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+          viewport={{ once: true, margin: "-50px" }}
+          className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
         >
-          {/* Frontend Card */}
-          <motion.div 
-            variants={shouldReduceMotion ? {} : cardVariants}
-            className="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-brand-cyan/50 transition-all overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-brand-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10">
-              <Cpu className="w-10 h-10 text-brand-cyan mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-semibold text-brand-white mb-4">Frontend Architecture</h3>
-              <ul className="space-y-3">
-                {techStack.frontend.map((tech) => (
-                  <li key={tech.name} className="flex items-center text-brand-muted text-sm group/item">
-                    <CheckCircle2 className="w-4 h-4 text-brand-cyan/40 mr-3 group-hover/item:text-brand-cyan transition-colors" />
-                    <span className="group-hover/item:text-brand-white transition-colors">{tech.name}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
+          {expertiseCategories.map((category, index) => {
+            const Icon = category.icon;
+            const isExpanded = expandedIndex === index;
 
-          {/* Infrastructure Card */}
-          <motion.div 
-            variants={shouldReduceMotion ? {} : cardVariants}
-            className="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-brand-cyan/50 transition-all overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-brand-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10">
-              <Database className="w-10 h-10 text-brand-cyan mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-semibold text-brand-white mb-4">Backend & Infrastructure</h3>
-              <ul className="space-y-3">
-                {techStack.infrastructure.map((tech) => (
-                  <li key={tech.name} className="flex items-center text-brand-muted text-sm group/item">
-                    <CheckCircle2 className="w-4 h-4 text-brand-cyan/40 mr-3 group-hover/item:text-brand-cyan transition-colors" />
-                    <span className="group-hover/item:text-brand-white transition-colors">{tech.name}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
+            return (
+              <motion.div
+                key={category.title}
+                variants={cardVariants}
+                onClick={() => handleToggle(index)}
+                className={`break-inside-avoid bg-[#0E0E0E] rounded-2xl p-6 cursor-pointer card-hover transition-all duration-500 ${isExpanded ? 'border border-[#D4AF37]/15 shadow-[0_0_30px_rgba(212,175,55,0.03)]' : ''}`}
+              >
+                {/* Top Row: Icon + Title + Chevron */}
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <Icon
+                      size={20}
+                      strokeWidth={1.5}
+                      className={`text-[#D4AF37] flex-shrink-0 transition-all duration-500 ${isExpanded ? 'drop-shadow-[0_0_8px_rgba(212,175,55,0.3)]' : ''}`}
+                    />
+                    <h3 className="text-base font-semibold text-[#F5F0E8]">
+                      {category.title}
+                    </h3>
+                  </div>
 
-          {/* AI Card */}
-          <motion.div 
-            variants={shouldReduceMotion ? {} : cardVariants}
-            className="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-brand-cyan/50 transition-all overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-brand-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10">
-              <Brain className="w-10 h-10 text-brand-cyan mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-semibold text-brand-white mb-4">AI & Automation</h3>
-              <ul className="space-y-3">
-                {techStack.automation.map((tech) => (
-                  <li key={tech.name} className="flex items-center text-brand-muted text-sm group/item">
-                    <CheckCircle2 className="w-4 h-4 text-brand-cyan/40 mr-3 group-hover/item:text-brand-cyan transition-colors" />
-                    <span className="group-hover/item:text-brand-white transition-colors">{tech.name}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
+                  {/* Expand / Collapse Chevron */}
+                  <ChevronDown
+                    size={18}
+                    strokeWidth={1.5}
+                    className={`text-[#6B6355] transition-transform duration-300 flex-shrink-0 mt-0.5 ${
+                      isExpanded ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-[#A09882] mt-2">
+                  {category.description}
+                </p>
+
+                {/* Expandable Technologies List */}
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-[#1F1F1F]">
+                        {category.technologies.map((tech) => (
+                          <span
+                            key={tech}
+                            className="text-xs text-[#A09882] bg-[#161616] px-3 py-1.5 rounded-full border border-[#1F1F1F]"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
     </section>
