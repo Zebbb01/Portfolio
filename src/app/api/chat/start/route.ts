@@ -13,25 +13,29 @@ export async function POST(req: Request) {
     // Resolve client IP address
     const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
 
-    // Rate Limit Check: Limit to 1 room creation per 15 minutes per IP
-    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+    const isAdminEmail = ['geraldvillaceran01@gmail.com', 'buangmo90@gmail.com'].includes(guestEmail.trim().toLowerCase());
 
-    const { data: recentRooms, error: checkError } = await supabase
-      .from('portfolio_chat_rooms')
-      .select('id, created_at')
-      .eq('ip_address', ip)
-      .gt('created_at', fifteenMinutesAgo)
-      .limit(1);
+    if (!isAdminEmail) {
+      // Rate Limit Check: Limit to 1 room creation per 3 minutes per IP
+      const threeMinutesAgo = new Date(Date.now() - 3 * 60 * 1000).toISOString();
 
-    if (checkError) {
-      console.error('Database rate limit check error:', checkError);
-    }
+      const { data: recentRooms, error: checkError } = await supabase
+        .from('portfolio_chat_rooms')
+        .select('id, created_at')
+        .eq('ip_address', ip)
+        .gt('created_at', threeMinutesAgo)
+        .limit(1);
 
-    if (recentRooms && recentRooms.length > 0) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please wait a few minutes before starting a new chat.' },
-        { status: 429 }
-      );
+      if (checkError) {
+        console.error('Database rate limit check error:', checkError);
+      }
+
+      if (recentRooms && recentRooms.length > 0) {
+        return NextResponse.json(
+          { error: 'Too many requests. Please wait a few minutes before starting a new chat.' },
+          { status: 429 }
+        );
+      }
     }
 
     // Insert Chat Room
