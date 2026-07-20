@@ -4,6 +4,7 @@ import { Inter, Outfit } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import LiveChatWidget from '@/src/components/ui/LiveChatWidget';
+import { Toaster } from 'sonner';
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -79,6 +80,7 @@ export default function RootLayout({
         />
         {children}
         <LiveChatWidget />
+        <Toaster theme="dark" position="bottom-right" richColors />
         <Analytics />
         <SpeedInsights />
       </body>

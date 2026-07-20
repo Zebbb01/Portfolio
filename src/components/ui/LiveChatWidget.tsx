@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, User, Mail, Loader2, Camera, Mic, Square, Trash2 } from 'lucide-react';
+import { MessageSquare, X, Send, User, Mail, Loader2, Camera, Mic, Square, Trash2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/src/lib/supabaseClient';
+import { toast } from 'sonner';
 
 interface Message {
   id: string;
@@ -33,6 +34,7 @@ export default function LiveChatWidget() {
   // Typing and AI states
   const [isAdminTyping, setIsAdminTyping] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(true);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -190,7 +192,7 @@ export default function LiveChatWidget() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.error || 'Failed to start chat session.');
+        toast.error(data.error || 'Failed to start chat session.');
         return;
       }
 
@@ -201,9 +203,9 @@ export default function LiveChatWidget() {
         localStorage.setItem('portfolio_chat_guest_name', guestName.trim());
         localStorage.setItem('portfolio_chat_guest_email', guestEmail.trim());
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error starting chat:', err);
-      alert('An error occurred. Please try again later.');
+      toast.error('An error occurred. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -239,7 +241,7 @@ export default function LiveChatWidget() {
 
       if (!res.ok) {
         console.error('Error sending message:', data.error);
-        alert(data.error || 'Failed to send message.');
+        toast.error(data.error || 'Failed to send message.');
       }
     } catch (err) {
       console.error('Error sending message:', err);
@@ -274,7 +276,7 @@ export default function LiveChatWidget() {
       }
     } catch (err: any) {
       console.error('Error uploading image:', err);
-      alert(err.message || 'Failed to upload image.');
+      toast.error(err.message || 'Failed to upload image.');
     } finally {
       setUploadingMedia(false);
     }
@@ -316,7 +318,7 @@ export default function LiveChatWidget() {
           }
         } catch (err: any) {
           console.error('Error uploading audio:', err);
-          alert(err.message || 'Failed to send voice message.');
+          toast.error(err.message || 'Failed to send voice message.');
         } finally {
           setUploadingMedia(false);
         }
@@ -330,7 +332,7 @@ export default function LiveChatWidget() {
       }, 1000);
     } catch (err) {
       console.error('Error starting audio recording:', err);
-      alert('Microphone permission is required to send voice notes.');
+      toast.error('Microphone permission is required to send voice notes.');
     }
   };
 
@@ -345,15 +347,19 @@ export default function LiveChatWidget() {
 
   // Reset session
   const handleResetSession = () => {
-    if (confirm('Clear chat session and start a new conversation?')) {
-      localStorage.removeItem('portfolio_chat_room_id');
-      localStorage.removeItem('portfolio_chat_guest_name');
-      localStorage.removeItem('portfolio_chat_guest_email');
-      setRoomId(null);
-      setMessages([]);
-      setGuestName('');
-      setGuestEmail('');
-    }
+    setShowResetConfirm(true);
+  };
+
+  const confirmResetSession = () => {
+    localStorage.removeItem('portfolio_chat_room_id');
+    localStorage.removeItem('portfolio_chat_guest_name');
+    localStorage.removeItem('portfolio_chat_guest_email');
+    setRoomId(null);
+    setMessages([]);
+    setGuestName('');
+    setGuestEmail('');
+    setShowResetConfirm(false);
+    toast.success('Conversation reset successfully.');
   };
 
   return (
@@ -378,6 +384,39 @@ export default function LiveChatWidget() {
             transition={{ duration: 0.3 }}
             className="absolute bottom-18 right-0 w-[360px] h-[520px] rounded-2xl border border-[#1F1F1F] bg-[#0E0E0E]/95 backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden"
           >
+            {/* Custom Inline Reset Confirm Dialog */}
+            <AnimatePresence>
+              {showResetConfirm && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 bg-[#0E0E0E]/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-6 text-center gap-4"
+                >
+                  <AlertCircle className="w-8 h-8 text-[#D4AF37] animate-pulse" />
+                  <div>
+                    <h5 className="text-xs font-bold text-[#F5F0E8] uppercase tracking-wider">Start New Chat?</h5>
+                    <p className="text-[10px] text-[#6B6355] mt-1.5 leading-relaxed px-4">
+                      This will clear your current conversation history.
+                    </p>
+                  </div>
+                  <div className="flex gap-2 w-full max-w-[200px]">
+                    <button
+                      onClick={() => setShowResetConfirm(false)}
+                      className="flex-1 py-2 bg-[#161616] border border-[#1F1F1F] rounded-lg text-[10px] font-bold uppercase text-[#A09882] hover:text-[#D4AF37] transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={confirmResetSession}
+                      className="flex-1 py-2 bg-[#D4AF37] text-[#060606] rounded-lg text-[10px] font-bold uppercase hover:bg-[#E8D48B] transition-all"
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
             {/* Header */}
             <div className="p-4 border-b border-[#1F1F1F] bg-[#161616] flex items-center justify-between">
               <div className="flex items-center gap-2">
