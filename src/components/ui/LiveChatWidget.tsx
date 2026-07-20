@@ -67,30 +67,24 @@ export default function LiveChatWidget() {
           .order('created_at', { ascending: true });
 
         if (error) throw error;
-        if (data) setMessages(data);
+        if (data) {
+          setMessages(data);
+          // If admin has sent any message other than the welcome message, disable local AI autopilot tracking
+          const hasAdminReplied = data.some(
+            (m) => m.sender === 'admin' && !m.content?.includes('Thanks for reaching out')
+          );
+          if (hasAdminReplied) {
+            setAiEnabled(false);
+          }
+        }
       } catch (err) {
         console.error('Error fetching messages:', err);
       }
     };
 
-    // Fetch room settings (e.g. ai_enabled)
-    const fetchRoomDetails = async () => {
-      try {
-        const { data } = await supabase
-          .from('portfolio_chat_rooms')
-          .select('ai_enabled')
-          .eq('id', roomId)
-          .single();
-        if (data) setAiEnabled(data.ai_enabled);
-      } catch (err) {
-        console.error('Error fetching room details:', err);
-      }
-    };
-
     fetchMessages();
-    fetchRoomDetails();
 
-    // Subscribe to realtime channel for messages, room updates, and typing broadcasts
+    // Subscribe to realtime channel for messages and typing broadcasts
     const channel = supabase
       .channel(`room:${roomId}`)
       .on(
@@ -107,20 +101,10 @@ export default function LiveChatWidget() {
             if (prev.some((m) => m.id === newMsg.id)) return prev;
             return [...prev, newMsg];
           });
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'portfolio_chat_rooms',
-          filter: `id=eq.${roomId}`,
-        },
-        (payload) => {
-          const updatedRoom = payload.new as any;
-          if (updatedRoom) {
-            setAiEnabled(updatedRoom.ai_enabled);
+
+          // Disable local AI autopilot if admin replies
+          if (newMsg.sender === 'admin' && !newMsg.content?.includes('Thanks for reaching out')) {
+            setAiEnabled(false);
           }
         }
       )
