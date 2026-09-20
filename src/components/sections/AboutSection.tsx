@@ -31,6 +31,7 @@ export default function AboutSection() {
                 alt="Gerald Villaceran"
                 width={500}
                 height={600}
+                sizes="(max-width: 1024px) 90vw, 500px"
                 className="rounded-2xl object-cover w-full max-w-md mx-auto lg:mx-0"
               />
             </div>
@@ -62,11 +63,7 @@ export default function AboutSection() {
 
             {/* Key Stats */}
             <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-[#1F1F1F]">
-              {[
-                { value: '22+', label: 'Modules Built' },
-                { value: '70+', label: 'DB Tables' },
-                { value: '5', label: 'Production Apps' },
-              ].map((stat) => (
+              {aboutData.stats.map((stat) => (
                 <div key={stat.label} className="text-center">
                   <p className="text-2xl font-bold text-[#D4AF37] font-heading">{stat.value}</p>
                   <p className="text-[10px] text-[#6B6355] uppercase tracking-[0.1em] mt-1">{stat.label}</p>

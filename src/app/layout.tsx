@@ -4,11 +4,17 @@ import { Inter, Outfit } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import LiveChatWidget from '@/src/components/ui/LiveChatWidget';
+import SourceGuard from '@/src/components/ui/SourceGuard';
 import { Toaster } from 'sonner';
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', weight: ['300', '400', '500', '600', '700', '800'] })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+})
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -21,6 +27,13 @@ const jsonLd = {
     'https://www.linkedin.com/in/gerald-villaceran-798983325'
   ],
   description: 'Full-stack engineer specializing in enterprise SaaS platforms, mobile applications, and business automation systems.',
+  address: { '@type': 'PostalAddress', addressCountry: 'PH' },
+  email: 'geraldvillaceran01@gmail.com',
+  hasOccupation: {
+    '@type': 'Occupation',
+    name: 'Full-Stack Engineer',
+    skills: 'Next.js, React, React Native, TypeScript, Supabase, PostgreSQL, AI Integration',
+  },
   knowsAbout: ['Full-Stack Development', 'Systems Architecture', 'SaaS', 'Next.js', 'React', 'React Native', 'AI Integration', 'Business Automation']
 }
 
@@ -72,6 +85,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${outfit.variable}`} data-scroll-behavior="smooth">
       <head>
         <meta name="theme-color" content="#060606" />
+        <meta name="color-scheme" content="dark" />
       </head>
       <body className="font-body bg-bg-primary text-text-primary">
         <script
@@ -79,6 +93,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
+        <SourceGuard />
         <LiveChatWidget />
         <Toaster theme="dark" position="bottom-right" richColors />
         <Analytics />

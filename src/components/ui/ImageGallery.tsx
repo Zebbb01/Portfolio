@@ -5,18 +5,27 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Minimize2 } from 'lucide-react';
 import Image from 'next/image';
+import type { Screenshot } from '@/src/types';
 
 interface ImageGalleryProps {
-  images: string[];
+  images: Screenshot[];
   isOpen: boolean;
   onClose: () => void;
   title: string;
+  /** Index to open on, so a click on an inline thumbnail lands on that shot. */
+  startIndex?: number;
 }
 
 const isVideo = (src: string) =>
-  src.toLowerCase().endsWith('.mkv') || src.toLowerCase().endsWith('.mp4');
+  /\.(mp4|webm)$/i.test(src);
 
-export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onClose, title }) => {
+export const ImageGallery: React.FC<ImageGalleryProps> = ({
+  images,
+  isOpen,
+  onClose,
+  title,
+  startIndex = 0,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -40,8 +49,8 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
 
   // Reset on open
   useEffect(() => {
-    if (isOpen) { setCurrentIndex(0); setZoomLevel(1); }
-  }, [isOpen]);
+    if (isOpen) { setCurrentIndex(startIndex); setZoomLevel(1); }
+  }, [isOpen, startIndex]);
 
   // Lock body scroll
   useEffect(() => {
@@ -69,14 +78,18 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
     if (thumb) thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }, [currentIndex]);
 
-  // Fullscreen
+  // Keep local state in sync when the browser exits fullscreen on its own (Esc)
+  useEffect(() => {
+    const sync = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener('fullscreenchange', sync);
+    return () => document.removeEventListener('fullscreenchange', sync);
+  }, []);
+
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement && galleryRef.current) {
-      galleryRef.current.requestFullscreen();
-      setIsFullscreen(true);
+      galleryRef.current.requestFullscreen().catch(() => setIsFullscreen(false));
     } else if (document.fullscreenElement) {
-      document.exitFullscreen();
-      setIsFullscreen(false);
+      document.exitFullscreen().catch(() => {});
     }
   }, []);
 
@@ -109,11 +122,12 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
             </div>
 
             <div className="flex items-center gap-1">
-              {!isVideo(images[currentIndex]) && (
+              {!isVideo(images[currentIndex].src) && (
                 <div className="hidden md:flex items-center gap-0.5 mr-1">
                   <button
                     onClick={() => setZoomLevel((z) => Math.max(z - 0.5, 1))}
                     disabled={zoomLevel <= 1}
+                    aria-label="Zoom out"
                     className="p-2 rounded-lg text-[#6B6355] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 disabled:opacity-20 transition-all"
                   >
                     <ZoomOut size={15} strokeWidth={1.5} />
@@ -124,6 +138,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
                   <button
                     onClick={() => setZoomLevel((z) => Math.min(z + 0.5, 3))}
                     disabled={zoomLevel >= 3}
+                    aria-label="Zoom in"
                     className="p-2 rounded-lg text-[#6B6355] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 disabled:opacity-20 transition-all"
                   >
                     <ZoomIn size={15} strokeWidth={1.5} />
@@ -132,12 +147,14 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
               )}
               <button
                 onClick={toggleFullscreen}
+                aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
                 className="hidden md:flex p-2 rounded-lg text-[#6B6355] hover:text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-all"
               >
                 {isFullscreen ? <Minimize2 size={15} strokeWidth={1.5} /> : <Maximize2 size={15} strokeWidth={1.5} />}
               </button>
               <button
                 onClick={onClose}
+                aria-label="Close gallery"
                 className="p-2 rounded-lg text-[#6B6355] hover:text-[#F5F0E8] hover:bg-[#F5F0E8]/5 transition-all ml-1"
               >
                 <X size={18} strokeWidth={1.5} />
@@ -155,12 +172,14 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
               <>
                 <button
                   onClick={prev}
+                  aria-label="Previous"
                   className="absolute left-2 md:left-5 z-10 p-2.5 rounded-full bg-[#0E0E0E]/70 border border-[#1F1F1F]/50 text-[#6B6355] hover:text-[#D4AF37] hover:border-[#D4AF37]/25 transition-all backdrop-blur-sm"
                 >
                   <ChevronLeft size={20} strokeWidth={1.5} />
                 </button>
                 <button
                   onClick={next}
+                  aria-label="Next"
                   className="absolute right-2 md:right-5 z-10 p-2.5 rounded-full bg-[#0E0E0E]/70 border border-[#1F1F1F]/50 text-[#6B6355] hover:text-[#D4AF37] hover:border-[#D4AF37]/25 transition-all backdrop-blur-sm"
                 >
                   <ChevronRight size={20} strokeWidth={1.5} />
@@ -187,9 +206,9 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
                       className="relative w-full h-full transition-transform duration-200 ease-out"
                       style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'center center' }}
                     >
-                      {isVideo(images[currentIndex]) ? (
+                      {isVideo(images[currentIndex].src) ? (
                         <video
-                          src={images[currentIndex]}
+                          src={images[currentIndex].src}
                           className="w-full h-full object-contain bg-[#060606]"
                           controls
                           autoPlay
@@ -199,8 +218,8 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
                         />
                       ) : (
                         <Image
-                          src={images[currentIndex]}
-                          alt={`${title} - ${currentIndex + 1}`}
+                          src={images[currentIndex].src}
+                          alt={images[currentIndex].caption || `${title} - ${currentIndex + 1}`}
                           fill
                           className="object-contain"
                           sizes="(max-width: 768px) 100vw, 1200px"
@@ -213,6 +232,18 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
               </AnimatePresence>
             </div>
           </div>
+
+          {/* ── Caption ─────────────────────────────────────────────── */}
+          {images[currentIndex].caption && (
+            <div
+              className="shrink-0 px-5 md:px-8 pt-3 z-10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <p className="max-w-3xl mx-auto text-center text-xs md:text-sm text-[#A09882] leading-relaxed">
+                {images[currentIndex].caption}
+              </p>
+            </div>
+          )}
 
           {/* ── Thumbnail Filmstrip ─────────────────────────────────── */}
           {images.length > 1 && (
@@ -231,13 +262,15 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
                       <button
                         key={i}
                         onClick={() => goTo(i)}
+                        aria-label={`Go to item ${i + 1}`}
+                        aria-current={i === currentIndex}
                         className={`relative shrink-0 rounded-lg overflow-hidden transition-all duration-200 ${
                           i === currentIndex
                             ? 'ring-2 ring-[#D4AF37] w-16 h-11 md:w-20 md:h-13 opacity-100 scale-105'
                             : 'w-12 h-8 md:w-16 md:h-10 opacity-35 hover:opacity-60'
                         }`}
                       >
-                        {isVideo(img) ? (
+                        {isVideo(img.src) ? (
                           <div className="w-full h-full bg-[#161616] flex items-center justify-center">
                             <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
                               <path d="M1 1.5V12.5L11 7L1 1.5Z" fill="#D4AF37" />
@@ -245,7 +278,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, isOpen, onCl
                           </div>
                         ) : (
                           <Image
-                            src={img}
+                            src={img.src}
                             alt=""
                             fill
                             className="object-cover"

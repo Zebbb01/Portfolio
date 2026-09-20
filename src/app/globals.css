@@ -89,6 +89,10 @@
    -------------------------------------------------------------------------- */
 html {
   scroll-behavior: smooth;
+  /* Fixed nav is 64px on mobile, 80px from md up. */
+  scroll-padding-top: 5rem;
+  /* clip, not hidden: keeps `position: sticky` working in the case-study page. */
+  overflow-x: clip;
 }
 
 body {
@@ -97,6 +101,21 @@ body {
   color: #F5F0E8;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+/* Headings read better when the last line isn't a single orphan word. */
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Media never forces a horizontal scrollbar on a narrow screen. */
+img, video, svg {
+  max-width: 100%;
 }
 
 /* --------------------------------------------------------------------------
@@ -400,4 +419,47 @@ body {
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+/* --------------------------------------------------------------------------
+   Reduced Motion
+   Respects the OS setting: the site still works, it just stops moving.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Framer Motion writes inline transforms; neutralise the decorative ones. */
+  .animate-float,
+  .glow-pulse,
+  .gradient-shift,
+  .shimmer-effect::after,
+  .text-shimmer {
+    animation: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Touch Targets
+   44px is the minimum comfortable tap size on a phone.
+   -------------------------------------------------------------------------- */
+@media (hover: none) and (pointer: coarse) {
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px;
+  }
+
+  /* Hover lifts read as a stuck state on touch, so drop them. */
+  .card-hover:hover {
+    transform: none;
+  }
 }

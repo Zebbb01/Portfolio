@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gerald Villaceran — Portfolio
 
-## Getting Started
+Personal portfolio and case-study site for a full-stack engineer. Built with the Next.js App Router, it serves a marketing front end plus a small live-chat product: visitors can open a chat widget, send text, voice notes and images, and an AI assistant answers from a curated knowledge base while the owner gets an email alert.
 
-First, run the development server:
+Live: https://portfolio-five-ruddy-49.vercel.app
+
+## Stack
+
+| Layer | Choice |
+| --- | --- |
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS v4 with a theme defined in `src/app/globals.css` |
+| Animation | Framer Motion |
+| Data & realtime | Supabase (Postgres, Realtime, Storage, RLS) |
+| AI replies | GitHub Models (`gpt-4o-mini`) via the Azure inference endpoint |
+| Mail | Nodemailer |
+| Notifications | Sonner |
+| Hosting | Vercel |
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npm run build   # production build, also runs the TypeScript check
+npm start       # serve the production build
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy the variables below into `.env.local`. The site renders without them, but the contact form, live chat and AI replies will not work.
 
-## Learn More
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key (RLS-protected) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-side key for chat and contact routes |
+| `GITHUB_TOKEN` | GitHub Models token for AI auto-reply; without it the widget falls back to a canned offline message |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | Outbound mail for contact and chat alerts |
+| `ADMIN_EMAIL` | Where contact-form and new-chat alerts are sent |
+| `NEXT_PUBLIC_SITE_URL` | Canonical origin used by metadata, `sitemap.xml` and `robots.txt` |
 
-To learn more about Next.js, take a look at the following resources:
+## Layout
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+  app/
+    page.tsx                 home page, composes the sections
+    layout.tsx               fonts, metadata, JSON-LD, global widgets
+    globals.css              design tokens, utilities, reduced-motion rules
+    projects/[slug]/         case studies (statically generated per project)
+    admin/chat/              chat inbox for the site owner
+    api/
+      contact/               contact form handler
+      chat/start|message/    live-chat session and message handlers
+      lib/                   db and mail helpers
+  components/
+    sections/                one file per home-page section
+    ui/                      navigation, chat widget, gallery, decorative shapes
+    hooks/useScrollSpy.ts    drives the active nav link
+  data/portfolioData.ts      single source of truth for all site content
+  types/                     shared interfaces
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Editing content
 
-## Deploy on Vercel
+Almost everything visible — metrics, services, projects, the build log, experience, expertise, bio and contact details — lives in [`src/data/portfolioData.ts`](src/data/portfolioData.ts). Project durations are computed from `startedAt` by `monthsSince`, so the "N months and counting" figures stay current without edits.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Adding a project means appending an entry to `projects`, adding a `projectScreenshots` key that matches its `title`, and dropping the media under `public/project/<Name>/`. The route, the sitemap entry and the metadata follow automatically.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+- **Video format.** Browsers cannot play Matroska, so project videos must be H.264 MP4. To convert: `ffmpeg -i in.mkv -an -vf "scale='min(1280,iw)':-2" -c:v libx264 -crf 26 -pix_fmt yuv420p -movflags +faststart out.mp4`.
+- **`SourceGuard`** blocks the context menu and the view-source, save-page and devtools shortcuts. It is a deterrent against casual copying, not a security control — never put a secret in client code and rely on it.
+- **Reduced motion.** Every decorative animation is wrapped in `motion-safe:` or disabled by the `prefers-reduced-motion` block in `globals.css`.
+- **ESLint.** `npx eslint` currently fails to load the flat config under ESLint 9 (`Converting circular structure to JSON` from `@eslint/eslintrc`). `npm run build` still type-checks, so this is a lint-only gap.

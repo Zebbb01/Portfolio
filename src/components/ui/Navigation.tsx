@@ -15,7 +15,8 @@ const navLinks: { id: string; label: string }[] = [
   { id: 'services', label: 'Services' },
   { id: 'projects', label: 'Work' },
   { id: 'experience', label: 'Experience' },
-  { id: 'expertise', label: 'About' },
+  { id: 'expertise', label: 'Expertise' },
+  { id: 'about', label: 'About' },
   { id: 'contact', label: 'Contact' },
 ];
 
@@ -119,7 +120,7 @@ export default function Navigation() {
           : 'bg-transparent border-b border-transparent'
       }`}
     >
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16 md:h-20">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 flex items-center justify-between h-16 md:h-20 gap-4">
         {/* ----------------------------------------------------------------
             Logo: Personal Brand Mark
         ----------------------------------------------------------------- */}
@@ -138,7 +139,7 @@ export default function Navigation() {
         {/* ----------------------------------------------------------------
             Desktop Navigation Links (hidden below lg)
         ----------------------------------------------------------------- */}
-        <div className="hidden lg:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-0.5">
           {navLinks.map((link) => {
             const isActive = activeSection === link.id;
             return (
@@ -146,7 +147,8 @@ export default function Navigation() {
                 key={link.id}
                 href={`#${link.id}`}
                 onClick={(e) => handleNavClick(e, link.id)}
-                className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 ${
+                aria-current={isActive ? 'true' : undefined}
+                className={`relative px-3 py-2 text-sm font-medium transition-colors duration-300 ${
                   isActive
                     ? 'text-[#D4AF37]'
                     : 'text-[#A09882] hover:text-[#F5F0E8]'
@@ -201,7 +203,7 @@ export default function Navigation() {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed inset-0 bg-[#060606]/60 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 bg-[#060606]/70 backdrop-blur-sm lg:hidden z-40"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
@@ -212,7 +214,10 @@ export default function Navigation() {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed inset-y-0 right-0 w-full sm:w-[380px] bg-[#060606] border-l border-[#1F1F1F] lg:hidden flex flex-col"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site navigation"
+              className="fixed inset-y-0 right-0 w-full sm:w-[380px] bg-[#060606] border-l border-[#1F1F1F] lg:hidden flex flex-col z-50"
             >
               {/* Header area (matches main nav height) */}
               <div className="flex items-center justify-between h-16 md:h-20 px-6 border-b border-[#1F1F1F]">
@@ -229,7 +234,7 @@ export default function Navigation() {
               </div>
 
               {/* Nav links */}
-              <div className="flex-1 flex flex-col justify-center px-8 gap-2">
+              <div className="flex-1 flex flex-col justify-center px-6 sm:px-8 gap-1 overflow-y-auto py-4">
                 {navLinks.map((link, i) => {
                   const isActive = activeSection === link.id;
                   return (
@@ -242,13 +247,13 @@ export default function Navigation() {
                       animate="visible"
                       exit="exit"
                       custom={i}
-                      className={`group flex items-center justify-between py-4 border-b border-[#1F1F1F]/50 transition-colors duration-300 ${
+                      className={`group flex items-center justify-between py-3.5 border-b border-[#1F1F1F]/50 transition-colors duration-300 ${
                         isActive
                           ? 'text-[#D4AF37]'
                           : 'text-[#F5F0E8] hover:text-[#D4AF37]'
                       }`}
                     >
-                      <span className="font-heading text-3xl md:text-4xl font-semibold tracking-tight">
+                      <span className="font-heading text-2xl sm:text-3xl font-semibold tracking-tight">
                         {link.label}
                       </span>
                       <ArrowUpRight
@@ -264,7 +269,7 @@ export default function Navigation() {
               </div>
 
               {/* Mobile CTA */}
-              <div className="px-8 pb-10">
+              <div className="px-6 sm:px-8 pb-8 pt-2">
                 <motion.a
                   href="#contact"
                   onClick={(e) => handleNavClick(e, 'contact')}

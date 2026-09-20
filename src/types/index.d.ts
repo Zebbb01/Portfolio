@@ -7,6 +7,19 @@ export interface Project {
   isFeatured: boolean;
   mediaType: 'image' | 'video';
   mediaSrc: string;
+  /** Marks a project as still under active development. */
+  status?: 'active';
+  /** ISO date of the first commit; drives the live "N months" badge. */
+  startedAt?: string;
+  /** Case-study detail. All optional so a thin project still renders. */
+  role?: string;
+  timeline?: string;
+  /** Who it is for and why it exists — the paragraph before the solution. */
+  context?: string;
+  /** The decisions worth defending, not a feature list. */
+  approach?: { title: string; detail: string }[];
+  /** Measured results, shown as a stat row. */
+  outcomes?: { value: string; label: string }[];
   description: string;
   problem: string;
   impact: string;
@@ -14,6 +27,11 @@ export interface Project {
   github: string;
   live: string;
   detailsUrl: string;
+}
+
+export interface Screenshot {
+  src: string;
+  caption: string;
 }
 
 export interface TechItem {
@@ -41,6 +59,9 @@ export interface Experience {
   description: string;
   highlights: string[];
   tech: string[];
+  /** ISO dates; drive the computed duration badge. */
+  startedAt?: string;
+  endedAt?: string;
 }
 
 export interface TrustMetric {

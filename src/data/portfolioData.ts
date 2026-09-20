@@ -1,16 +1,11 @@
 // src/data/portfolioData.ts
 import {
-  Code,
   Database,
   Server,
   Github,
   Linkedin,
   Mail,
-  Cpu,
-  Zap,
-  Globe,
   Layout,
-  ShieldCheck,
   Bot,
   Layers,
   Smartphone,
@@ -21,7 +16,7 @@ import {
   Radio,
   type LucideIcon,
 } from 'lucide-react';
-import type { Project, Service, Experience, TrustMetric, ExpertiseCategory } from '../types';
+import type { Project, Screenshot, Service, Experience, TrustMetric, ExpertiseCategory } from '../types';
 
 // ---------------------------------------------------------------------------
 // Navigation Sections
@@ -29,14 +24,83 @@ import type { Project, Service, Experience, TrustMetric, ExpertiseCategory } fro
 export const sections = ['home', 'services', 'projects', 'experience', 'expertise', 'about', 'contact'];
 
 // ---------------------------------------------------------------------------
-// Hero / Trust Metrics
+// Duration helper — keeps "months active" accurate without manual edits
+// ---------------------------------------------------------------------------
+export function monthsSince(isoDate: string, until?: string): number {
+  const start = new Date(isoDate);
+  const end = until ? new Date(until) : new Date();
+  // UTC throughout, so the server and the browser agree and hydration matches.
+  const months =
+    (end.getUTCFullYear() - start.getUTCFullYear()) * 12 +
+    (end.getUTCMonth() - start.getUTCMonth());
+  return Math.max(1, months);
+}
+
+export function formatDuration(months: number): string {
+  if (months < 12) return `${months} mo${months === 1 ? '' : 's'}`;
+  const years = Math.floor(months / 12);
+  const rest = months % 12;
+  return rest === 0 ? `${years} yr${years === 1 ? '' : 's'}` : `${years} yr ${rest} mo`;
+}
+
+// ---------------------------------------------------------------------------
+// Hero / Trust Metrics — figures traceable to shipped repositories
 // ---------------------------------------------------------------------------
 export const trustMetrics: TrustMetric[] = [
-  { label: 'Years Experience', value: '3+' },
-  { label: 'Projects Delivered', value: '15+' },
-  { label: 'Production Apps', value: '5' },
-  { label: 'Lines of Code', value: '100K+' },
+  { label: 'Years Engineering', value: '2+' },
+  { label: 'Production Apps', value: '8' },
+  { label: 'Commits in 2026', value: '900+' },
+  { label: 'Modules Shipped', value: '24' },
 ];
+
+// ---------------------------------------------------------------------------
+// Currently Building — live status block, sourced from the active codebase
+// ---------------------------------------------------------------------------
+export const currentFocus = {
+  label: 'Currently Building',
+  project: 'ProfitView Accounting',
+  role: 'Personal product — sole engineer',
+  startedAt: '2026-03-29',
+  summary:
+    'A multi-tenant accounting platform built for Philippine businesses — BIR-compliant VAT, withholding tax and Books of Accounts, in weekly versioned releases. I own the architecture, the money-handling correctness, the AI agent layer and the test suite across a web app, a mobile app and a shared design system.',
+  stats: [
+    { label: 'Modules live', value: '24' },
+    { label: 'Lines of code', value: '158K' },
+    { label: 'Test suites', value: '92' },
+    { label: 'Release', value: 'v0.66' },
+  ],
+  milestones: [
+    {
+      period: 'Mar 2026',
+      title: 'Foundation',
+      detail: 'Multi-tenant schema, Supabase RLS isolation, and the auth and onboarding flow.',
+    },
+    {
+      period: 'Apr – May 2026',
+      title: 'Core ledger',
+      detail:
+        'Double-entry journal, chart of accounts, invoices, bills and expenses — every money path on Decimal.js, no floats.',
+    },
+    {
+      period: 'Jun – Jul 2026',
+      title: 'Philippine compliance',
+      detail:
+        'VAT split across taxable, zero-rated and exempt, expanded withholding tax, SLSP summary lists, Books of Accounts and a filing calendar.',
+    },
+    {
+      period: 'Aug 2026',
+      title: 'Hardening',
+      detail:
+        '92 Vitest and Playwright suites in CI, fiscal period locks, an AI agent for document extraction, and an audit trail on every mutation.',
+    },
+    {
+      period: 'Sep 2026',
+      title: 'Design system',
+      detail:
+        'Brand tokens shared across the web app, the Expo mobile app and the till, on a 13px table density with a live /kit page.',
+    },
+  ],
+};
 
 // ---------------------------------------------------------------------------
 // Services
@@ -75,7 +139,7 @@ export const services: Service[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Projects (4 Featured)
+// Projects
 // ---------------------------------------------------------------------------
 export const projects: Project[] = [
   {
@@ -83,14 +147,54 @@ export const projects: Project[] = [
     slug: 'profitview',
     category: 'Enterprise SaaS',
     isFeatured: true,
+    status: 'active',
+    startedAt: '2026-03-29',
     mediaType: 'image',
-    mediaSrc: '/project/SaaS/Dashboard.webp',
-    problem: 'Manual data entry and disconnected systems slowing financial reporting.',
+    mediaSrc: '/project/SaaS/dashboard.webp',
+    problem:
+      'Philippine businesses run their books in spreadsheets, then rebuild everything by hand at filing time.',
     description:
-      'A sophisticated web-based accounting and finance operations platform built for modern businesses. Features 22 modules including AI-powered data extraction, real-time invoicing, expense management, and multi-tenant isolation with PostgreSQL RLS.',
+      'A multi-tenant accounting platform for the Philippine market, shipped in weekly versioned releases. 24 live modules covering double-entry journals, invoicing, bills, banking reconciliation, fiscal periods and reporting — plus the compliance layer the local market actually needs: VAT split across taxable, zero-rated and exempt, expanded withholding tax, SLSP summary lists and BIR Books of Accounts. Money paths run on Decimal.js rather than floats, tenant isolation is enforced by PostgreSQL RLS, and an AI agent handles document extraction and reconciliation. 158K lines of TypeScript behind 92 Vitest and Playwright suites in CI.',
     impact: '40% faster month-end closing',
-    tech: ['Next.js 15', 'Supabase', 'Stripe', 'AI Agent', 'PostgreSQL'],
-    github: '#',
+    role: 'Founder & sole engineer — personal product',
+    timeline: 'March 2026 — Present',
+    context:
+      'Philippine SMBs keep their books in spreadsheets and rebuild everything by hand when BIR filing comes due. Off-the-shelf accounting software either ignores local tax rules or prices itself out of the market. ProfitView is the attempt to serve that gap properly: a real double-entry ledger with the compliance layer built in rather than bolted on.',
+    approach: [
+      {
+        title: 'Isolation at the database, not the app',
+        detail:
+          'Every tenant boundary is a PostgreSQL Row Level Security policy. An application bug cannot leak another organisation\u2019s ledger, because the query never returns those rows in the first place.',
+      },
+      {
+        title: 'No floating point anywhere money moves',
+        detail:
+          'Every amount runs through Decimal.js from entry to report. A line worth less than half a centavo is refused with a sentence rather than a rounding error that silently unbalances the books.',
+      },
+      {
+        title: 'Compliance modelled, not appended',
+        detail:
+          'VAT carries its treatment — taxable, zero-rated or exempt — on the tax rate itself, so the SLSP summary lists split correctly instead of guessing. Withholding tax, Books of Accounts and the filing calendar follow from the same model.',
+      },
+      {
+        title: 'Weekly versioned releases',
+        detail:
+          'Each release ships with a changelog entry users actually see in-app. Currently at v0.66 after six months, with no missed week.',
+      },
+      {
+        title: 'Tests as the safety net for an audit trail',
+        detail:
+          '92 Vitest and Playwright suites run in CI against a real isolated Supabase project, because accounting logic that is only unit-tested against mocks proves nothing.',
+      },
+    ],
+    outcomes: [
+      { value: '24', label: 'Modules live' },
+      { value: '158K', label: 'Lines of TypeScript' },
+      { value: '92', label: 'Test suites in CI' },
+      { value: 'v0.66', label: 'Current release' },
+    ],
+    tech: ['Next.js 15', 'Supabase', 'PostgreSQL RLS', 'Anthropic SDK', 'Decimal.js', 'Playwright', 'Vitest', 'PayMongo'],
+    github: '',
     live: 'https://profit-view-swart.vercel.app/',
     detailsUrl: '/projects/profitview',
   },
@@ -100,12 +204,43 @@ export const projects: Project[] = [
     category: 'Workflow Automation',
     isFeatured: true,
     mediaType: 'video',
-    mediaSrc: '/videos/automation.mkv',
+    mediaSrc: '/videos/automation.mp4',
     problem: 'Repetitive manual business processes consuming valuable team hours and increasing error rates.',
     description:
       'Custom-built automation workflows using n8n and Make to streamline business operations. Designed multi-step pipelines integrating CRMs, email systems, payment gateways, and internal tools. Includes webhook-triggered flows, scheduled data syncs, and AI-powered document processing.',
     impact: '60% reduction in manual operations',
-    tech: ['n8n', 'Make', 'Webhooks', 'API Integration', 'GoHighLevel'],
+    role: 'Automation Engineer',
+    timeline: '2024 — 2026',
+    context:
+      'Small teams lose whole days to copying data between a CRM, an inbox and a spreadsheet. The work is not hard, it is just constant — and every manual hop is a chance to mistype something that nobody catches until a client does.',
+    approach: [
+      {
+        title: 'Map the handoffs before writing a node',
+        detail:
+          'Each workflow starts as a list of the points where data changes hands. Automating a bad process just makes the mistakes faster.',
+      },
+      {
+        title: 'Event-driven over scheduled where it matters',
+        detail:
+          'Webhooks fire on the actual business event — a form submitted, a payment cleared — so follow-up lands in minutes rather than on the next hourly poll.',
+      },
+      {
+        title: 'Failures are visible, not silent',
+        detail:
+          'Every pipeline has an error branch that notifies a human. An automation that fails quietly is worse than no automation.',
+      },
+      {
+        title: 'AI only where rules cannot reach',
+        detail:
+          'OCR and language models handle invoice and receipt extraction — the genuinely fuzzy part. Everything deterministic stays deterministic.',
+      },
+    ],
+    outcomes: [
+      { value: '60%', label: 'Less manual work' },
+      { value: '10+', label: 'Services connected' },
+      { value: '24/7', label: 'Unattended running' },
+    ],
+    tech: ['n8n', 'Make', 'Webhooks', 'API Integration', 'GoHighLevel', 'OCR'],
     github: '',
     live: '',
     detailsUrl: '/projects/n8n-automation',
@@ -116,31 +251,45 @@ export const projects: Project[] = [
     category: 'Sales Funnels',
     isFeatured: true,
     mediaType: 'video',
-    mediaSrc: '/project/GHL/ghl-video (1).mkv',
+    mediaSrc: '/project/GHL/ghl-1.mp4',
     problem: 'Low conversion rates due to generic layouts and poor user engagement.',
     description:
       'Custom-built marketing websites and highly optimized sales funnels using GoHighLevel. Designed immersive micro-animations and integrated custom CRM follow-up sequences for automated lead nurturing.',
     impact: '35% increase in lead capture',
+    role: 'Web & Funnel Developer',
+    timeline: '2024 — 2026',
+    context:
+      'Template funnels convert badly because they look like template funnels. The pages that work are the ones that answer a specific objection at the moment a visitor has it, then make the next step obvious.',
+    approach: [
+      {
+        title: 'Structure the page around one decision',
+        detail:
+          'Each funnel step asks for exactly one thing. Competing calls to action split attention and cost conversions.',
+      },
+      {
+        title: 'Motion that directs attention',
+        detail:
+          'Custom CSS micro-animations cue the eye toward the next action instead of decorating the page for its own sake.',
+      },
+      {
+        title: 'Capture and nurture in one system',
+        detail:
+          'Forms write straight into GoHighLevel, which triggers the follow-up sequence. No export step, no lead sitting unworked in a spreadsheet.',
+      },
+      {
+        title: 'Qualify before the sales call',
+        detail:
+          'Multi-step forms ask the disqualifying questions early, so the calls that get booked are worth taking.',
+      },
+    ],
+    outcomes: [
+      { value: '35%', label: 'More leads captured' },
+      { value: '0', label: 'Manual lead handoffs' },
+    ],
     tech: ['GoHighLevel', 'CSS Animations', 'CRM Integration', 'JavaScript'],
-    github: '#',
-    live: '',
-    detailsUrl: '/projects/ghl-website',
-  },
-  {
-    title: 'Rundzee PH',
-    slug: 'rundzee',
-    category: 'Super-App Platform',
-    isFeatured: true,
-    mediaType: 'image',
-    mediaSrc: '/project/Rundzee/home-screen.png',
-    problem: 'Fragmented delivery and errand services in the Philippine market.',
-    description:
-      'A comprehensive on-demand delivery, errand, and marketplace super-app. Built and maintained 5 production applications (customer v2, merchant, rider, admin portal, and web platform) integrated with Supabase. Implemented critical systems including real-time order tracking with custom Map IDs, React Context customer support chat, secure OTP login flows, Facebook/Google OAuth with email permission fallbacks, database audit log triggers, and automated refunds.',
-    impact: '5-app ecosystem in production',
-    tech: ['React Native', 'Expo Router', 'Supabase', 'PostgreSQL', 'PayMongo', 'React Context', 'Reanimated', 'Map API'],
     github: '',
     live: '',
-    detailsUrl: '/projects/rundzee',
+    detailsUrl: '/projects/ghl-website',
   },
   {
     title: 'Body Tracker',
@@ -153,7 +302,33 @@ export const projects: Project[] = [
     description:
       'A comprehensive personal fitness tracker with AI-powered nutrition analysis from food photos, workout logging, TDEE calculator, and intermittent fasting widget. Progressive Web App with offline-first architecture using IndexedDB.',
     impact: 'AI-powered meal analysis from photos',
-    tech: ['Next.js 16', 'Supabase', 'PWA', 'AI/ML', 'IndexedDB'],
+    role: 'Solo developer — design through deployment',
+    timeline: 'February 2026 — March 2026',
+    context:
+      'Logging food is the part of fitness tracking everyone abandons. Typing a meal into a database of 40,000 entries takes longer than eating it, so the log goes stale and the app goes unopened.',
+    approach: [
+      {
+        title: 'Photograph the meal, skip the form',
+        detail:
+          'A vision model reads the plate and returns a macro estimate the user can correct. An approximate number that gets logged beats an exact one that does not.',
+      },
+      {
+        title: 'Offline-first, not offline-tolerant',
+        detail:
+          'IndexedDB is the source of truth on the device and syncs when a connection returns — gyms have terrible reception, and that is exactly when logging happens.',
+      },
+      {
+        title: 'A PWA rather than two native apps',
+        detail:
+          'Installable from the browser on both platforms, with no store review between a fix and the people using it.',
+      },
+    ],
+    outcomes: [
+      { value: '36', label: 'Commits in 8 weeks' },
+      { value: '100%', label: 'Offline capable' },
+      { value: '1', label: 'Codebase, both platforms' },
+    ],
+    tech: ['Next.js 16', 'Supabase', 'PWA', 'AI/ML', 'IndexedDB', 'Service Workers'],
     github: '',
     live: 'https://body-tracker-iota.vercel.app/',
     detailsUrl: '/projects/body-tracker',
@@ -163,43 +338,55 @@ export const projects: Project[] = [
 // ---------------------------------------------------------------------------
 // Project Screenshots (for gallery)
 // ---------------------------------------------------------------------------
-export const projectScreenshots: Record<string, string[]> = {
+export const projectScreenshots: Record<string, Screenshot[]> = {
   'ProfitView Accounting': [
-    '/project/SaaS/Dashboard.webp',
-    '/project/SaaS/Agent Activity Log.webp',
-    '/project/SaaS/Banking Details.webp',
-    '/project/SaaS/Bills Paid.webp',
-    '/project/SaaS/Bills.webp',
-    '/project/SaaS/Chart of Accounts.webp',
-    '/project/SaaS/Contact Activity History.webp',
-    '/project/SaaS/Contact Generated SOA.webp',
-    '/project/SaaS/Invoices Paid.webp',
-    '/project/SaaS/Landing.webp',
-    '/project/SaaS/Reports Trial Balance.webp',
-    '/project/SaaS/Settings Fiscal Periods.webp',
-    '/project/SaaS/SignUp.webp',
+    {
+      src: '/project/SaaS/dashboard.webp',
+      caption:
+        'Dashboard — cash position, receivables and payables, with the financial-health ratios explained in plain language underneath.',
+    },
+    {
+      src: '/project/SaaS/sales-invoices.webp',
+      caption:
+        'Sales register — draft, posted, paid and overdue states, filtered by period and status, with balance due tracked per invoice.',
+    },
+    {
+      src: '/project/SaaS/new-invoice.webp',
+      caption:
+        'New invoice — VAT-inclusive or exclusive amounts, expanded withholding tax, and a running summary as lines are added.',
+    },
+    {
+      src: '/project/SaaS/bir-slsp-report.webp',
+      caption:
+        'SLSP report — sales and purchases per counterparty split into taxable, zero-rated and exempt, refusing to file until the data is actually complete.',
+    },
+    {
+      src: '/project/SaaS/general-ledger.webp',
+      caption:
+        'General ledger at tablet width — every posting traceable to its source document, with the layout reflowing rather than scrolling sideways.',
+    },
+    {
+      src: '/project/SaaS/design-system.webp',
+      caption:
+        'The /kit page — one live reference for table density, control heights and states, shared across the web, mobile and till apps.',
+    },
   ],
   'GHL Marketing Websites': [
-    '/project/GHL/ghl-video (1).mkv',
-    '/project/GHL/ghl-video (2).mkv',
-    '/project/GHL/ghl-video.mkv',
+    { src: '/project/GHL/ghl-1.mp4', caption: 'Landing page with scroll-triggered micro-animations cueing the next action.' },
+    { src: '/project/GHL/ghl-2.mp4', caption: 'Funnel step — one decision per screen, no competing calls to action.' },
+    { src: '/project/GHL/ghl-3.mp4', caption: 'Multi-step qualification form feeding the CRM follow-up sequence.' },
   ],
   'N8N Business Automation': [
-    '/project/Automation/automate_image.webp',
-    '/project/Automation/automate_image (1).webp',
-    '/project/Automation/automate_image (2).webp',
-    '/project/Automation/automate_image (3).webp',
-    '/project/Automation/automate_image (4).webp',
-  ],
-  'Rundzee PH': [
-    '/project/Rundzee/home-screen.png',
-    '/project/Rundzee/delivery-tracking.png',
-    '/project/Rundzee/marketplace.png',
+    { src: '/project/Automation/automate_image.webp', caption: 'Multi-step pipeline connecting CRM, mail and payment events.' },
+    { src: '/project/Automation/automate_image (1).webp', caption: 'Webhook trigger branch with its error path routed to a human.' },
+    { src: '/project/Automation/automate_image (2).webp', caption: 'Scheduled sync reconciling records between two systems.' },
+    { src: '/project/Automation/automate_image (3).webp', caption: 'AI document step extracting fields from invoices and receipts.' },
+    { src: '/project/Automation/automate_image (4).webp', caption: 'Follow-up sequence fired from a qualified form submission.' },
   ],
   'Body Tracker': [
-    '/project/BodyTracker/dashboard.png',
-    '/project/BodyTracker/ai-scan.png',
-    '/project/BodyTracker/workout.png',
+    { src: '/project/BodyTracker/dashboard.png', caption: 'Daily dashboard — calories, macros and the fasting window at a glance.' },
+    { src: '/project/BodyTracker/ai-scan.png', caption: 'Photo analysis — a vision model estimates macros, the user corrects them.' },
+    { src: '/project/BodyTracker/workout.png', caption: 'Workout log, written to IndexedDB first and synced when a connection returns.' },
   ],
 };
 
@@ -209,33 +396,56 @@ export const projectScreenshots: Record<string, string[]> = {
 export const experiences: Experience[] = [
   {
     title: 'Full-Stack Developer',
-    company: 'Poseidon Distribution Inc. (Rundzee PH)',
+    company: 'Poseidon Distribution OPC',
     type: 'Full-Time',
     period: 'May 2026 - Present',
+    startedAt: '2026-05-18',
     description:
-      'Built and shipped 5 production applications for a Philippine super-app platform serving customers, merchants, and riders across food delivery, errands, and e-commerce.',
+      'Building and maintaining the web platforms and region-scoped admin portals behind an on-demand delivery and marketplace operation, alongside the customer, merchant and rider applications.',
     highlights: [
-      'Developed customer, merchant, and rider mobile apps with React Native, Expo Router, and Reanimated',
-      'Implemented real-time delivery tracking with custom Map IDs, live GPS, and Supabase Realtime',
-      'Integrated secure email/SMS OTP login flows and Google/Facebook OAuth with email permission fallbacks',
-      'Designed and maintained 70+ database tables with complex triggers, RLS policies, and database audit logs',
-      'Built admin portal and web platform featuring automated transaction refunds and merchant settlements',
+      'Maintain multiple production web platforms and admin portals, each scoped to its own operating region',
+      'Built responsive, scalable interfaces that hold up from a 360px phone to a wide desktop dashboard',
+      'Developed customer, merchant and rider mobile apps with React Native, Expo Router and Reanimated',
+      'Implemented real-time delivery tracking with custom Map IDs, live GPS and Supabase Realtime',
+      'Integrated email and SMS OTP login plus Google and Facebook OAuth with email-permission fallbacks',
+      'Designed and maintained 70+ database tables with triggers, RLS policies and audit logging',
+      'Shipped automated transaction refunds and merchant settlements across the admin portals',
     ],
-    tech: ['React Native', 'Expo Router', 'Supabase', 'PayMongo', 'TypeScript', 'Google Maps', 'PostgreSQL'],
+    tech: ['Next.js', 'React Native', 'Expo Router', 'Supabase', 'PayMongo', 'TypeScript', 'Google Maps', 'PostgreSQL'],
+  },
+  {
+    title: 'Founder & Sole Engineer',
+    company: 'ProfitView — Self-Initiated Product',
+    type: 'Personal Project',
+    period: 'March 2026 - Present',
+    startedAt: '2026-03-29',
+    description:
+      'My own product, built end to end. A multi-tenant accounting platform for the Philippine market, shipping weekly versioned releases for six straight months — architecture, compliance, AI layer and test suite all mine.',
+    highlights: [
+      'Architected 24 live modules: double-entry journal, chart of accounts, invoicing, bills, expenses, banking reconciliation, fiscal periods and reporting',
+      'Built the Philippine compliance layer — VAT across taxable, zero-rated and exempt, expanded withholding tax, SLSP summary lists and BIR Books of Accounts',
+      'Enforced tenant isolation with PostgreSQL Row Level Security and an audit trail on every write',
+      'Held money correctness with Decimal.js across every ledger path — no floating-point arithmetic in the accounting core',
+      'Built the AI agent layer on the Anthropic and OpenAI SDKs for document extraction and bank reconciliation',
+      'Wrote and maintain 92 Vitest and Playwright suites running in CI, plus brand tokens shared across the web, mobile and till apps',
+      'Shipped 460+ commits across four repositories in six months, on a weekly versioned release cadence',
+    ],
+    tech: ['Next.js 15', 'TypeScript', 'Supabase', 'PostgreSQL RLS', 'Anthropic SDK', 'Decimal.js', 'Playwright', 'Vitest'],
   },
   {
     title: 'Freelance Full-Stack Engineer',
     company: 'Independent',
     type: 'Freelance',
-    period: '2023 - Present',
+    period: '2024 - 2026',
+    startedAt: '2024-01-01',
+    endedAt: '2026-05-01',
     description:
-      'Delivering enterprise-grade platforms for clients across SaaS, civic tech, AI applications, and business automation.',
+      'Delivered production platforms for clients across SaaS, civic tech, AI applications and business automation.',
     highlights: [
-      'Architected ProfitView - a 22-module SaaS accounting system with AI agent',
-      'Built government civic tech platform (OSCA) for senior citizen affairs management',
-      'Developed AI-powered fitness PWA with food photo nutrition analysis',
-      'Created multi-provider AI chatbot supporting OpenAI, Anthropic, and Azure',
-      'Designed marketing systems and automation workflows with GHL and n8n',
+      'Built a government civic tech platform (OSCA) for senior citizen affairs management',
+      'Developed an AI-powered fitness PWA with food-photo nutrition analysis and offline-first storage',
+      'Created a multi-provider AI chatbot supporting OpenAI, Anthropic and Azure',
+      'Designed marketing systems and automation workflows with GoHighLevel and n8n',
     ],
     tech: ['Next.js', 'React', 'Supabase', 'Stripe', 'AI Integration', 'PostgreSQL'],
   },
@@ -249,7 +459,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
     title: 'Frontend Engineering',
     icon: Layout as LucideIcon,
     description: 'Fast, responsive interfaces that convert visitors into customers.',
-    technologies: ['Next.js', 'React', 'React Native', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'shadcn/ui'],
+    technologies: ['Next.js', 'React', 'React Native', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Radix UI'],
   },
   {
     title: 'Backend & Infrastructure',
@@ -266,20 +476,20 @@ export const expertiseCategories: ExpertiseCategory[] = [
   {
     title: 'Payments & Commerce',
     icon: CreditCard as LucideIcon,
-    description: 'Secure payment processing with multiple provider support.',
-    technologies: ['Stripe', 'PayMongo', 'GCash', 'Maya', 'Subscriptions', 'Multi-currency'],
+    description: 'Secure payment processing built for the market it serves.',
+    technologies: ['PayMongo', 'GCash', 'Maya', 'GrabPay', 'Stripe', 'Subscriptions'],
   },
   {
     title: 'AI & Automation',
     icon: Bot as LucideIcon,
     description: 'Intelligent automation that reduces costs and accelerates decisions.',
-    technologies: ['OpenAI', 'Anthropic', 'n8n', 'Make', 'OCR', 'Prompt Engineering'],
+    technologies: ['Anthropic SDK', 'OpenAI', 'n8n', 'Make', 'OCR', 'Prompt Engineering'],
   },
   {
-    title: 'Data & Real-time',
+    title: 'Testing & Reliability',
     icon: Radio as LucideIcon,
-    description: 'Live data, secure multi-tenancy, and actionable business insights.',
-    technologies: ['PostgreSQL RLS', 'Realtime', 'WebSockets', 'Recharts', 'Analytics'],
+    description: 'Correctness held by tests, not by hope — especially where money moves.',
+    technologies: ['Vitest', 'Playwright', 'PostgreSQL RLS', 'Decimal.js', 'Audit Logging', 'GitHub Actions'],
   },
 ];
 
@@ -289,9 +499,14 @@ export const expertiseCategories: ExpertiseCategory[] = [
 export const aboutData = {
   title: 'The Engineer Behind the Code',
   bio: [
-    "I'm Gerald Villaceran, a full-stack engineer based in the Philippines specializing in building production-grade platforms that solve real business problems.",
-    'From architecting a 22-module SaaS accounting system to shipping a multi-sided super-app with real-time delivery tracking and payment processing, I focus on one thing: building systems that create measurable business value.',
+    "I'm Gerald Villaceran, a full-stack engineer based in the Philippines specializing in production-grade platforms that solve real business problems.",
+    'Right now I am six months into building my own BIR-compliant accounting SaaS end to end — 24 modules, 158K lines of TypeScript, 92 test suites and a weekly release cadence I have not missed — while working full-time on the web platforms and region-scoped admin portals of an on-demand delivery operation.',
     'Great software is invisible. It just works, scales, and delivers results. That principle drives every system I build.',
+  ],
+  stats: [
+    { value: '24', label: 'Modules Live' },
+    { value: '158K', label: 'Lines Shipped' },
+    { value: '92', label: 'Test Suites' },
   ],
 };
 

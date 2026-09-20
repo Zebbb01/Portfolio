@@ -1,45 +1,59 @@
 // src/components/hooks/useScrollSpy.ts
 import { useState, useEffect } from 'react';
 
+/**
+ * Returns the id of the section currently under the header.
+ *
+ * `offset` should roughly match the fixed nav height so a section counts as
+ * active once its top passes beneath the nav rather than the viewport edge.
+ */
 const useScrollSpy = (sectionIds: string[], offset = 0) => {
   const [activeSection, setActiveSection] = useState(sectionIds[0] || '');
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + offset + 1; // Add 1 to prevent issues at exact boundary
+    let frame = 0;
 
-      // Start from the last section and work backwards to find the first one in view
-      let newActiveSection = '';
-      for (let i = sectionIds.length - 1; i >= 0; i--) {
-        const sectionId = sectionIds[i];
-        const element = document.getElementById(sectionId);
+    const measure = () => {
+      frame = 0;
+      const scrollPosition = window.scrollY + offset + 1;
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
 
-        if (element) {
-          const top = element.offsetTop;
-          // Check if the current scroll position is at or past the top of the section
-          if (scrollPosition >= top) {
-            newActiveSection = sectionId;
-            break; // Found the active section, so we can exit the loop
+      // The last section wins once the page is scrolled to the very bottom —
+      // a short trailing section is otherwise unreachable.
+      let found = atBottom ? sectionIds[sectionIds.length - 1] : '';
+
+      if (!found) {
+        for (let i = sectionIds.length - 1; i >= 0; i--) {
+          const element = document.getElementById(sectionIds[i]);
+          if (element && scrollPosition >= element.offsetTop) {
+            found = sectionIds[i];
+            break;
           }
         }
       }
 
-      // If no section is found (e.g., at the very top of the page), default to the first section
-      if (!newActiveSection && sectionIds.length > 0) {
-        newActiveSection = sectionIds[0];
-      }
-
-      if (newActiveSection !== activeSection) {
-        setActiveSection(newActiveSection);
-      }
+      setActiveSection((prev) => {
+        const next = found || sectionIds[0] || '';
+        return next === prev ? prev : next;
+      });
     };
 
-    // Set initial active section on component mount
-    handleScroll();
-    window.addEventListener('scroll', handleScroll);
+    // Coalesce scroll events into one measurement per frame.
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [sectionIds, offset, activeSection]);
+    measure();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [sectionIds, offset]);
 
   return activeSection;
 };

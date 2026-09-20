@@ -9,6 +9,8 @@ export default function Footer() {
   const navLinks = [
     { label: 'Home', target: 'home' },
     { label: 'Work', target: 'projects' },
+    { label: 'Experience', target: 'experience' },
+    { label: 'About', target: 'about' },
     { label: 'Contact', target: 'contact' },
   ];
 
@@ -20,6 +22,7 @@ export default function Footer() {
           <button
             onClick={() => scrollTo('home')}
             className="group"
+            aria-label="Back to top"
           >
             <img
               src="/images/logo-gv.svg"
@@ -28,7 +31,7 @@ export default function Footer() {
             />
           </button>
 
-          <nav className="flex gap-6">
+          <nav className="flex flex-wrap gap-x-6 gap-y-2">
             {navLinks.map((link) => (
               <button
                 key={link.target}
@@ -42,13 +45,19 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="mt-8 pt-8 border-t border-[#171717] flex justify-between items-center flex-wrap gap-4">
+        <div className="mt-8 pt-8 border-t border-[#171717] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <p className="text-xs text-[#6B6355]">
-            &copy; 2026 Gerald Villaceran
+            &copy; {new Date().getFullYear()} Gerald Villaceran
           </p>
-          <p className="text-xs text-[#6B6355]">
-            Built with Next.js
-          </p>
+          <div className="flex items-center gap-5">
+            <a href="/privacy" className="text-xs text-[#6B6355] hover:text-[#A09882] transition-colors">
+              Privacy
+            </a>
+            <a href="/terms" className="text-xs text-[#6B6355] hover:text-[#A09882] transition-colors">
+              Terms
+            </a>
+            <p className="text-xs text-[#6B6355]">Built with Next.js</p>
+          </div>
         </div>
       </div>
     </footer>

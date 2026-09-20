@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
-import { experiences } from "@/src/data/portfolioData";
+import { experiences, formatDuration, monthsSince } from "@/src/data/portfolioData";
 import GeometricShape from "@/src/components/ui/GeometricShape";
 
 // ---------------------------------------------------------------------------
@@ -26,7 +26,7 @@ const entryVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: [0.16, 1, 0.3, 1] as any,
+      ease: [0.16, 1, 0.3, 1] as const,
     },
   },
 };
@@ -58,6 +58,9 @@ const ExperienceSection = () => {
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-semibold text-[#F5F0E8]">
             Professional Journey
           </h2>
+          <p className="text-[#A09882] mt-4 max-w-2xl leading-relaxed">
+            Durations and commit counts below come straight from the repositories.
+          </p>
         </motion.div>
 
         {/* Timeline */}
@@ -71,7 +74,13 @@ const ExperienceSection = () => {
           {/* Vertical Gold Line */}
           <div className="absolute left-0 md:left-8 w-px bg-[#D4AF37]/15 top-0 bottom-0" />
 
-          {experiences.map((exp, index) => (
+          {experiences.map((exp, index) => {
+            const isCurrent = exp.period.includes("Present");
+            const duration = exp.startedAt
+              ? formatDuration(monthsSince(exp.startedAt, exp.endedAt))
+              : null;
+
+            return (
             <motion.div
               key={`${exp.company}-${index}`}
               variants={entryVariants}
@@ -79,19 +88,32 @@ const ExperienceSection = () => {
             >
               {/* Gold Dot Marker */}
               <div
-                className="absolute left-0 md:left-8 top-1.5 w-3 h-3 rounded-full bg-[#D4AF37] border-2 border-[#060606] -translate-x-1/2"
+                className={`absolute left-0 md:left-8 top-1.5 w-3 h-3 rounded-full border-2 border-[#060606] -translate-x-1/2 ${
+                  isCurrent ? "bg-[#4ADE80]" : "bg-[#D4AF37]"
+                }`}
               />
 
-              {/* Type Badge */}
-              <span
-                className={`text-xs font-medium tracking-[0.15em] uppercase ${
-                  exp.type === "Full-Time"
-                    ? "text-[#D4AF37]"
-                    : "text-[#A09882]"
-                }`}
-              >
-                {exp.type}
-              </span>
+              {/* Type + live badge */}
+              <div className="flex flex-wrap items-center gap-3">
+                <span
+                  className={`text-xs font-medium tracking-[0.15em] uppercase ${
+                    exp.type === "Full-Time"
+                      ? "text-[#D4AF37]"
+                      : "text-[#A09882]"
+                  }`}
+                >
+                  {exp.type}
+                </span>
+                {isCurrent && (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-[#4ADE80]/25 bg-[#4ADE80]/[0.07] px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-[#4ADE80]">
+                    <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                      <span className="absolute inline-flex h-full w-full rounded-full bg-[#4ADE80] opacity-60 motion-safe:animate-ping" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#4ADE80]" />
+                    </span>
+                    Current
+                  </span>
+                )}
+              </div>
 
               {/* Title */}
               <h3 className="font-heading text-xl md:text-2xl font-semibold text-[#F5F0E8] mt-1">
@@ -103,9 +125,15 @@ const ExperienceSection = () => {
                 {exp.company}
               </p>
 
-              {/* Period */}
+              {/* Period + computed duration */}
               <p className="text-xs text-[#6B6355] mt-1">
                 {exp.period}
+                {duration && (
+                  <>
+                    <span className="mx-2 text-[#3a3530]">·</span>
+                    <span className="text-[#A09882]">{duration}</span>
+                  </>
+                )}
               </p>
 
               {/* Description */}
@@ -139,7 +167,8 @@ const ExperienceSection = () => {
                 </div>
               )}
             </motion.div>
-          ))}
+            );
+          })}
         </motion.div>
       </div>
     </section>

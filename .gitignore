@@ -44,3 +44,5 @@ next-env.d.ts
 /.agents
 # /public folder is tracked for assets, but ignore large test videos
 /public/videos/vid-test.mkv
+# stale local typecheck output
+tsc_output.txt

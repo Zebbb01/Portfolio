@@ -363,10 +363,12 @@ export default function LiveChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[999] font-body">
+    <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-[999] font-body">
       {/* Floating Chat Bubble Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? 'Close chat' : 'Open chat'}
+        aria-expanded={isOpen}
         className="w-14 h-14 rounded-full bg-[#D4AF37] text-[#060606] flex items-center justify-center shadow-[0_4px_20px_rgba(212,175,55,0.3)] hover:scale-105 transition-all duration-300 relative"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -382,7 +384,10 @@ export default function LiveChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="absolute bottom-18 right-0 w-[360px] h-[520px] rounded-2xl border border-[#1F1F1F] bg-[#0E0E0E]/95 backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden"
+            role="dialog"
+            aria-label="Live chat"
+            /* A fixed 360px panel overflowed the left edge of a 360-375px phone. */
+            className="fixed sm:absolute inset-x-5 bottom-24 sm:inset-x-auto sm:bottom-18 sm:right-0 w-auto sm:w-[380px] h-[min(520px,70vh)] rounded-2xl border border-[#1F1F1F] bg-[#0E0E0E]/95 backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden"
           >
             {/* Custom Inline Reset Confirm Dialog */}
             <AnimatePresence>

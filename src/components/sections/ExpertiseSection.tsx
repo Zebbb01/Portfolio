@@ -26,7 +26,7 @@ const cardVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: [0.16, 1, 0.3, 1] as any,
+      ease: [0.16, 1, 0.3, 1] as const,
     },
   },
 };
@@ -80,7 +80,17 @@ const ExpertiseSection = () => {
               <motion.div
                 key={category.title}
                 variants={cardVariants}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isExpanded}
+                aria-label={`${category.title} — show technologies`}
                 onClick={() => handleToggle(index)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleToggle(index);
+                  }
+                }}
                 className={`break-inside-avoid bg-[#0E0E0E] rounded-2xl p-6 cursor-pointer card-hover transition-all duration-500 ${isExpanded ? 'border border-[#D4AF37]/15 shadow-[0_0_30px_rgba(212,175,55,0.03)]' : ''}`}
               >
                 {/* Top Row: Icon + Title + Chevron */}

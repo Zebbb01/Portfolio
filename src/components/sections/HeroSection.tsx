@@ -5,7 +5,7 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import { trustMetrics } from '@/src/data/portfolioData';
+import { currentFocus, formatDuration, monthsSince, trustMetrics } from '@/src/data/portfolioData';
 import AnimatedBackground from '@/src/components/ui/AnimatedBackground';
 
 // ---------------------------------------------------------------------------
@@ -70,18 +70,24 @@ export default function HeroSection() {
       />
 
       {/* ── Main Content ─────────────────────────────────────────── */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-16 pt-32 pb-16 md:pt-32 md:pb-8">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 pt-28 pb-20 sm:pt-32 sm:pb-24 md:pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
           {/* ── Left: Text ──────────────────────────────────────── */}
           <div className="lg:col-span-7">
             {/* Label */}
-            <motion.p
-              {...fadeUp(0.1)}
-              className="section-label mb-4"
-            >
-              Full-Stack Engineer &amp; Systems Architect
-            </motion.p>
+            <motion.div {...fadeUp(0.1)} className="flex flex-wrap items-center gap-3 mb-4">
+              <p className="section-label">
+                Full-Stack Engineer &amp; Systems Architect
+              </p>
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#4ADE80]/25 bg-[#4ADE80]/[0.07] px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-[#4ADE80]">
+                <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-[#4ADE80] opacity-60 motion-safe:animate-ping" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#4ADE80]" />
+                </span>
+                Open to work
+              </span>
+            </motion.div>
 
             {/* Heading */}
             <motion.h1
@@ -134,26 +140,26 @@ export default function HeroSection() {
             </motion.div>
 
             {/* Trust metrics */}
-            <motion.div
+            <motion.dl
               {...fadeUp(0.55)}
-              className="flex items-center gap-6 md:gap-8 mt-10 pt-6 border-t border-[#1F1F1F]"
+              className="grid grid-cols-2 sm:flex sm:items-center gap-x-6 gap-y-5 sm:gap-8 mt-10 pt-6 border-t border-[#1F1F1F]"
             >
               {trustMetrics.map((metric, i) => (
                 <React.Fragment key={metric.label}>
                   {i > 0 && (
-                    <div className="hidden sm:block w-px h-10 bg-[#1F1F1F]" />
+                    <div className="hidden sm:block w-px h-10 bg-[#1F1F1F]" aria-hidden="true" />
                   )}
                   <div className="flex flex-col">
-                    <span className="text-xl md:text-2xl font-bold text-[#F5F0E8] font-heading tracking-tight">
+                    <dd className="text-xl md:text-2xl font-bold text-[#F5F0E8] font-heading tracking-tight">
                       {metric.value}
-                    </span>
-                    <span className="text-[10px] text-[#6B6355] uppercase tracking-[0.1em] mt-1">
+                    </dd>
+                    <dt className="text-[10px] text-[#6B6355] uppercase tracking-[0.1em] mt-1">
                       {metric.label}
-                    </span>
+                    </dt>
                   </div>
                 </React.Fragment>
               ))}
-            </motion.div>
+            </motion.dl>
           </div>
 
           {/* ── Right: Code card ─────────────────────────────────── */}
@@ -233,8 +239,10 @@ export default function HeroSection() {
                 transition={{ delay: 1.2, duration: 0.5 }}
                 className="absolute -top-4 -right-4 bg-[#0E0E0E]/90 border border-[#1F1F1F] rounded-xl px-4 py-2.5 shadow-lg backdrop-blur-sm"
               >
-                <p className="text-[10px] text-[#6B6355] uppercase tracking-wider mb-0.5">Projects</p>
-                <p className="text-lg font-bold text-[#F5F0E8] font-heading">15+</p>
+                <p className="text-[10px] text-[#6B6355] uppercase tracking-wider mb-0.5">Shipping now</p>
+                <p className="text-lg font-bold text-[#F5F0E8] font-heading">
+                  {formatDuration(monthsSince(currentFocus.startedAt))}
+                </p>
               </motion.div>
 
               {/* Floating badge — bottom left */}
@@ -244,8 +252,8 @@ export default function HeroSection() {
                 transition={{ delay: 1.4, duration: 0.5 }}
                 className="absolute -bottom-4 -left-4 bg-[#0E0E0E]/90 border border-[#D4AF37]/15 rounded-xl px-4 py-2.5 shadow-lg backdrop-blur-sm"
               >
-                <p className="text-[10px] text-[#6B6355] uppercase tracking-wider mb-0.5">Production</p>
-                <p className="text-lg font-bold text-[#D4AF37] font-heading">5 Apps</p>
+                <p className="text-[10px] text-[#6B6355] uppercase tracking-wider mb-0.5">Test suites</p>
+                <p className="text-lg font-bold text-[#D4AF37] font-heading">92</p>
               </motion.div>
             </div>
           </motion.div>
@@ -257,7 +265,7 @@ export default function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 z-10"
       >
         <span className="text-[10px] text-[#6B6355] uppercase tracking-widest">Scroll to explore</span>
         <motion.div

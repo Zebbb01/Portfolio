@@ -2,7 +2,6 @@
 'use client';
 
 interface WaveDividerProps {
-  flip?: boolean;
   className?: string;
 }
 

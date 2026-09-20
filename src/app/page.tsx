@@ -2,6 +2,7 @@
 import ScrollProgress from '@/src/components/ui/ScrollProgress';
 import Navigation from '@/src/components/ui/Navigation';
 import HeroSection from '@/src/components/sections/HeroSection';
+import CurrentlyBuildingSection from '@/src/components/sections/CurrentlyBuildingSection';
 import ServicesSection from '@/src/components/sections/ServicesSection';
 import ProjectsSection from '@/src/components/sections/ProjectsSection';
 import ExperienceSection from '@/src/components/sections/ExperienceSection';
@@ -13,31 +14,42 @@ import Footer from '@/src/components/ui/Footer';
 
 export default function Home() {
   return (
-    <main className="relative bg-bg-primary min-h-screen">
-      <ScrollProgress />
-      <Navigation />
+    <>
+      <a
+        href="#projects"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1000] focus:rounded-full focus:bg-[#D4AF37] focus:px-5 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-[#060606]"
+      >
+        Skip to work
+      </a>
 
-      <HeroSection />
+      <main className="relative bg-bg-primary min-h-screen">
+        <ScrollProgress />
+        <Navigation />
 
-      <WaveDivider />
-      <ServicesSection />
+        <HeroSection />
 
-      <WaveDivider flip />
-      <ProjectsSection />
+        <CurrentlyBuildingSection />
 
-      <WaveDivider />
-      <ExperienceSection />
+        <WaveDivider />
+        <ServicesSection />
 
-      <WaveDivider flip />
-      <ExpertiseSection />
+        <WaveDivider />
+        <ProjectsSection />
 
-      <WaveDivider />
-      <AboutSection />
+        <WaveDivider />
+        <ExperienceSection />
 
-      <WaveDivider flip />
-      <ContactSection />
+        <WaveDivider />
+        <ExpertiseSection />
 
-      <Footer />
-    </main>
+        <WaveDivider />
+        <AboutSection />
+
+        <WaveDivider />
+        <ContactSection />
+
+        <Footer />
+      </main>
+    </>
   );
 }
