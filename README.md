@@ -1,6 +1,6 @@
 # Gerald Villaceran — Portfolio
 
-Personal portfolio and case-study site for a full-stack engineer. Built with the Next.js App Router, it serves a marketing front end plus a small live-chat product: visitors can open a chat widget, send text, voice notes and images, and an AI assistant answers from a curated knowledge base while the owner gets an email alert.
+Personal portfolio and case-study site for a software engineer. Built with the Next.js App Router, it serves a marketing front end plus a small live-chat product: visitors can open a chat widget, send text, voice notes and images, and an AI assistant answers from a curated knowledge base while the owner gets an email alert.
 
 Live: https://portfolio-five-ruddy-49.vercel.app
 

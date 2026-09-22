@@ -62,7 +62,7 @@ const ProjectCaseStudy = () => {
   const hasRepo = Boolean(project.github && project.github !== '#');
 
   const facts = [
-    { label: 'Role', value: project.role ?? 'Full-Stack Engineer' },
+    { label: 'Role', value: project.role ?? 'Software Engineer' },
     { label: 'Timeline', value: project.timeline ?? '—' },
     {
       label: 'Status',

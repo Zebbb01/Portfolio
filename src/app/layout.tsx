@@ -20,48 +20,48 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Gerald Villaceran',
-  jobTitle: 'Full-Stack Engineer & Systems Architect',
+  jobTitle: 'Software Engineer',
   url: 'https://portfolio-five-ruddy-49.vercel.app',
   sameAs: [
     'https://github.com/Zebbb01',
     'https://www.linkedin.com/in/gerald-villaceran-798983325'
   ],
-  description: 'Full-stack engineer specializing in enterprise SaaS platforms, mobile applications, and business automation systems.',
+  description: 'Software engineer building production SaaS platforms, mobile applications, and business automation systems.',
   address: { '@type': 'PostalAddress', addressCountry: 'PH' },
   email: 'geraldvillaceran01@gmail.com',
   hasOccupation: {
     '@type': 'Occupation',
-    name: 'Full-Stack Engineer',
+    name: 'Software Engineer',
     skills: 'Next.js, React, React Native, TypeScript, Supabase, PostgreSQL, AI Integration',
   },
-  knowsAbout: ['Full-Stack Development', 'Systems Architecture', 'SaaS', 'Next.js', 'React', 'React Native', 'AI Integration', 'Business Automation']
+  knowsAbout: ['Software Engineering', 'Full-Stack Development', 'SaaS', 'Next.js', 'React', 'React Native', 'AI Integration', 'Business Automation']
 }
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://portfolio-five-ruddy-49.vercel.app'),
   title: {
-    default: 'Gerald Villaceran | Full-Stack Engineer & Systems Architect',
+    default: 'Gerald Villaceran | Software Engineer',
     template: '%s | Gerald Villaceran'
   },
   icons: {
     icon: '/images/logo-mark.svg',
   },
-  description: 'Full-stack engineer specializing in enterprise SaaS platforms, mobile applications, and business automation systems that deliver measurable business outcomes.',
-  keywords: ['Gerald Villaceran', 'Full-Stack Engineer', 'Systems Architect', 'Software Engineer', 'SaaS', 'Next.js', 'React', 'React Native', 'TypeScript', 'Supabase'],
+  description: 'Software engineer building production SaaS platforms, mobile applications, and business automation systems that deliver measurable business outcomes.',
+  keywords: ['Gerald Villaceran', 'Software Engineer', 'Full-Stack Developer', 'Web Developer', 'React Native Developer', 'SaaS', 'Next.js', 'React', 'React Native', 'TypeScript', 'Supabase'],
   authors: [{ name: 'Gerald Villaceran' }],
   creator: 'Gerald Villaceran',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://portfolio-five-ruddy-49.vercel.app',
-    title: 'Gerald Villaceran | Full-Stack Engineer & Systems Architect',
-    description: 'Full-stack engineer specializing in enterprise SaaS platforms, mobile applications, and business automation systems.',
+    title: 'Gerald Villaceran | Software Engineer',
+    description: 'Software engineer building production SaaS platforms, mobile applications, and business automation systems.',
     siteName: 'Gerald Villaceran'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Gerald Villaceran | Full-Stack Engineer & Systems Architect',
-    description: 'Full-stack engineer specializing in enterprise SaaS platforms, mobile applications, and business automation systems.',
+    title: 'Gerald Villaceran | Software Engineer',
+    description: 'Software engineer building production SaaS platforms, mobile applications, and business automation systems.',
   },
   robots: {
     index: true,

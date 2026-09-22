@@ -78,7 +78,7 @@ export default function HeroSection() {
             {/* Label */}
             <motion.div {...fadeUp(0.1)} className="flex flex-wrap items-center gap-3 mb-4">
               <p className="section-label">
-                Full-Stack Engineer &amp; Systems Architect
+                Software Engineer &#183; Full-Stack Web &amp; Mobile
               </p>
               <span className="inline-flex items-center gap-2 rounded-full border border-[#4ADE80]/25 bg-[#4ADE80]/[0.07] px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-[#4ADE80]">
                 <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
@@ -200,7 +200,7 @@ export default function HeroSection() {
                   <p className="pl-4">
                     <span className="text-[#A09882]">role</span>
                     <span className="text-[#6B6355]">:</span>{' '}
-                    <span className="text-[#D4AF37]/80">&quot;Full-Stack Engineer&quot;</span>
+                    <span className="text-[#D4AF37]/80">&quot;Software Engineer&quot;</span>
                     <span className="text-[#6B6355]">,</span>
                   </p>
                   <p className="pl-4">

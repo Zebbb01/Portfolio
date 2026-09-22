@@ -499,7 +499,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
 export const aboutData = {
   title: 'The Engineer Behind the Code',
   bio: [
-    "I'm Gerald Villaceran, a full-stack engineer based in the Philippines specializing in production-grade platforms that solve real business problems.",
+    "I'm Gerald Villaceran, a software engineer based in the Philippines. I build production-grade web and mobile platforms that solve real business problems.",
     'Right now I am six months into building my own BIR-compliant accounting SaaS end to end — 24 modules, 158K lines of TypeScript, 92 test suites and a weekly release cadence I have not missed — while working full-time on the web platforms and region-scoped admin portals of an on-demand delivery operation.',
     'Great software is invisible. It just works, scales, and delivers results. That principle drives every system I build.',
   ],
