@@ -534,7 +534,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
     title: 'Backend & Infrastructure',
     icon: Database as LucideIcon,
     description: 'Scalable systems that handle growth without breaking.',
-    technologies: ['Supabase', 'PostgreSQL', 'Prisma', 'Node.js', 'Vercel', 'Edge Functions'],
+    technologies: ['Supabase', 'PostgreSQL', 'REST APIs', 'Webhooks', 'Prisma', 'Node.js', 'Vercel', 'Edge Functions'],
   },
   {
     title: 'Mobile Development',

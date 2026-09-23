@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     icon: '/images/logo-mark.svg',
   },
   description: 'Software engineer building production SaaS platforms, mobile applications, and business automation systems that deliver measurable business outcomes.',
-  keywords: ['Gerald Villaceran', 'Software Engineer', 'Full-Stack Developer', 'Web Developer', 'React Native Developer', 'SaaS', 'Next.js', 'React', 'React Native', 'TypeScript', 'Supabase'],
+  keywords: ['Gerald Villaceran', 'Software Engineer', 'Full-Stack Developer', 'Web Developer', 'React Native Developer', 'REST API', 'SaaS', 'Next.js', 'React', 'React Native', 'TypeScript', 'Supabase'],
   authors: [{ name: 'Gerald Villaceran' }],
   creator: 'Gerald Villaceran',
   openGraph: {
