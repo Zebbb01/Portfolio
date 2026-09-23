@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { currentFocus, formatDuration, monthsSince, trustMetrics } from '@/src/data/portfolioData';
 import AnimatedBackground from '@/src/components/ui/AnimatedBackground';
+import CountUp from '@/src/components/ui/CountUp';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -151,7 +152,7 @@ export default function HeroSection() {
                   )}
                   <div className="flex flex-col">
                     <dd className="text-xl md:text-2xl font-bold text-[#F5F0E8] font-heading tracking-tight">
-                      {metric.value}
+                      <CountUp value={metric.value} />
                     </dd>
                     <dt className="text-[10px] text-[#6B6355] uppercase tracking-[0.1em] mt-1">
                       {metric.label}

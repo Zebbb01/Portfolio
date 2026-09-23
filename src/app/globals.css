@@ -192,6 +192,38 @@ img, video, svg {
   box-shadow: 0 8px 32px #D4AF3708;
 }
 
+/* Gold spotlight that follows the pointer; PointerSpotlight feeds --mx/--my. */
+.card-hover {
+  position: relative;
+  isolation: isolate;
+}
+
+.card-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), #D4AF3712, transparent 45%);
+}
+
+.card-hover:hover::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-hover,
+  .card-hover::before {
+    transition: none;
+  }
+  .card-hover:hover {
+    transform: none;
+  }
+}
+
 /* --------------------------------------------------------------------------
    Gold Gradient Text
    -------------------------------------------------------------------------- */

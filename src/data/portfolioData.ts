@@ -17,11 +17,12 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type { Project, Screenshot, Service, Experience, TrustMetric, ExpertiseCategory } from '../types';
+import type { BrandSlug } from '../components/ui/BrandIcon';
 
 // ---------------------------------------------------------------------------
 // Navigation Sections
 // ---------------------------------------------------------------------------
-export const sections = ['home', 'services', 'projects', 'experience', 'expertise', 'about', 'contact'];
+export const sections = ['home', 'services', 'projects', 'process', 'experience', 'expertise', 'about', 'contact'];
 
 // ---------------------------------------------------------------------------
 // Duration helper — keeps "months active" accurate without manual edits
@@ -98,6 +99,74 @@ export const currentFocus = {
       title: 'Design system',
       detail:
         'Brand tokens shared across the web app, the Expo mobile app and the till, on a 13px table density with a live /kit page.',
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
+// How I Build — toolchain, cost tier and delivery cadence
+// ---------------------------------------------------------------------------
+export type ToolTier = 'Paid' | 'Free tier' | 'Open source';
+
+export const buildProcess = {
+  intro:
+    "ProfitView started on Gemini's free tier. The build now runs on Claude Code, held to a test suite that has to pass before anything ships — and the rest of the toolchain starts free, so a production platform costs close to nothing until real usage says otherwise.",
+  phases: [
+    {
+      id: 'before',
+      label: 'Where it started',
+      tool: 'Gemini',
+      slug: 'googlegemini' as BrandSlug,
+      tier: 'Free tier' as ToolTier,
+      summary:
+        'Scaffolding, research and throwaway prototypes. Good for getting a first version on screen — slower once the codebase outgrew what fits in a single conversation.',
+    },
+    {
+      id: 'now',
+      label: 'How it ships now',
+      tool: 'Claude Code',
+      slug: 'claude' as BrandSlug,
+      tier: 'Paid' as ToolTier,
+      summary:
+        'An agent working inside the repository: it reads the codebase, writes the change against the test suite and runs it. This is the setup the weekly release cadence runs on today.',
+    },
+  ],
+  release: { weeks: 26, version: 'v0.66' },
+  velocity: [
+    { value: '26', label: 'Weekly releases, none missed' },
+    { value: '460+', label: 'Commits in six months' },
+    { value: '158K', label: 'Lines of TypeScript' },
+    { value: '92', label: 'Test suites in CI' },
+    { value: '24', label: 'Modules live' },
+  ],
+  tools: [
+    { name: 'Claude Code', slug: 'claude', tier: 'Paid', use: 'The agent in the repository. Reads the codebase, writes the change, runs the suites — where the weekly releases are built.' },
+    { name: 'Gemini', slug: 'googlegemini', tier: 'Free tier', use: 'Where ProfitView started: scaffolding, research and throwaway prototypes, before the build moved to Claude Code.' },
+    { name: 'Next.js', slug: 'nextdotjs', tier: 'Open source', use: 'The web apps, the admin portals and this site — App Router, server components and route handlers.' },
+    { name: 'Supabase', slug: 'supabase', tier: 'Free tier', use: 'Postgres, auth, storage and realtime. Tenant isolation lives here as Row Level Security, not in application code.' },
+    { name: 'Expo', slug: 'expo', tier: 'Free tier', use: 'Customer, merchant and rider apps from one React Native codebase, shipped to iOS and Android.' },
+    { name: 'Vitest & Playwright', slug: 'vitest', tier: 'Open source', use: '92 suites: unit tests for the ledger maths, browser tests for the flows a client actually clicks through.' },
+    { name: 'GitHub Actions', slug: 'githubactions', tier: 'Free tier', use: 'Runs the suites on every push, against an isolated Supabase project rather than mocks.' },
+    { name: 'Vercel', slug: 'vercel', tier: 'Free tier', use: 'A preview deployment for every branch, so changes are reviewed live before they reach production.' },
+    { name: 'n8n', slug: 'n8n', tier: 'Open source', use: 'Client automation — CRMs, email, payments and internal tools wired together, with failures that alert instead of hiding.' },
+    { name: 'Figma', slug: 'figma', tier: 'Free tier', use: 'Layouts and flows settled before code, so the build argues about implementation rather than direction.' },
+  ] satisfies { name: string; slug: BrandSlug; tier: ToolTier; use: string }[],
+  guarantees: [
+    {
+      title: 'Progress you can see every week',
+      detail: 'A versioned release lands weekly, with a changelog you can read. No quiet month followed by a big reveal.',
+    },
+    {
+      title: 'Correctness before speed',
+      detail: 'Tests run on every push against a real database, and money is handled with exact decimal arithmetic — never floating point.',
+    },
+    {
+      title: 'Costs that start near zero',
+      detail: 'Supabase, Vercel and GitHub Actions all start on a free tier. You pay for infrastructure when real usage justifies it, not before.',
+    },
+    {
+      title: 'Data isolated by the database',
+      detail: "Each client's rows are locked by PostgreSQL Row Level Security, so a bug in one screen cannot expose another tenant's data.",
     },
   ],
 };

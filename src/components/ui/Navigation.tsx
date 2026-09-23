@@ -14,6 +14,7 @@ const navLinks: { id: string; label: string }[] = [
   { id: 'home', label: 'Home' },
   { id: 'services', label: 'Services' },
   { id: 'projects', label: 'Work' },
+  { id: 'process', label: 'Process' },
   { id: 'experience', label: 'Experience' },
   { id: 'expertise', label: 'Expertise' },
   { id: 'about', label: 'About' },

@@ -5,12 +5,14 @@ import HeroSection from '@/src/components/sections/HeroSection';
 import CurrentlyBuildingSection from '@/src/components/sections/CurrentlyBuildingSection';
 import ServicesSection from '@/src/components/sections/ServicesSection';
 import ProjectsSection from '@/src/components/sections/ProjectsSection';
+import HowIBuildSection from '@/src/components/sections/HowIBuildSection';
 import ExperienceSection from '@/src/components/sections/ExperienceSection';
 import ExpertiseSection from '@/src/components/sections/ExpertiseSection';
 import AboutSection from '@/src/components/sections/AboutSection';
 import ContactSection from '@/src/components/sections/ContactSection';
 import WaveDivider from '@/src/components/ui/WaveDivider';
 import Footer from '@/src/components/ui/Footer';
+import PointerSpotlight from '@/src/components/ui/PointerSpotlight';
 
 export default function Home() {
   return (
@@ -24,6 +26,7 @@ export default function Home() {
 
       <main className="relative bg-bg-primary min-h-screen">
         <ScrollProgress />
+        <PointerSpotlight />
         <Navigation />
 
         <HeroSection />
@@ -35,6 +38,9 @@ export default function Home() {
 
         <WaveDivider />
         <ProjectsSection />
+
+        <WaveDivider />
+        <HowIBuildSection />
 
         <WaveDivider />
         <ExperienceSection />
