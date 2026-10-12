@@ -63,12 +63,12 @@ export const currentFocus = {
   role: 'Personal product — sole engineer',
   startedAt: '2026-03-29',
   summary:
-    'A multi-tenant accounting platform built for Philippine businesses — BIR-compliant VAT, withholding tax and Books of Accounts, in weekly versioned releases. I own the architecture, the money-handling correctness, the AI agent layer and the test suite across a web app, a mobile app and a shared design system.',
+    'A multi-tenant accounting platform built for Philippine businesses — BIR-compliant VAT, withholding tax and Books of Accounts, in versioned releases. I own the architecture, the money-handling correctness, the AI agent layer and the test suite across a web app, a mobile app and a shared design system.',
   stats: [
     { label: 'Modules live', value: '24' },
-    { label: 'Lines of code', value: '158K' },
-    { label: 'Test suites', value: '92' },
-    { label: 'Release', value: 'v0.66' },
+    { label: 'Lines of code', value: '164K' },
+    { label: 'Test suites', value: '106' },
+    { label: 'Release', value: 'v0.69' },
   ],
   milestones: [
     {
@@ -95,10 +95,10 @@ export const currentFocus = {
         '92 Vitest and Playwright suites in CI, fiscal period locks, an AI agent for document extraction, and an audit trail on every mutation.',
     },
     {
-      period: 'Sep 2026',
-      title: 'Design system',
+      period: 'Sep – Oct 2026',
+      title: 'Design system and classroom',
       detail:
-        'Brand tokens shared across the web app, the Expo mobile app and the till, on a 13px table density with a live /kit page.',
+        'Brand tokens shared across the web app, the Expo mobile app and the till, with a live /kit page — plus a classroom mode where accounting students hand in exercises and see whether they are right.',
     },
   ],
 };
@@ -128,24 +128,24 @@ export const buildProcess = {
       slug: 'claude' as BrandSlug,
       tier: 'Paid' as ToolTier,
       summary:
-        'An agent working inside the repository: it reads the codebase, writes the change against the test suite and runs it. This is the setup the weekly release cadence runs on today.',
+        'An agent working inside the repository: it reads the codebase, writes the change against the test suite and runs it. Every release since the switch has shipped from this setup.',
     },
   ],
-  release: { weeks: 26, version: 'v0.66' },
+  release: { weeks: 28, count: 116, version: 'v0.69' },
   velocity: [
-    { value: '26', label: 'Weekly releases, none missed' },
-    { value: '460+', label: 'Commits in six months' },
-    { value: '158K', label: 'Lines of TypeScript' },
-    { value: '92', label: 'Test suites in CI' },
+    { value: '116', label: 'Versioned releases' },
+    { value: '630+', label: 'Commits across four repos' },
+    { value: '164K', label: 'Lines of TypeScript' },
+    { value: '106', label: 'Test suites in CI' },
     { value: '24', label: 'Modules live' },
   ],
   tools: [
-    { name: 'Claude Code', slug: 'claude', tier: 'Paid', use: 'The agent in the repository. Reads the codebase, writes the change, runs the suites — where the weekly releases are built.' },
+    { name: 'Claude Code', slug: 'claude', tier: 'Paid', use: 'The agent in the repository. Reads the codebase, writes the change, runs the suites — where every release is built.' },
     { name: 'Gemini', slug: 'googlegemini', tier: 'Free tier', use: 'Where ProfitView started: scaffolding, research and throwaway prototypes, before the build moved to Claude Code.' },
     { name: 'Next.js', slug: 'nextdotjs', tier: 'Open source', use: 'The web apps, the admin portals and this site — App Router, server components and route handlers.' },
     { name: 'Supabase', slug: 'supabase', tier: 'Free tier', use: 'Postgres, auth, storage and realtime. Tenant isolation lives here as Row Level Security, not in application code.' },
-    { name: 'Expo', slug: 'expo', tier: 'Free tier', use: 'Customer, merchant and rider apps from one React Native codebase, shipped to iOS and Android.' },
-    { name: 'Vitest & Playwright', slug: 'vitest', tier: 'Open source', use: '92 suites: unit tests for the ledger maths, browser tests for the flows a client actually clicks through.' },
+    { name: 'Expo', slug: 'expo', tier: 'Free tier', use: 'The ProfitView mobile app — one React Native codebase for iOS and Android, on the same brand tokens as the web app.' },
+    { name: 'Vitest & Playwright', slug: 'vitest', tier: 'Open source', use: '106 suites: unit tests for the ledger maths, browser tests for the flows a client actually clicks through.' },
     { name: 'GitHub Actions', slug: 'githubactions', tier: 'Free tier', use: 'Runs the suites on every push, against an isolated Supabase project rather than mocks.' },
     { name: 'Vercel', slug: 'vercel', tier: 'Free tier', use: 'A preview deployment for every branch, so changes are reviewed live before they reach production.' },
     { name: 'n8n', slug: 'n8n', tier: 'Open source', use: 'Client automation — CRMs, email, payments and internal tools wired together, with failures that alert instead of hiding.' },
@@ -223,8 +223,8 @@ export const projects: Project[] = [
     problem:
       'Philippine businesses run their books in spreadsheets, then rebuild everything by hand at filing time.',
     description:
-      'A multi-tenant accounting platform for the Philippine market, shipped in weekly versioned releases. 24 live modules covering double-entry journals, invoicing, bills, banking reconciliation, fiscal periods and reporting — plus the compliance layer the local market actually needs: VAT split across taxable, zero-rated and exempt, expanded withholding tax, SLSP summary lists and BIR Books of Accounts. Money paths run on Decimal.js rather than floats, tenant isolation is enforced by PostgreSQL RLS, and an AI agent handles document extraction and reconciliation. 158K lines of TypeScript behind 92 Vitest and Playwright suites in CI.',
-    impact: '40% faster month-end closing',
+      'A multi-tenant accounting platform for the Philippine market, shipped in versioned releases — 116 so far. 24 live modules covering double-entry journals, invoicing, bills, banking reconciliation, fiscal periods and reporting — plus the compliance layer the local market actually needs: VAT split across taxable, zero-rated and exempt, expanded withholding tax, SLSP summary lists and BIR Books of Accounts. Money paths run on Decimal.js rather than floats, tenant isolation is enforced by PostgreSQL RLS, and an AI agent handles document extraction and reconciliation. 164K lines of TypeScript behind 106 Vitest and Playwright suites in CI.',
+    impact: '116 versioned releases in six months',
     role: 'Founder & sole engineer — personal product',
     timeline: 'March 2026 — Present',
     context:
@@ -246,26 +246,77 @@ export const projects: Project[] = [
           'VAT carries its treatment — taxable, zero-rated or exempt — on the tax rate itself, so the SLSP summary lists split correctly instead of guessing. Withholding tax, Books of Accounts and the filing calendar follow from the same model.',
       },
       {
-        title: 'Weekly versioned releases',
+        title: 'Versioned releases with a changelog',
         detail:
-          'Each release ships with a changelog entry users actually see in-app. Currently at v0.66 after six months, with no missed week.',
+          'Each release ships with a changelog entry users actually see in-app. 116 releases in six months, now at v0.69.',
       },
       {
         title: 'Tests as the safety net for an audit trail',
         detail:
-          '92 Vitest and Playwright suites run in CI against a real isolated Supabase project, because accounting logic that is only unit-tested against mocks proves nothing.',
+          '106 Vitest and Playwright suites run in CI against a real isolated Supabase project, because accounting logic that is only unit-tested against mocks proves nothing.',
       },
     ],
     outcomes: [
       { value: '24', label: 'Modules live' },
-      { value: '158K', label: 'Lines of TypeScript' },
-      { value: '92', label: 'Test suites in CI' },
-      { value: 'v0.66', label: 'Current release' },
+      { value: '164K', label: 'Lines of TypeScript' },
+      { value: '106', label: 'Test suites in CI' },
+      { value: 'v0.69', label: 'Current release' },
     ],
     tech: ['Next.js 15', 'Supabase', 'PostgreSQL RLS', 'Anthropic SDK', 'Decimal.js', 'Playwright', 'Vitest', 'PayMongo'],
     github: '',
     live: 'https://profit-view-swart.vercel.app/',
     detailsUrl: '/projects/profitview',
+  },
+  {
+    title: 'TamangSahod',
+    slug: 'tamang-sahod',
+    category: 'AI Search · Python',
+    isFeatured: true,
+    status: 'active',
+    startedAt: '2026-09-28',
+    mediaType: 'image',
+    mediaSrc: '/project/TamangSahod/holiday.webp',
+    problem:
+      'Owners of 1–20-person businesses guess at holiday pay, 13th month and contributions, and a wrong guess underpays a worker.',
+    description:
+      'Payroll answers for Philippine micro-businesses. Five calculators — salary for the year, 13th month, holiday pay, final pay, and SSS, PhilHealth and Pag-IBIG — each return the peso amount with the official rule quoted word for word. Questions in English or Taglish run through hybrid search (multilingual embeddings plus full-text, rank-fused in LanceDB) over the DOLE and agency sources, and anything outside the five topics is refused rather than guessed. An optional LLM only pre-fills a form the owner checks; tested Python does the maths.',
+    impact: '96% right rule in the top 3',
+    role: 'Solo — research, data, evals and deployment',
+    timeline: 'September 2026 — Present',
+    context:
+      'Small employers run payroll by hand or in Excel. What a worker is owed on a holiday, in 13th month pay, in final pay or in contributions is spread across DOLE advisories, a Presidential Decree and three agencies’ circulars that change every year — so owners guess, and a wrong guess underpays someone or ends in a DOLE complaint.',
+    approach: [
+      {
+        title: 'The AI never does the maths',
+        detail:
+          'Language models read Taglish well and add badly, so the model only fills in a form. The owner confirms every field and tested Python computes the pesos. The model’s reply is treated as untrusted input: unknown topics, fields and out-of-range values are dropped.',
+      },
+      {
+        title: 'Every amount cites its rule',
+        detail:
+          'Each result quotes the passage it follows, with the source and page, so an owner can check the answer instead of trusting it.',
+      },
+      {
+        title: 'Rates are data with an expiry',
+        detail:
+          'Every rate carries its source and the date it was last verified. A pay date outside a verified period is refused — never computed with an old rate.',
+      },
+      {
+        title: 'Refuse what it cannot answer',
+        detail:
+          'Questions outside the five topics get “not covered” and the DOLE hotline, never a guess. Nothing the owner types is stored, and amounts travel in POST bodies rather than URLs.',
+      },
+    ],
+    outcomes: [
+      { value: '5', label: 'Payroll calculators' },
+      { value: '74', label: 'Tests vs official examples' },
+      { value: '96%', label: 'Right rule in top 3' },
+      { value: '20/20', label: 'Off-topic refused (seed set)' },
+    ],
+    tech: ['Python', 'FastAPI', 'LanceDB', 'fastembed', 'Groq', 'pytest', 'GitHub Actions', 'Modal'],
+    github: 'https://github.com/Zebbb01/tamang-sahod',
+    live: '',
+    detailsUrl: '/projects/tamang-sahod',
   },
   {
     title: 'N8N Business Automation',
@@ -440,6 +491,22 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
         'The /kit page — one live reference for table density, control heights and states, shared across the web, mobile and till apps.',
     },
   ],
+  TamangSahod: [
+    {
+      src: '/project/TamangSahod/holiday.webp',
+      caption:
+        'Holiday pay for Christmas Day — the amount, the 200% rule behind it, and links to the DOLE handbook, the labor advisory and the proclamation.',
+    },
+    {
+      src: '/project/TamangSahod/ask.webp',
+      caption:
+        'A Taglish question answered with the matching rules, quoted word for word with the source and page.',
+    },
+    {
+      src: '/project/TamangSahod/home.webp',
+      caption: 'Ask in English or Taglish, or open one of the five calculators. No login, nothing stored.',
+    },
+  ],
   'GHL Marketing Websites': [
     { src: '/project/GHL/ghl-1.mp4', caption: 'Landing page with scroll-triggered micro-animations cueing the next action.' },
     { src: '/project/GHL/ghl-2.mp4', caption: 'Funnel step — one decision per screen, no competing calls to action.' },
@@ -470,17 +537,15 @@ export const experiences: Experience[] = [
     period: 'May 2026 - Present',
     startedAt: '2026-05-18',
     description:
-      'Building and maintaining the web platforms and region-scoped admin portals behind an on-demand delivery and marketplace operation, alongside the customer, merchant and rider applications.',
+      'Full-stack work on an on-demand delivery and marketplace platform: its customer, merchant and rider mobile apps and the web dashboards that run it. Specifics are under NDA.',
     highlights: [
-      'Maintain multiple production web platforms and admin portals, each scoped to its own operating region',
-      'Built responsive, scalable interfaces that hold up from a 360px phone to a wide desktop dashboard',
-      'Developed customer, merchant and rider mobile apps with React Native, Expo Router and Reanimated',
-      'Implemented real-time delivery tracking with custom Map IDs, live GPS and Supabase Realtime',
-      'Integrated email and SMS OTP login plus Google and Facebook OAuth with email-permission fallbacks',
-      'Designed and maintained 70+ database tables with triggers, RLS policies and audit logging',
-      'Shipped automated transaction refunds and merchant settlements across the admin portals',
+      'Build and maintain the customer, merchant and rider mobile apps with React Native and Expo Router',
+      'Build responsive web dashboards in Next.js that hold up from a 360px phone to a wide desktop',
+      'Ship features end to end across UI, APIs and PostgreSQL on Supabase',
+      'Delivered phone OTP and social sign-in, live delivery tracking on Google Maps, and in-app checkout',
+      'Work with designers, project managers and QA through Git-based review and releases',
     ],
-    tech: ['Next.js', 'React Native', 'Expo Router', 'Supabase', 'PayMongo', 'TypeScript', 'Google Maps', 'PostgreSQL'],
+    tech: ['Next.js', 'React Native', 'Expo Router', 'Supabase', 'PostgreSQL', 'TypeScript', 'Google Maps', 'PayMongo'],
   },
   {
     title: 'Founder & Sole Engineer',
@@ -489,15 +554,15 @@ export const experiences: Experience[] = [
     period: 'March 2026 - Present',
     startedAt: '2026-03-29',
     description:
-      'My own product, built end to end. A multi-tenant accounting platform for the Philippine market, shipping weekly versioned releases for six straight months — architecture, compliance, AI layer and test suite all mine.',
+      'My own product, built end to end. A multi-tenant accounting platform for the Philippine market, with 116 versioned releases in six months — architecture, compliance, AI layer and test suite all mine.',
     highlights: [
       'Architected 24 live modules: double-entry journal, chart of accounts, invoicing, bills, expenses, banking reconciliation, fiscal periods and reporting',
       'Built the Philippine compliance layer — VAT across taxable, zero-rated and exempt, expanded withholding tax, SLSP summary lists and BIR Books of Accounts',
       'Enforced tenant isolation with PostgreSQL Row Level Security and an audit trail on every write',
       'Held money correctness with Decimal.js across every ledger path — no floating-point arithmetic in the accounting core',
       'Built the AI agent layer on the Anthropic and OpenAI SDKs for document extraction and bank reconciliation',
-      'Wrote and maintain 92 Vitest and Playwright suites running in CI, plus brand tokens shared across the web, mobile and till apps',
-      'Shipped 460+ commits across four repositories in six months, on a weekly versioned release cadence',
+      'Wrote and maintain 106 Vitest and Playwright suites running in CI, plus brand tokens shared across the web, mobile and till apps',
+      'Shipped 630+ commits across four repositories and 116 versioned releases in six months',
     ],
     tech: ['Next.js 15', 'TypeScript', 'Supabase', 'PostgreSQL RLS', 'Anthropic SDK', 'Decimal.js', 'Playwright', 'Vitest'],
   },
@@ -534,7 +599,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
     title: 'Backend & Infrastructure',
     icon: Database as LucideIcon,
     description: 'Scalable systems that handle growth without breaking.',
-    technologies: ['Supabase', 'PostgreSQL', 'REST APIs', 'Webhooks', 'Prisma', 'Node.js', 'Vercel', 'Edge Functions'],
+    technologies: ['Supabase', 'PostgreSQL', 'REST APIs', 'Webhooks', 'Node.js', 'Python', 'FastAPI', 'Prisma', 'Vercel', 'Edge Functions'],
   },
   {
     title: 'Mobile Development',
@@ -552,13 +617,13 @@ export const expertiseCategories: ExpertiseCategory[] = [
     title: 'AI & Automation',
     icon: Bot as LucideIcon,
     description: 'Intelligent automation that reduces costs and accelerates decisions.',
-    technologies: ['Anthropic SDK', 'OpenAI', 'n8n', 'Make', 'OCR', 'Prompt Engineering'],
+    technologies: ['Anthropic SDK', 'OpenAI', 'Embeddings', 'LanceDB', 'Hybrid Search', 'n8n', 'Make', 'OCR', 'Prompt Engineering'],
   },
   {
     title: 'Testing & Reliability',
     icon: Radio as LucideIcon,
     description: 'Correctness held by tests, not by hope — especially where money moves.',
-    technologies: ['Vitest', 'Playwright', 'PostgreSQL RLS', 'Decimal.js', 'Audit Logging', 'GitHub Actions'],
+    technologies: ['Vitest', 'Playwright', 'pytest', 'Evals', 'PostgreSQL RLS', 'Decimal.js', 'Audit Logging', 'GitHub Actions'],
   },
 ];
 
@@ -569,13 +634,13 @@ export const aboutData = {
   title: 'The Engineer Behind the Code',
   bio: [
     "I'm Gerald Villaceran, a software engineer based in the Philippines. I build production-grade web and mobile platforms that solve real business problems.",
-    'Right now I am six months into building my own BIR-compliant accounting SaaS end to end — 24 modules, 158K lines of TypeScript, 92 test suites and a weekly release cadence I have not missed — while working full-time on the web platforms and region-scoped admin portals of an on-demand delivery operation.',
+    'Right now I am six months into building my own BIR-compliant accounting SaaS end to end — 24 modules, 164K lines of TypeScript, 106 test suites and 116 versioned releases — and TamangSahod, a Python search tool that answers Philippine payroll questions with the rule behind every peso. By day I work full-time on the mobile apps and web dashboards of an on-demand delivery platform.',
     'Great software is invisible. It just works, scales, and delivers results. That principle drives every system I build.',
   ],
   stats: [
     { value: '24', label: 'Modules Live' },
-    { value: '158K', label: 'Lines Shipped' },
-    { value: '92', label: 'Test Suites' },
+    { value: '164K', label: 'Lines Shipped' },
+    { value: '106', label: 'Test Suites' },
   ],
 };
 

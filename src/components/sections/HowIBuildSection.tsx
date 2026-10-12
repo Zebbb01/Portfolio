@@ -172,7 +172,7 @@ export default function HowIBuildSection() {
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h3 className="font-heading text-xl font-semibold text-[#F5F0E8]">
-                {release.weeks} weeks. {release.weeks} releases.
+                {release.weeks} weeks. {release.count} releases.
               </h3>
               <span className="text-xs text-[#6B6355] uppercase tracking-[0.14em]">Now at {release.version}</span>
             </div>

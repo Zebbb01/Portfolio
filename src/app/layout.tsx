@@ -32,9 +32,9 @@ const jsonLd = {
   hasOccupation: {
     '@type': 'Occupation',
     name: 'Software Engineer',
-    skills: 'Next.js, React, React Native, TypeScript, Supabase, PostgreSQL, AI Integration',
+    skills: 'Next.js, React, React Native, TypeScript, Supabase, PostgreSQL, Python, AI Integration',
   },
-  knowsAbout: ['Software Engineering', 'Full-Stack Development', 'SaaS', 'Next.js', 'React', 'React Native', 'AI Integration', 'Business Automation']
+  knowsAbout: ['Software Engineering', 'Full-Stack Development', 'SaaS', 'Next.js', 'React', 'React Native', 'Python', 'Vector Search', 'AI Integration', 'Business Automation']
 }
 
 export const metadata: Metadata = {
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     icon: '/images/logo-mark.svg',
   },
   description: 'Software engineer building production SaaS platforms, mobile applications, and business automation systems that deliver measurable business outcomes.',
-  keywords: ['Gerald Villaceran', 'Software Engineer', 'Full-Stack Developer', 'Web Developer', 'React Native Developer', 'REST API', 'SaaS', 'Next.js', 'React', 'React Native', 'TypeScript', 'Supabase'],
+  keywords: ['Gerald Villaceran', 'Software Engineer', 'Full-Stack Developer', 'Web Developer', 'React Native Developer', 'REST API', 'SaaS', 'Next.js', 'React', 'React Native', 'TypeScript', 'Supabase', 'Python'],
   authors: [{ name: 'Gerald Villaceran' }],
   creator: 'Gerald Villaceran',
   openGraph: {
