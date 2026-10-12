@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/src/app/api/lib/db';
+import { getSupabase } from '@/src/app/api/lib/db';
 import { sendChatNotificationEmail } from '@/src/app/api/lib/mail';
 
 export async function POST(req: Request) {
   try {
+    const supabase = getSupabase();
     const { guestName, guestEmail } = await req.json();
 
     if (!guestName || !guestEmail) {

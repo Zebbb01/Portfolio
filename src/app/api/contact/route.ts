@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import supabase from '../../api/lib/db'; // Import the shared Supabase client
+import { getSupabase } from '../../api/lib/db'; // Import the shared Supabase client
 import { sendContactEmail } from '../../api/lib/mail'; // Import the email sending function
 
 export async function POST(request: Request) {
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       // Note: If using supabase-js v2, standard .insert doesn't take signal in the method call
       // But we can check for timeout in the catch block if the promise hangs
       const { error: dbError } = await Promise.race([
-        supabase.from('contact_messages').insert([{ name, email, message }]),
+        getSupabase().from('contact_messages').insert([{ name, email, message }]),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000))
       ]) as any;
       

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/src/app/api/lib/db';
+import { getSupabase } from '@/src/app/api/lib/db';
 
 async function generateAiReply(history: { role: string; content: string }[]) {
   const token = process.env.GITHUB_TOKEN;
@@ -99,6 +99,7 @@ Conversation Guidelines:
 
 export async function POST(req: Request) {
   try {
+    const supabase = getSupabase();
     const { roomId, sender, content, mediaUrl, mediaType } = await req.json();
 
     if (!roomId || !sender) {
