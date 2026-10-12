@@ -24,7 +24,7 @@ const jsonLd = {
   url: 'https://portfolio-five-ruddy-49.vercel.app',
   sameAs: [
     'https://github.com/Zebbb01',
-    'https://www.linkedin.com/in/gerald-villaceran-798983325'
+    'https://www.linkedin.com/in/gerald-villaceran/'
   ],
   description: 'Software engineer building production SaaS platforms, mobile applications, and business automation systems.',
   address: { '@type': 'PostalAddress', addressCountry: 'PH' },

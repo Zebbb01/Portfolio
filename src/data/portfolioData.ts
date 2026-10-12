@@ -657,7 +657,7 @@ export const contactInfo = {
     {
       name: 'LinkedIn',
       icon: Linkedin as LucideIcon,
-      href: 'https://www.linkedin.com/in/gerald-villaceran-798983325',
+      href: 'https://www.linkedin.com/in/gerald-villaceran/',
     },
     {
       name: 'Email',
