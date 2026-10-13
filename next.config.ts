@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  // ProfitView was renamed Trusum on the switch-over; old links keep working.
+  async redirects() {
+    return [{ source: '/projects/profitview', destination: '/projects/trusum', permanent: true }];
+  },
+
   async headers() {
     return [
       {

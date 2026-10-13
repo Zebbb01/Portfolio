@@ -59,7 +59,7 @@ export const trustMetrics: TrustMetric[] = [
 // ---------------------------------------------------------------------------
 export const currentFocus = {
   label: 'Currently Building',
-  project: 'ProfitView Accounting',
+  project: 'Trusum Accounting',
   role: 'Personal product — sole engineer',
   startedAt: '2026-03-29',
   summary:
@@ -110,7 +110,7 @@ export type ToolTier = 'Paid' | 'Free tier' | 'Open source';
 
 export const buildProcess = {
   intro:
-    "ProfitView started on Gemini's free tier. The build now runs on Claude Code, held to a test suite that has to pass before anything ships — and the rest of the toolchain starts free, so a production platform costs close to nothing until real usage says otherwise.",
+    "Trusum started on Gemini's free tier. The build now runs on Claude Code, held to a test suite that has to pass before anything ships — and the rest of the toolchain starts free, so a production platform costs close to nothing until real usage says otherwise.",
   phases: [
     {
       id: 'before',
@@ -141,10 +141,10 @@ export const buildProcess = {
   ],
   tools: [
     { name: 'Claude Code', slug: 'claude', tier: 'Paid', use: 'The agent in the repository. Reads the codebase, writes the change, runs the suites — where every release is built.' },
-    { name: 'Gemini', slug: 'googlegemini', tier: 'Free tier', use: 'Where ProfitView started: scaffolding, research and throwaway prototypes, before the build moved to Claude Code.' },
+    { name: 'Gemini', slug: 'googlegemini', tier: 'Free tier', use: 'Where Trusum started: scaffolding, research and throwaway prototypes, before the build moved to Claude Code.' },
     { name: 'Next.js', slug: 'nextdotjs', tier: 'Open source', use: 'The web apps, the admin portals and this site — App Router, server components and route handlers.' },
     { name: 'Supabase', slug: 'supabase', tier: 'Free tier', use: 'Postgres, auth, storage and realtime. Tenant isolation lives here as Row Level Security, not in application code.' },
-    { name: 'Expo', slug: 'expo', tier: 'Free tier', use: 'The ProfitView mobile app — one React Native codebase for iOS and Android, on the same brand tokens as the web app.' },
+    { name: 'Expo', slug: 'expo', tier: 'Free tier', use: 'The Trusum mobile app — one React Native codebase for iOS and Android, on the same brand tokens as the web app.' },
     { name: 'Vitest & Playwright', slug: 'vitest', tier: 'Open source', use: '106 suites: unit tests for the ledger maths, browser tests for the flows a client actually clicks through.' },
     { name: 'GitHub Actions', slug: 'githubactions', tier: 'Free tier', use: 'Runs the suites on every push, against an isolated Supabase project rather than mocks.' },
     { name: 'Vercel', slug: 'vercel', tier: 'Free tier', use: 'A preview deployment for every branch, so changes are reviewed live before they reach production.' },
@@ -212,8 +212,8 @@ export const services: Service[] = [
 // ---------------------------------------------------------------------------
 export const projects: Project[] = [
   {
-    title: 'ProfitView Accounting',
-    slug: 'profitview',
+    title: 'Trusum Accounting',
+    slug: 'trusum',
     category: 'Enterprise SaaS',
     isFeatured: true,
     status: 'active',
@@ -228,7 +228,7 @@ export const projects: Project[] = [
     role: 'Founder & sole engineer — personal product',
     timeline: 'March 2026 — Present',
     context:
-      'Philippine SMBs keep their books in spreadsheets and rebuild everything by hand when BIR filing comes due. Off-the-shelf accounting software either ignores local tax rules or prices itself out of the market. ProfitView is the attempt to serve that gap properly: a real double-entry ledger with the compliance layer built in rather than bolted on.',
+      'Philippine SMBs keep their books in spreadsheets and rebuild everything by hand when BIR filing comes due. Off-the-shelf accounting software either ignores local tax rules or prices itself out of the market. Trusum is the attempt to serve that gap properly: a real double-entry ledger with the compliance layer built in rather than bolted on.',
     approach: [
       {
         title: 'Isolation at the database, not the app',
@@ -265,7 +265,7 @@ export const projects: Project[] = [
     tech: ['Next.js 15', 'Supabase', 'PostgreSQL RLS', 'Anthropic SDK', 'Decimal.js', 'Playwright', 'Vitest', 'PayMongo'],
     github: '',
     live: 'https://profit-view-swart.vercel.app/',
-    detailsUrl: '/projects/profitview',
+    detailsUrl: '/projects/trusum',
   },
   {
     title: 'TamangSahod',
@@ -459,7 +459,7 @@ export const projects: Project[] = [
 // Project Screenshots (for gallery)
 // ---------------------------------------------------------------------------
 export const projectScreenshots: Record<string, Screenshot[]> = {
-  'ProfitView Accounting': [
+  'Trusum Accounting': [
     {
       src: '/project/SaaS/dashboard.webp',
       caption:
@@ -549,7 +549,7 @@ export const experiences: Experience[] = [
   },
   {
     title: 'Founder & Sole Engineer',
-    company: 'ProfitView — Self-Initiated Product',
+    company: 'Trusum — Self-Initiated Product',
     type: 'Personal Project',
     period: 'March 2026 - Present',
     startedAt: '2026-03-29',

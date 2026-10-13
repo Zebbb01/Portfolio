@@ -81,7 +81,7 @@ export default function CurrentlyBuildingSection() {
             </dl>
 
             <Link
-              href="/projects/profitview"
+              href="/projects/trusum"
               className="group inline-flex items-center gap-2 text-sm font-medium text-[#D4AF37] hover:text-[#E8D48B] transition-colors mt-8"
             >
               Read the case study
