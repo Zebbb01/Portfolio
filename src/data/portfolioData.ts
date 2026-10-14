@@ -219,7 +219,7 @@ export const projects: Project[] = [
     status: 'active',
     startedAt: '2026-03-29',
     mediaType: 'image',
-    mediaSrc: '/project/SaaS/dashboard.webp',
+    mediaSrc: '/project/SaaS/trusum-dashboard.webp',
     problem:
       'Philippine businesses run their books in spreadsheets, then rebuild everything by hand at filing time.',
     description:
@@ -461,32 +461,32 @@ export const projects: Project[] = [
 export const projectScreenshots: Record<string, Screenshot[]> = {
   'Trusum Accounting': [
     {
-      src: '/project/SaaS/dashboard.webp',
+      src: '/project/SaaS/trusum-dashboard.webp',
       caption:
         'Dashboard — cash position, receivables and payables, with the financial-health ratios explained in plain language underneath.',
     },
     {
-      src: '/project/SaaS/sales-invoices.webp',
+      src: '/project/SaaS/trusum-sales.webp',
       caption:
         'Sales register — draft, posted, paid and overdue states, filtered by period and status, with balance due tracked per invoice.',
     },
     {
-      src: '/project/SaaS/new-invoice.webp',
+      src: '/project/SaaS/trusum-new-invoice.webp',
       caption:
         'New invoice — VAT-inclusive or exclusive amounts, expanded withholding tax, and a running summary as lines are added.',
     },
     {
-      src: '/project/SaaS/bir-slsp-report.webp',
+      src: '/project/SaaS/trusum-slsp.webp',
       caption:
         'SLSP report — sales and purchases per counterparty split into taxable, zero-rated and exempt, refusing to file until the data is actually complete.',
     },
     {
-      src: '/project/SaaS/general-ledger.webp',
+      src: '/project/SaaS/trusum-general-ledger.webp',
       caption:
         'General ledger at tablet width — every posting traceable to its source document, with the layout reflowing rather than scrolling sideways.',
     },
     {
-      src: '/project/SaaS/design-system.webp',
+      src: '/project/SaaS/trusum-kit.webp',
       caption:
         'The /kit page — one live reference for table density, control heights and states, shared across the web, mobile and till apps.',
     },
