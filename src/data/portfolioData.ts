@@ -264,7 +264,7 @@ export const projects: Project[] = [
     ],
     tech: ['Next.js 15', 'Supabase', 'PostgreSQL RLS', 'Anthropic SDK', 'Decimal.js', 'Playwright', 'Vitest', 'PayMongo'],
     github: '',
-    live: 'https://profit-view-swart.vercel.app/',
+    live: 'https://trusum.vercel.app/',
     detailsUrl: '/projects/trusum',
   },
   {
