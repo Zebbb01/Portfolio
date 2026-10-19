@@ -534,16 +534,17 @@ export const experiences: Experience[] = [
     title: 'Full-Stack Developer',
     company: 'Poseidon Distribution OPC',
     type: 'Full-Time',
-    period: 'May 2026 - Present',
+    period: 'May 2026 - Oct 2026',
     startedAt: '2026-05-18',
+    endedAt: '2026-10-16',
     description:
       'Full-stack work on an on-demand delivery and marketplace platform: its customer, merchant and rider mobile apps and the web dashboards that run it. Specifics are under NDA.',
     highlights: [
-      'Build and maintain the customer, merchant and rider mobile apps with React Native and Expo Router',
-      'Build responsive web dashboards in Next.js that hold up from a 360px phone to a wide desktop',
-      'Ship features end to end across UI, APIs and PostgreSQL on Supabase',
+      'Built and maintained the customer, merchant and rider mobile apps with React Native and Expo Router',
+      'Built responsive web dashboards in Next.js that hold up from a 360px phone to a wide desktop',
+      'Shipped features end to end across UI, APIs and PostgreSQL on Supabase',
       'Delivered phone OTP and social sign-in, live delivery tracking on Google Maps, and in-app checkout',
-      'Work with designers, project managers and QA through Git-based review and releases',
+      'Worked with designers, project managers and QA through Git-based review and releases',
     ],
     tech: ['Next.js', 'React Native', 'Expo Router', 'Supabase', 'PostgreSQL', 'TypeScript', 'Google Maps', 'PayMongo'],
   },
@@ -634,7 +635,7 @@ export const aboutData = {
   title: 'The Engineer Behind the Code',
   bio: [
     "I'm Gerald Villaceran, a software engineer based in the Philippines. I build production-grade web and mobile platforms that solve real business problems.",
-    'Right now I am six months into building my own BIR-compliant accounting SaaS end to end — 24 modules, 164K lines of TypeScript, 106 test suites and 116 versioned releases — and TamangSahod, a Python search tool that answers Philippine payroll questions with the rule behind every peso. By day I work full-time on the mobile apps and web dashboards of an on-demand delivery platform.',
+    'Right now I am six months into building my own BIR-compliant accounting SaaS end to end — 24 modules, 164K lines of TypeScript, 106 test suites and 116 versioned releases — and TamangSahod, a Python search tool that answers Philippine payroll questions with the rule behind every peso. Until October 2026 I worked full-time on the mobile apps and web dashboards of an on-demand delivery platform.',
     'Great software is invisible. It just works, scales, and delivers results. That principle drives every system I build.',
   ],
   stats: [

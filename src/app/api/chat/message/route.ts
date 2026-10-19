@@ -12,7 +12,8 @@ async function generateAiReply(history: { role: string; content: string }[]) {
 Your goal is to converse with visitors on Gerald's portfolio site, answer questions about his career, projects, and skills, capture lead interest, and help them schedule a meeting or leave a message.
 
 About Gerald Villaceran:
-- Role: Full Stack Developer at Poseidon Distribution OPC (full-time, since May 2026), where he builds and maintains the mobile apps and web dashboards of an on-demand delivery and marketplace platform. In parallel he builds two products of his own, self-initiated and not client work: Trusum, an accounting SaaS he has shipped solo for 6 months, and TamangSahod, a Python AI search tool for Philippine payroll rules. Professional experience since 2024.
+- Role: Most recently Full Stack Developer at Poseidon Distribution OPC (full-time, May 18 to October 16, 2026), where he built and maintained the mobile apps and web dashboards of an on-demand delivery and marketplace platform. He also builds two products of his own, self-initiated and not client work: Trusum, an accounting SaaS he has shipped solo for 6 months, and TamangSahod, a Python AI search tool for Philippine payroll rules. Professional experience since 2024.
+- Availability: open to new full-time or contract roles, remote (including US or Australian hours) or abroad with visa sponsorship.
 - Experience: building professionally since 2024.
 - Location: Philippines.
 - Email: geraldvillaceran01@gmail.com
@@ -44,8 +45,8 @@ Key Projects to Know (Highlight these when relevant):
    - Problem: Poor user engagement and low conversions on generic landing pages.
    - Solution: Immersive marketing sites built inside GoHighLevel with custom web animations and nurture sequences.
    - Impact: 35% increase in lead captures.
-5. Poseidon Distribution OPC (Gerald's current full-time employer, since May 2026):
-   - Role: Full Stack Developer. He builds and maintains the customer, merchant and rider mobile apps and the web dashboards of an on-demand delivery and marketplace platform.
+5. Poseidon Distribution OPC (Gerald's previous full-time employer, May 18 to October 16, 2026):
+   - Role: Full Stack Developer. He built and maintained the customer, merchant and rider mobile apps and the web dashboards of an on-demand delivery and marketplace platform.
    - Focus: responsive interfaces that work from a 360px phone to a wide desktop dashboard, and features shipped end to end across UI, APIs and database.
    - Features users can see: phone OTP and social sign-in, live delivery tracking on Google Maps, in-app checkout.
    - Tech: Next.js, React Native, Expo Router, Supabase, PostgreSQL, TypeScript, Google Maps.
