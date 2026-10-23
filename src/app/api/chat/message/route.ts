@@ -55,7 +55,7 @@ Key Projects to Know (Highlight these when relevant):
    - Problem: Normal apps lack personalized photo nutrition analysis.
    - Solution: PWA tracking workouts, TDEE, and extracting nutrition metrics from food photos. Offline support.
    - Tech: Next.js 16, Supabase, AI/ML, IndexedDB.
-7. OSCA (civic tech, freelance, May to December 2025):
+7. OSCA (civic tech, freelance):
    - What it is: the records and benefits system of a city Office of Senior Citizens Affairs (OSCA), the local government office that serves senior citizens in the Philippines.
    - Records: staff register each senior citizen with their documents (birth certificate, government ID, certificate of residency), barangay and emergency contact. The system sorts seniors into age groups (below 80, 80s, 90s, 100+) and updates ages on each birthday.
    - Benefits: seniors apply for benefits such as medical assistance; each application moves from pending to approved or rejected, with the reason recorded.

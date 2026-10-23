@@ -275,7 +275,7 @@ export const projects: Project[] = [
     status: 'active',
     startedAt: '2026-09-28',
     mediaType: 'image',
-    mediaSrc: '/project/TamangSahod/holiday.webp',
+    mediaSrc: '/project/TamangSahod/holiday-v2.webp',
     problem:
       'Owners of 1–20-person businesses guess at holiday pay, 13th month and contributions, and a wrong guess underpays a worker.',
     description:
@@ -493,17 +493,17 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
   ],
   TamangSahod: [
     {
-      src: '/project/TamangSahod/holiday.webp',
+      src: '/project/TamangSahod/holiday-v2.webp',
       caption:
         'Holiday pay for Christmas Day — the amount, the 200% rule behind it, and links to the DOLE handbook, the labor advisory and the proclamation.',
     },
     {
-      src: '/project/TamangSahod/ask.webp',
+      src: '/project/TamangSahod/ask-v2.webp',
       caption:
         'A Taglish question answered with the matching rules, quoted word for word with the source and page.',
     },
     {
-      src: '/project/TamangSahod/home.webp',
+      src: '/project/TamangSahod/home-v2.webp',
       caption: 'Ask in English or Taglish, or open one of the five calculators. No login, nothing stored.',
     },
   ],
@@ -577,7 +577,7 @@ export const experiences: Experience[] = [
     description:
       'Delivered production platforms for clients across SaaS, civic tech, AI applications and business automation.',
     highlights: [
-      'Built OSCA (May – Dec 2025), the records and benefits system of a city Office of Senior Citizens Affairs: staff register each senior citizen with their documents, and the system sorts them into age groups (below 80, 80s, 90s and 100+) and keeps ages current on every birthday',
+      'Built OSCA, the records and benefits system of a city Office of Senior Citizens Affairs: staff register each senior citizen with their documents, and the system sorts them into age groups (below 80, 80s, 90s and 100+) and keeps ages current on every birthday',
       'Its benefit flow takes applications for aid such as medical assistance, moves each from pending to approved or rejected, and records every release against the office’s government fund, with admin and staff roles and PDF reports (Next.js 15, Prisma, PostgreSQL)',
       'Developed an AI-powered fitness PWA with food-photo nutrition analysis and offline-first storage',
       'Created a multi-provider AI chatbot supporting OpenAI, Anthropic and Azure',
