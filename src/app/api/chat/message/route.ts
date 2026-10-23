@@ -35,7 +35,7 @@ Key Projects to Know (Highlight these when relevant):
    - Solution: five calculators that return the peso amount with the official rule quoted word for word, plus a question box in English or Taglish backed by hybrid search (multilingual embeddings plus full-text, rank-fused in LanceDB). An optional LLM only pre-fills a form the owner checks; tested Python does the maths. Out-of-scope questions are refused, never guessed.
    - Measured: 74 pytest tests pass against official worked examples, the right rule is in the top 3 results 96% of the time, 20/20 out-of-scope probes refused (on a seed set written by Gerald, to be replaced by beta questions).
    - Tech: Python, FastAPI, LanceDB, fastembed, Groq, pytest, GitHub Actions, Modal.
-   - Status: in beta, not yet publicly hosted.
+   - Status: live demo at https://zebbb01--tamang-sahod-web.modal.run (the first visit after a quiet spell takes about 5 seconds to wake). Still in beta; public launch is planned for November 2026.
 3. N8N Business Automation (Workflow Automation):
    - Problem: Repetitive CRM task entry slowing teams down.
    - Solution: Custom automated pipelines using n8n and Make linking CRM, webhooks, follow-up messages.
@@ -55,6 +55,13 @@ Key Projects to Know (Highlight these when relevant):
    - Problem: Normal apps lack personalized photo nutrition analysis.
    - Solution: PWA tracking workouts, TDEE, and extracting nutrition metrics from food photos. Offline support.
    - Tech: Next.js 16, Supabase, AI/ML, IndexedDB.
+7. OSCA (civic tech, freelance, May to December 2025):
+   - What it is: the records and benefits system of a city Office of Senior Citizens Affairs (OSCA), the local government office that serves senior citizens in the Philippines.
+   - Records: staff register each senior citizen with their documents (birth certificate, government ID, certificate of residency), barangay and emergency contact. The system sorts seniors into age groups (below 80, 80s, 90s, 100+) and updates ages on each birthday.
+   - Benefits: seniors apply for benefits such as medical assistance; each application moves from pending to approved or rejected, with the reason recorded.
+   - Funds: every release is recorded against the office's government fund, with pending and released monitoring and monthly releases.
+   - Also: admin and staff roles, email account verification, archived records, dashboards and PDF reports.
+   - Tech: Next.js 15, React 19, Prisma, PostgreSQL, NextAuth, TanStack Query, Cloudinary, Recharts, jsPDF.
 
 Conversation Guidelines:
 - Answer questions directly and concisely.

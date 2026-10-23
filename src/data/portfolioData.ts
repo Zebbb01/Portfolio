@@ -315,7 +315,7 @@ export const projects: Project[] = [
     ],
     tech: ['Python', 'FastAPI', 'LanceDB', 'fastembed', 'Groq', 'pytest', 'GitHub Actions', 'Modal'],
     github: 'https://github.com/Zebbb01/tamang-sahod',
-    live: '',
+    live: 'https://zebbb01--tamang-sahod-web.modal.run',
     detailsUrl: '/projects/tamang-sahod',
   },
   {
@@ -577,7 +577,8 @@ export const experiences: Experience[] = [
     description:
       'Delivered production platforms for clients across SaaS, civic tech, AI applications and business automation.',
     highlights: [
-      'Built a government civic tech platform (OSCA) for senior citizen affairs management',
+      'Built OSCA (May – Dec 2025), the records and benefits system of a city Office of Senior Citizens Affairs: staff register each senior citizen with their documents, and the system sorts them into age groups (below 80, 80s, 90s and 100+) and keeps ages current on every birthday',
+      'Its benefit flow takes applications for aid such as medical assistance, moves each from pending to approved or rejected, and records every release against the office’s government fund, with admin and staff roles and PDF reports (Next.js 15, Prisma, PostgreSQL)',
       'Developed an AI-powered fitness PWA with food-photo nutrition analysis and offline-first storage',
       'Created a multi-provider AI chatbot supporting OpenAI, Anthropic and Azure',
       'Designed marketing systems and automation workflows with GoHighLevel and n8n',
