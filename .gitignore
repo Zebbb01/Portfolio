@@ -46,3 +46,7 @@ next-env.d.ts
 /public/videos/vid-test.mkv
 # stale local typecheck output
 tsc_output.txt
+
+# playwright
+/test-results/
+/playwright-report/

@@ -62,6 +62,12 @@ Key Projects to Know (Highlight these when relevant):
    - Funds: every release is recorded against the office's government fund, with pending and released monitoring and monthly releases.
    - Also: admin and staff roles, email account verification, archived records, dashboards and PDF reports.
    - Tech: Next.js 15, React 19, Prisma, PostgreSQL, NextAuth, TanStack Query, Cloudinary, Recharts, jsPDF.
+8. Watershed Plan Extractor (AI document extraction) - a paid technical assessment Gerald built solo for ChowaCo in October 2026:
+   - What it does: reads a watershed plan PDF, text or scanned, and returns its goals, best management practices (BMPs), implementation activities, monitoring metrics, outreach and geographic areas, each linked to the page and the exact words that support it.
+   - How: pdf.js reads the PDF in the browser and code rebuilds headings, bullet levels and tables; Claude extracts at most three pages per request into a Zod schema; code checks every quote, name and amount against the page and rejects what fails.
+   - Measured by script against answer keys for nine Mississippi watershed plans (2004 to 2021), three runs each: 80.3% F1 on goals, BMPs and activities, 78.6% on the six plans held out from tuning, 83.7% of numbers exact, and 0 extracted names that are not in the PDF.
+   - Tech: Next.js 16, React 19, TypeScript, Anthropic SDK (Claude Haiku), Zod, pdf.js, Tesseract.js, Recharts, Vitest, Playwright, Netlify.
+   - Live demo: https://watershed-extractor.netlify.app (the sample plans open instantly). The code belongs to ChowaCo, so never offer the source code.
 
 Conversation Guidelines:
 - Answer questions directly and concisely.
