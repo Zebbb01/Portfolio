@@ -319,6 +319,55 @@ export const projects: Project[] = [
     detailsUrl: '/projects/tamang-sahod',
   },
   {
+    title: 'Watershed Plan Extractor',
+    slug: 'watershed-extractor',
+    category: 'AI Document Extraction',
+    isFeatured: true,
+    mediaType: 'image',
+    mediaSrc: '/project/Watershed/overview.webp',
+    problem:
+      'Watershed plans bury their goals, practices and targets in hundreds of pages, laid out differently in every plan.',
+    description:
+      'Reads a watershed plan PDF, text or scanned, and returns its goals, best management practices, implementation activities, monitoring metrics, outreach and areas, each linked to the page and the exact words that support it. The browser reads the PDF and code rebuilds its layout; an LLM extracts a few pages at a time into a strict schema; then code checks every item against its page and fails closed. Built as a paid technical assessment for ChowaCo.',
+    impact: '80.3% F1 against answer keys for nine plans',
+    role: 'Solo — paid technical assessment for ChowaCo',
+    timeline: 'October 2026',
+    context:
+      'Government watershed plans share a purpose but not a format: nine-key-element tables, narrative chapters written between 2004 and 2021, and scans. The task was to pull structured data out of them accurately enough to trust, behind a live demo anyone can test without signing up.',
+    approach: [
+      {
+        title: 'Code and the model each do what they are reliable at',
+        detail:
+          'pdf.js reads the PDF in the browser, and code rebuilds headings, bullet levels and tables from text positions. The model only extracts, at most three pages per request into a Zod schema, so a long plan never changes what one request carries.',
+      },
+      {
+        title: 'Every item is checked against its page',
+        detail:
+          'The quote must be on the cited page, and every name and amount must appear there verbatim. Whatever fails is listed with its reason under Quality and never shown as data.',
+      },
+      {
+        title: 'Accuracy measured, not claimed',
+        detail:
+          'A scoring script compares each run with hand-built answer keys for nine Mississippi plans, three runs each. Six of the nine were held out from tuning: 78.6% F1 on those, 80.3% across all nine.',
+      },
+      {
+        title: 'The smaller model, chosen on evidence',
+        detail:
+          'Claude Haiku is the default because a larger model did not buy accuracy: on the tuning plans Sonnet scored 1.2 points higher for 11 times the cost. Totals and the completion rate are computed in code, never by the model.',
+      },
+    ],
+    outcomes: [
+      { value: '80.3%', label: 'F1, nine plans' },
+      { value: '78.6%', label: 'F1, six held-out plans' },
+      { value: '83.7%', label: 'Numbers exact' },
+      { value: '0', label: 'Names not in the PDF' },
+    ],
+    tech: ['Next.js 16', 'TypeScript', 'Anthropic SDK', 'Zod', 'pdf.js', 'Tesseract.js', 'Recharts', 'Vitest', 'Playwright', 'Netlify'],
+    github: '',
+    live: 'https://watershed-extractor.netlify.app',
+    detailsUrl: '/projects/watershed-extractor',
+  },
+  {
     title: 'N8N Business Automation',
     slug: 'n8n-automation',
     category: 'Workflow Automation',
@@ -505,6 +554,22 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     {
       src: '/project/TamangSahod/home-v2.webp',
       caption: 'Ask in English or Taglish, or open one of the five calculators. No login, nothing stored.',
+    },
+  ],
+  'Watershed Plan Extractor': [
+    {
+      src: '/project/Watershed/overview.webp',
+      caption:
+        'Report overview — items per category, the share of proposed items that passed the checks, and the plan at a glance from goals to monitoring.',
+    },
+    {
+      src: '/project/Watershed/evidence-row.webp',
+      caption:
+        'Implementation tab — each activity with who carries it out and when, plus the quote and page it came from, here from a scanned 2004 plan.',
+    },
+    {
+      src: '/project/Watershed/accuracy.webp',
+      caption: 'Accuracy page — F1 per plan against hand-built answer keys, held-out plans in blue, the 75% bar marked.',
     },
   ],
   'GHL Marketing Websites': [
