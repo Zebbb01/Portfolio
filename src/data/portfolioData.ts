@@ -502,6 +502,63 @@ export const projects: Project[] = [
     live: 'https://body-tracker-iota.vercel.app/',
     detailsUrl: '/projects/body-tracker',
   },
+  {
+    title: 'LedgerLens',
+    slug: 'ledgerlens',
+    category: 'AI Document Automation · Azure',
+    isFeatured: false,
+    mediaType: 'image',
+    mediaSrc: '/project/LedgerLens/review-blocked.webp',
+    problem: 'Supplier bills are keyed into the books by hand, and a misread total or a duplicate gets paid.',
+    description:
+      'Reads invoices and receipts with Azure AI Document Intelligence, then checks every number in code (totals, line items, 12% Philippine VAT, dates, the vendor TIN and duplicates) before a bill can be approved and exported. A failed check blocks approval until a person fixes the field. Runs entirely on Azure free tiers: a Next.js app and a KEDA-scaled queue worker on Container Apps, Blob and Queue Storage, and Cosmos DB for MongoDB, provisioned with Terraform and deployed by GitHub Actions over OpenID Connect.',
+    impact: 'Six Azure services, all on free tiers',
+    role: 'Solo — design, build, infrastructure and tests',
+    timeline: 'October 2026 — Present',
+    context:
+      'Small finance teams retype supplier bills into their accounting software. AI extraction makes that faster, but a model that misreads one digit turns into an overpayment or a duplicate payment. Reading the bill is the easy part; knowing when not to trust the reading is the work.',
+    approach: [
+      {
+        title: 'The model reads, code decides',
+        detail:
+          'Document Intelligence extracts the fields; nine checks in code decide whether the bill can be approved. A failed check blocks approval until a person corrects the field, and every correction is kept with the checks run again.',
+      },
+      {
+        title: 'A queue between upload and analysis',
+        detail:
+          'The web app stores the file and queues its ID; a Container Apps job started by KEDA drains the queue and exits. Nothing runs while nobody uploads, which is what keeps it free.',
+      },
+      {
+        title: 'The free tier as a design constraint',
+        detail:
+          'Analyses are reused by file hash, monthly and daily caps keep usage under the 500 free pages, data expires after 7 days, and logging has a daily cap. The bill stays at zero by construction.',
+      },
+      {
+        title: 'No keys anywhere',
+        detail:
+          'The app reaches Storage and Document Intelligence with a managed identity, key access to Document Intelligence is switched off, and GitHub Actions deploys through OpenID Connect with no stored secret.',
+      },
+    ],
+    outcomes: [
+      { value: '9', label: 'Checks in code' },
+      { value: '81', label: 'Unit and end-to-end tests' },
+      { value: '6', label: 'Azure services, free tier' },
+      { value: '0', label: 'Keys in config or CI' },
+    ],
+    tech: [
+      'Next.js 16',
+      'TypeScript',
+      'Azure Container Apps',
+      'Azure AI Document Intelligence',
+      'Cosmos DB for MongoDB',
+      'Terraform',
+      'GitHub Actions',
+      'Playwright',
+    ],
+    github: 'https://github.com/Zebbb01/ledgerlens',
+    live: '',
+    detailsUrl: '/projects/ledgerlens',
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -588,6 +645,22 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     { src: '/project/BodyTracker/dashboard.png', caption: 'Daily dashboard — calories, macros and the fasting window at a glance.' },
     { src: '/project/BodyTracker/ai-scan.png', caption: 'Photo analysis — a vision model estimates macros, the user corrects them.' },
     { src: '/project/BodyTracker/workout.png', caption: 'Workout log, written to IndexedDB first and synced when a connection returns.' },
+  ],
+  LedgerLens: [
+    {
+      src: '/project/LedgerLens/review-blocked.webp',
+      caption:
+        'A bill whose printed total does not add up: two checks fail with the reason spelled out, and Approve stays disabled until the total is corrected.',
+    },
+    {
+      src: '/project/LedgerLens/review-ready.webp',
+      caption:
+        'A Philippine VAT invoice that passes all nine checks, beside the original PDF, with the confidence of every field the model read.',
+    },
+    {
+      src: '/project/LedgerLens/home.webp',
+      caption: 'Upload a bill or try a sample; documents stay private to the browser that added them.',
+    },
   ],
 };
 
