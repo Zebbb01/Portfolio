@@ -1,9 +1,15 @@
 // src/types/index.d.ts
 
+/** Kinds of work the projects page filters by; a project can be several. */
+export type ProjectType = 'saas' | 'ai' | 'automation' | 'websites' | 'mobile';
+
 export interface Project {
   title: string;
   slug: string;
+  /** Filters on the projects page. */
+  types: ProjectType[];
   category: string;
+  /** Featured projects make up the bento grid on the home page. */
   isFeatured: boolean;
   mediaType: 'image' | 'video';
   mediaSrc: string;
