@@ -602,13 +602,13 @@ export const projects: Project[] = [
       {
         title: 'Graded in code, costed per ticket',
         detail:
-          'Twelve eval tickets, from order status to a chargeback threat, a prompt injection and a message in Spanish, are graded in code with no model judging another, and every ticket shows its tokens and list-price cost.',
+          'Twelve eval tickets, from order status to a chargeback threat, a prompt injection and a message in Spanish, are graded in code with no model judging another; all twelve pass on Gemini 3.5 Flash-Lite at about $0.001 a ticket at list price.',
       },
     ],
     outcomes: [
       { value: '6', label: 'Checks in code on every draft' },
       { value: '78', label: 'Unit and end-to-end tests' },
-      { value: '12', label: 'Eval tickets, graded in code' },
+      { value: '12/12', label: 'Eval tickets passed on Gemini' },
       { value: '3', label: 'Azure services, free tier' },
     ],
     tech: [
