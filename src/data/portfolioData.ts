@@ -545,11 +545,16 @@ export const projects: Project[] = [
         detail:
           'The app reaches Storage and Document Intelligence with a managed identity, key access to Document Intelligence is switched off, and GitHub Actions deploys through OpenID Connect with no stored secret.',
       },
+      {
+        title: 'Tested on a real invoice',
+        detail:
+          'A real Shopee shipping invoice exposed what the samples had not: the model read the logo as the vendor and skipped VAT lines labelled the platform’s way. LedgerLens now reads the registered name, the BIR series number and those labels from the page, going from 8 to 11 of 11 fields, and a lookalike sample keeps the case in the demo without anyone’s personal details.',
+      },
     ],
     outcomes: [
       { value: '9', label: 'Checks in code' },
-      { value: '97.7%', label: 'Fields read right, live service' },
-      { value: '94', label: 'Unit and end-to-end tests' },
+      { value: '98.2%', label: 'Fields read right, live service' },
+      { value: '111', label: 'Unit and end-to-end tests' },
       { value: '6', label: 'Azure services, free tier' },
     ],
     tech: [
