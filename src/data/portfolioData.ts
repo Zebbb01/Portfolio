@@ -214,6 +214,7 @@ export const projects: Project[] = [
   {
     title: 'Trusum Accounting',
     slug: 'trusum',
+    types: ['saas', 'ai'],
     category: 'Enterprise SaaS',
     isFeatured: true,
     status: 'active',
@@ -270,6 +271,7 @@ export const projects: Project[] = [
   {
     title: 'TamangSahod',
     slug: 'tamang-sahod',
+    types: ['ai'],
     category: 'AI Search · Python',
     isFeatured: true,
     status: 'active',
@@ -321,6 +323,7 @@ export const projects: Project[] = [
   {
     title: 'Watershed Plan Extractor',
     slug: 'watershed-extractor',
+    types: ['ai'],
     category: 'AI Document Extraction',
     isFeatured: true,
     mediaType: 'image',
@@ -370,6 +373,7 @@ export const projects: Project[] = [
   {
     title: 'N8N Business Automation',
     slug: 'n8n-automation',
+    types: ['automation'],
     category: 'Workflow Automation',
     isFeatured: true,
     mediaType: 'video',
@@ -417,6 +421,7 @@ export const projects: Project[] = [
   {
     title: 'GHL Marketing Websites',
     slug: 'ghl-website',
+    types: ['websites'],
     category: 'Sales Funnels',
     isFeatured: true,
     mediaType: 'video',
@@ -463,6 +468,7 @@ export const projects: Project[] = [
   {
     title: 'Body Tracker',
     slug: 'body-tracker',
+    types: ['mobile', 'ai'],
     category: 'AI-Powered PWA',
     isFeatured: true,
     mediaType: 'image',
@@ -505,6 +511,7 @@ export const projects: Project[] = [
   {
     title: 'LedgerLens',
     slug: 'ledgerlens',
+    types: ['ai', 'automation'],
     category: 'AI Document Automation · Azure',
     isFeatured: false,
     mediaType: 'image',
@@ -542,7 +549,7 @@ export const projects: Project[] = [
     outcomes: [
       { value: '9', label: 'Checks in code' },
       { value: '97.7%', label: 'Fields read right, live service' },
-      { value: '83', label: 'Unit and end-to-end tests' },
+      { value: '94', label: 'Unit and end-to-end tests' },
       { value: '6', label: 'Azure services, free tier' },
     ],
     tech: [
@@ -650,7 +657,7 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     {
       src: '/project/LedgerLens/review-blocked.webp',
       caption:
-        'A bill whose printed total does not add up: two checks fail with the reason spelled out, and Approve stays disabled until the total is corrected.',
+        'A bill whose printed total does not add up: the failed checks come first with a button to the field most likely misread, and Approve stays disabled until it is fixed.',
     },
     {
       src: '/project/LedgerLens/review-ready.webp',
@@ -659,7 +666,7 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     },
     {
       src: '/project/LedgerLens/home.webp',
-      caption: 'Upload a bill or try a sample; documents stay private to the browser that added them.',
+      caption: 'The home page: a real sample invoice with the check it fails, the read, check and approve steps, and sample documents to try.',
     },
   ],
 };
