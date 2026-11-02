@@ -541,9 +541,9 @@ export const projects: Project[] = [
     ],
     outcomes: [
       { value: '9', label: 'Checks in code' },
-      { value: '81', label: 'Unit and end-to-end tests' },
+      { value: '97.7%', label: 'Fields read right, live service' },
+      { value: '83', label: 'Unit and end-to-end tests' },
       { value: '6', label: 'Azure services, free tier' },
-      { value: '0', label: 'Keys in config or CI' },
     ],
     tech: [
       'Next.js 16',
@@ -556,7 +556,7 @@ export const projects: Project[] = [
       'Playwright',
     ],
     github: 'https://github.com/Zebbb01/ledgerlens',
-    live: '',
+    live: 'https://ca-ledgerlens-iq777r.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
     detailsUrl: '/projects/ledgerlens',
   },
 ];

@@ -31,11 +31,15 @@ test('LedgerLens is listed after the featured work and its case study links the 
   await page.locator('a[href="/projects/ledgerlens"]').first().click();
   await expect(page).toHaveURL(/\/projects\/ledgerlens$/);
   await expect(page.getByRole('heading', { name: 'LedgerLens', level: 1 })).toBeVisible();
-  for (const label of ['Checks in code', 'Unit and end-to-end tests', 'Azure services, free tier', 'Keys in config or CI']) {
+  for (const label of ['Checks in code', 'Fields read right, live service', 'Unit and end-to-end tests', 'Azure services, free tier']) {
     await expect(page.getByText(label, { exact: true })).toBeVisible();
   }
   await expect(page.getByRole('link', { name: 'Repository' })).toHaveAttribute(
     'href',
     'https://github.com/Zebbb01/ledgerlens',
+  );
+  await expect(page.getByRole('link', { name: /Launch live demo/ })).toHaveAttribute(
+    'href',
+    'https://ca-ledgerlens-iq777r.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
   );
 });
