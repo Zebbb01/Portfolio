@@ -10,7 +10,7 @@ describe('filterProjects', () => {
   });
 
   it('keeps only the projects of the chosen type, in their listed order', () => {
-    expect(titles(filterProjects(projects, 'automation'))).toEqual(['N8N Business Automation', 'LedgerLens']);
+    expect(titles(filterProjects(projects, 'automation'))).toEqual(['N8N Business Automation', 'LedgerLens', 'ReplyPilot']);
   });
 
   it('lists a project under each of its types', () => {
@@ -23,7 +23,7 @@ describe('countByType', () => {
   it('counts the projects of each type, so no filter is ever empty', () => {
     const counts = countByType(projects);
 
-    expect(counts.automation).toBe(2);
+    expect(counts.automation).toBe(3);
     for (const { id } of PROJECT_TYPES) expect(counts[id]).toBeGreaterThan(0);
   });
 });

@@ -571,6 +571,65 @@ export const projects: Project[] = [
     live: 'https://ca-ledgerlens-iq777r.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
     detailsUrl: '/projects/ledgerlens',
   },
+  {
+    title: 'ReplyPilot',
+    slug: 'replypilot',
+    types: ['ai', 'automation'],
+    category: 'AI Support Agent · Shopify · Azure',
+    isFeatured: false,
+    mediaType: 'image',
+    mediaSrc: '/project/ReplyPilot/review-blocked.webp',
+    problem:
+      'An AI that answers store support email on its own can show one customer another customer\'s order, or promise a refund nobody approved.',
+    description:
+      'An AI support agent for an online store, written as code rather than wired up in a no-code tool. Customer emails and Shopify delivery events become tickets; an agent looks up the order and the store policies with tools and drafts the reply; code checks the draft; and nothing is sent until a person approves it. Every model call and tool call is a durable step in PostgreSQL, so a failure retries and resumes instead of starting over, with an append-only audit log and the cost of every ticket. Runs on Azure free tiers with Terraform and GitHub Actions.',
+    impact: 'No reply leaves without a person',
+    role: 'Solo — design, build, infrastructure and tests',
+    timeline: 'November 2026 — Present',
+    context:
+      'Most of a small store\'s support email is "where is my order", returns and damaged items. An agent can answer those, but only safely if it cannot see other customers\' orders, cannot invent amounts or policies, and cannot send anything a person has not read.',
+    approach: [
+      {
+        title: 'Access is decided in code, not in the prompt',
+        detail:
+          'The order tools only return orders placed with the sender\'s email address. A stranger asking for someone else\'s tracking number, or a prompt injection, gets "belongs to another address" and no details.',
+      },
+      {
+        title: 'The model drafts, code checks, a person sends',
+        detail:
+          'Six checks run on every draft and again on every edit: order numbers must be verified for this customer, money amounts must appear in the order data, and cited policies must have been looked up. A failed check locks Approve.',
+      },
+      {
+        title: 'Durable steps instead of a workflow tool',
+        detail:
+          'Each model call, tool call and send is stored when it finishes, on a PostgreSQL job queue with SKIP LOCKED. A retry after a rate limit resumes at the step that failed, and a stored send is never sent twice.',
+      },
+      {
+        title: 'Graded in code, costed per ticket',
+        detail:
+          'Twelve eval tickets, from order status to a chargeback threat, a prompt injection and a message in Spanish, are graded in code with no model judging another; all twelve pass on Gemini 3.5 Flash-Lite at about $0.001 a ticket at list price.',
+      },
+    ],
+    outcomes: [
+      { value: '6', label: 'Checks in code on every draft' },
+      { value: '78', label: 'Unit and end-to-end tests' },
+      { value: '12/12', label: 'Eval tickets passed on Gemini' },
+      { value: '3', label: 'Azure services, free tier' },
+    ],
+    tech: [
+      'Next.js 16',
+      'TypeScript',
+      'PostgreSQL',
+      'Gemini API',
+      'Shopify Admin API',
+      'Azure Container Apps',
+      'Terraform',
+      'Playwright',
+    ],
+    github: 'https://github.com/Zebbb01/replypilot',
+    live: '',
+    detailsUrl: '/projects/replypilot',
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -672,6 +731,23 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     {
       src: '/project/LedgerLens/home.webp',
       caption: 'The home page: a real sample invoice with the check it fails, the read, check and approve steps, and sample documents to try.',
+    },
+  ],
+  ReplyPilot: [
+    {
+      src: '/project/ReplyPilot/review-blocked.webp',
+      caption:
+        'A reviewer adds "$500" to a draft: no such amount is in the order data, so the check fails and Approve locks. The agent trace and the ticket\'s cost sit beside it.',
+    },
+    {
+      src: '/project/ReplyPilot/sent.webp',
+      caption:
+        'An approved reply with the tool calls that produced it, the tokens of each model call, and the audit log from receipt to send.',
+    },
+    {
+      src: '/project/ReplyPilot/home.webp',
+      caption:
+        'The demo inbox: sample customer emails, including a prompt injection and a request for someone else\'s order, with each ticket\'s status and cost.',
     },
   ],
 };
