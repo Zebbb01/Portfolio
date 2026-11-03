@@ -469,42 +469,47 @@ export const projects: Project[] = [
     title: 'Body Tracker',
     slug: 'body-tracker',
     types: ['mobile', 'ai'],
-    category: 'AI-Powered PWA',
+    category: 'Offline-first PWA · Supabase',
     isFeatured: true,
     mediaType: 'image',
-    mediaSrc: '/project/BodyTracker/dashboard.png',
-    problem: 'Generic fitness apps lack personalized nutrition intelligence.',
+    mediaSrc: '/project/BodyTracker/dashboard.webp',
+    problem: 'Fitness logging gets abandoned because it is slow, and gyms have no signal.',
     description:
-      'A comprehensive personal fitness tracker with AI-powered nutrition analysis from food photos, workout logging, TDEE calculator, and intermittent fasting widget. Progressive Web App with offline-first architecture using IndexedDB.',
-    impact: 'AI-powered meal analysis from photos',
-    role: 'Solo developer — design through deployment',
-    timeline: 'February 2026 — March 2026',
+      'A phone-first tracker for workouts, meals and body weight that keeps working with no signal. A visitor is in with one tap through a Supabase anonymous account they can save with Google later, logs a set in two taps, photographs a meal and confirms the numbers Gemini fills in, and sees weight and strength trends. Every entry is written to IndexedDB on the phone first and synced to Supabase Postgres, where Row Level Security limits each row to its owner. Installable as an app, with a hand-written service worker, and run entirely on free tiers.',
+    impact: 'Try it in one tap, log with no signal',
+    role: 'Solo — design, build, tests and deployment',
+    timeline: 'February 2026 — November 2026',
     context:
-      'Logging food is the part of fitness tracking everyone abandons. Typing a meal into a database of 40,000 entries takes longer than eating it, so the log goes stale and the app goes unopened.',
+      'Logging is the part of fitness tracking everyone abandons. Typing a meal takes longer than eating it, the gym has one bar of signal, and an app that asks for an account before showing anything loses a visitor in the first minute.',
     approach: [
       {
-        title: 'Photograph the meal, skip the form',
+        title: 'Try it before signing up',
         detail:
-          'A vision model reads the plate and returns a macro estimate the user can correct. An approximate number that gets logged beats an exact one that does not.',
+          'Supabase anonymous sign-in puts a visitor in the app with one tap. Linking Google later keeps the same user id, so nothing logged is lost; try-it accounts are rate limited and removed after 30 days.',
       },
       {
-        title: 'Offline-first, not offline-tolerant',
+        title: 'The phone first, the server second',
         detail:
-          'IndexedDB is the source of truth on the device and syncs when a connection returns — gyms have terrible reception, and that is exactly when logging happens.',
+          'Every write lands in a per-person IndexedDB database, marked unsynced. A small sync engine pushes those rows and pulls changes from other devices, with tombstones for deletes, and the app says plainly when entries are only on the phone.',
       },
       {
-        title: 'A PWA rather than two native apps',
+        title: 'Row Level Security is the only door',
         detail:
-          'Installable from the browser on both platforms, with no store review between a fix and the people using it.',
+          'The browser talks to Supabase with a public key, so every table has an owner-only policy. A test signs in two people and proves neither can read, change, delete or forge the other’s rows.',
+      },
+      {
+        title: 'AI fills the form, the person saves',
+        detail:
+          'The photo is shrunk on the phone, Gemini returns structured JSON that is validated and clamped, and each person has a daily allowance. Nothing reaches the diary until the numbers are checked.',
       },
     ],
     outcomes: [
-      { value: '36', label: 'Commits in 8 weeks' },
-      { value: '100%', label: 'Offline capable' },
-      { value: '1', label: 'Codebase, both platforms' },
+      { value: '0', label: 'Accessibility violations, 7 screens, 2 themes' },
+      { value: '56', label: 'Unit, RLS and browser tests in CI' },
+      { value: '2', label: 'Taps to log the next set' },
     ],
-    tech: ['Next.js 16', 'Supabase', 'PWA', 'AI/ML', 'IndexedDB', 'Service Workers'],
-    github: '',
+    tech: ['Next.js 16', 'React 19', 'TypeScript', 'Supabase Auth', 'Postgres RLS', 'IndexedDB', 'Service Worker', 'Gemini API', 'Playwright'],
+    github: 'https://github.com/Zebbb01/Workout-Tracker',
     live: 'https://body-tracker-iota.vercel.app/',
     detailsUrl: '/projects/body-tracker',
   },
@@ -654,9 +659,10 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     { src: '/project/Automation/automate_image (4).webp', caption: 'Follow-up sequence fired from a qualified form submission.' },
   ],
   'Body Tracker': [
-    { src: '/project/BodyTracker/dashboard.png', caption: 'Daily dashboard — calories, macros and the fasting window at a glance.' },
-    { src: '/project/BodyTracker/ai-scan.png', caption: 'Photo analysis — a vision model estimates macros, the user corrects them.' },
-    { src: '/project/BodyTracker/workout.png', caption: 'Workout log, written to IndexedDB first and synced when a connection returns.' },
+    { src: '/project/BodyTracker/dashboard.webp', caption: 'Today on a desktop: calories and macros left, what was eaten, today’s sets and the weight trend.' },
+    { src: '/project/BodyTracker/dashboard-phone.webp', caption: 'Today on a phone, above the bottom tabs: the whole day on one screen.' },
+    { src: '/project/BodyTracker/workout.webp', caption: 'The workout log: the next set starts as a copy of the last one, so logging it is one more tap.' },
+    { src: '/project/BodyTracker/progress.webp', caption: 'Progress: weight over 90 days, strength as the best estimated one-rep max, and weekly volume, each with a table view.' },
   ],
   LedgerLens: [
     {
