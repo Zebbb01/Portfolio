@@ -78,3 +78,16 @@ test('the LedgerLens case study opens from the projects page and links the repos
     'https://ca-ledgerlens-iq777r.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
   );
 });
+
+test('the Body Tracker case study shows real screenshots, measured results and both links', async ({ page }) => {
+  await page.goto('/projects/body-tracker');
+  await expect(page.getByRole('heading', { name: 'Body Tracker', level: 1 })).toBeVisible();
+  for (const label of ['Lighthouse performance, mobile', 'Accessibility violations, 7 screens, 2 themes', 'Unit, RLS and browser tests in CI']) {
+    await expect(page.getByText(label, { exact: true })).toBeVisible();
+  }
+  await expect(page.getByRole('link', { name: 'Repository' })).toHaveAttribute('href', 'https://github.com/Zebbb01/Workout-Tracker');
+  await expect(page.getByRole('link', { name: /Launch live demo/ })).toHaveAttribute('href', 'https://body-tracker-iota.vercel.app/');
+  for (const src of ['dashboard.webp', 'dashboard-phone.webp', 'workout.webp', 'progress.webp']) {
+    expect((await page.request.get(`/project/BodyTracker/${src}`)).status(), src).toBe(200);
+  }
+});
