@@ -469,42 +469,47 @@ export const projects: Project[] = [
     title: 'Body Tracker',
     slug: 'body-tracker',
     types: ['mobile', 'ai'],
-    category: 'AI-Powered PWA',
+    category: 'Offline-first PWA · Supabase',
     isFeatured: true,
     mediaType: 'image',
-    mediaSrc: '/project/BodyTracker/dashboard.png',
-    problem: 'Generic fitness apps lack personalized nutrition intelligence.',
+    mediaSrc: '/project/BodyTracker/dashboard.webp',
+    problem: 'Fitness logging gets abandoned because it is slow, and gyms have no signal.',
     description:
-      'A comprehensive personal fitness tracker with AI-powered nutrition analysis from food photos, workout logging, TDEE calculator, and intermittent fasting widget. Progressive Web App with offline-first architecture using IndexedDB.',
-    impact: 'AI-powered meal analysis from photos',
-    role: 'Solo developer — design through deployment',
-    timeline: 'February 2026 — March 2026',
+      'A phone-first tracker for workouts, meals and body weight that keeps working with no signal. A visitor is in with one tap through a Supabase anonymous account they can save with Google later, logs a set in two taps, photographs a meal and confirms the numbers Gemini fills in, and sees weight and strength trends. Every entry is written to IndexedDB on the phone first and synced to Supabase Postgres, where Row Level Security limits each row to its owner. Installable as an app, with a hand-written service worker, and run entirely on free tiers.',
+    impact: 'Try it in one tap, log with no signal',
+    role: 'Solo — design, build, tests and deployment',
+    timeline: 'February 2026 — November 2026',
     context:
-      'Logging food is the part of fitness tracking everyone abandons. Typing a meal into a database of 40,000 entries takes longer than eating it, so the log goes stale and the app goes unopened.',
+      'Logging is the part of fitness tracking everyone abandons. Typing a meal takes longer than eating it, the gym has one bar of signal, and an app that asks for an account before showing anything loses a visitor in the first minute.',
     approach: [
       {
-        title: 'Photograph the meal, skip the form',
+        title: 'Try it before signing up',
         detail:
-          'A vision model reads the plate and returns a macro estimate the user can correct. An approximate number that gets logged beats an exact one that does not.',
+          'Supabase anonymous sign-in puts a visitor in the app with one tap. Linking Google later keeps the same user id, so nothing logged is lost; try-it accounts are rate limited and removed after 30 days.',
       },
       {
-        title: 'Offline-first, not offline-tolerant',
+        title: 'The phone first, the server second',
         detail:
-          'IndexedDB is the source of truth on the device and syncs when a connection returns — gyms have terrible reception, and that is exactly when logging happens.',
+          'Every write lands in a per-person IndexedDB database, marked unsynced. A small sync engine pushes those rows and pulls changes from other devices, with tombstones for deletes, and the app says plainly when entries are only on the phone.',
       },
       {
-        title: 'A PWA rather than two native apps',
+        title: 'Row Level Security is the only door',
         detail:
-          'Installable from the browser on both platforms, with no store review between a fix and the people using it.',
+          'The browser talks to Supabase with a public key, so every table has an owner-only policy. A test signs in two people and proves neither can read, change, delete or forge the other’s rows.',
+      },
+      {
+        title: 'AI fills the form, the person saves',
+        detail:
+          'The photo is shrunk on the phone, Gemini returns structured JSON that is validated and clamped, and each person has a daily allowance. Nothing reaches the diary until the numbers are checked.',
       },
     ],
     outcomes: [
-      { value: '36', label: 'Commits in 8 weeks' },
-      { value: '100%', label: 'Offline capable' },
-      { value: '1', label: 'Codebase, both platforms' },
+      { value: '94', label: 'Lighthouse performance, mobile' },
+      { value: '0', label: 'Accessibility violations, 7 screens, 2 themes' },
+      { value: '56', label: 'Unit, RLS and browser tests in CI' },
     ],
-    tech: ['Next.js 16', 'Supabase', 'PWA', 'AI/ML', 'IndexedDB', 'Service Workers'],
-    github: '',
+    tech: ['Next.js 16', 'React 19', 'TypeScript', 'Supabase Auth', 'Postgres RLS', 'IndexedDB', 'Service Worker', 'Gemini API', 'Playwright'],
+    github: 'https://github.com/Zebbb01/Workout-Tracker',
     live: 'https://body-tracker-iota.vercel.app/',
     detailsUrl: '/projects/body-tracker',
   },
@@ -570,6 +575,125 @@ export const projects: Project[] = [
     github: 'https://github.com/Zebbb01/ledgerlens',
     live: 'https://ca-ledgerlens-iq777r.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
     detailsUrl: '/projects/ledgerlens',
+  },
+  {
+    title: 'ReplyPilot',
+    slug: 'replypilot',
+    types: ['ai', 'automation'],
+    category: 'AI Support Agent · Shopify · Azure',
+    isFeatured: false,
+    mediaType: 'image',
+    mediaSrc: '/project/ReplyPilot/review-blocked.webp',
+    problem:
+      'An AI that answers store support email on its own can show one customer another customer\'s order, or promise a refund nobody approved.',
+    description:
+      'An AI support agent for an online store, written as code rather than wired up in a no-code tool. Customer emails and Shopify delivery events become tickets; an agent looks up the order and the store policies with tools and drafts the reply; code checks the draft; and nothing is sent until a person approves it. Every model call and tool call is a durable step in PostgreSQL, so a failure retries and resumes instead of starting over, with an append-only audit log and the cost of every ticket. Runs on Azure free tiers with Terraform and GitHub Actions.',
+    impact: 'No reply leaves without a person',
+    role: 'Solo — design, build, infrastructure and tests',
+    timeline: 'November 2026 — Present',
+    context:
+      'Most of a small store\'s support email is "where is my order", returns and damaged items. An agent can answer those, but only safely if it cannot see other customers\' orders, cannot invent amounts or policies, and cannot send anything a person has not read.',
+    approach: [
+      {
+        title: 'Access is decided in code, not in the prompt',
+        detail:
+          'The order tools only return orders placed with the sender\'s email address. A stranger asking for someone else\'s tracking number, or a prompt injection, gets "belongs to another address" and no details.',
+      },
+      {
+        title: 'The model drafts, code checks, a person sends',
+        detail:
+          'Six checks run on every draft and again on every edit: order numbers must be verified for this customer, money amounts must appear in the order data, and cited policies must have been looked up. A failed check locks Approve.',
+      },
+      {
+        title: 'Durable steps instead of a workflow tool',
+        detail:
+          'Each model call, tool call and send is stored when it finishes, on a PostgreSQL job queue with SKIP LOCKED. A retry after a rate limit resumes at the step that failed, and a stored send is never sent twice.',
+      },
+      {
+        title: 'Graded in code, costed per ticket',
+        detail:
+          'Twelve eval tickets, from order status to a chargeback threat, a prompt injection and a message in Spanish, are graded in code with no model judging another; all twelve pass on Gemini 3.5 Flash-Lite at about $0.001 a ticket at list price.',
+      },
+    ],
+    outcomes: [
+      { value: '6', label: 'Checks in code on every draft' },
+      { value: '78', label: 'Unit and end-to-end tests' },
+      { value: '12/12', label: 'Eval tickets passed on Gemini' },
+      { value: '3', label: 'Azure services, free tier' },
+    ],
+    tech: [
+      'Next.js 16',
+      'TypeScript',
+      'PostgreSQL',
+      'Gemini API',
+      'Shopify Admin API',
+      'Azure Container Apps',
+      'Terraform',
+      'Playwright',
+    ],
+    github: 'https://github.com/Zebbb01/replypilot',
+    live: '',
+    detailsUrl: '/projects/replypilot',
+  },
+  {
+    title: 'LeadLoom',
+    slug: 'leadloom',
+    types: ['ai', 'automation'],
+    category: 'Lead Intake & CRM Automation · n8n · Python · Azure',
+    isFeatured: false,
+    mediaType: 'image',
+    mediaSrc: '/project/LeadLoom/lead-synced.webp',
+    problem:
+      'Leads arrive from a website form, an inbox and a booking calendar, get typed into the CRM by hand, twice for the same person, and the hot ones wait in the queue with everything else.',
+    description:
+      'A lead-intake and CRM automation system built from a self-hosted n8n workflow and a Python (FastAPI) service. n8n receives every lead and orchestrates; the Python service does what n8n does badly: it checks who the lead already is, reads the company\'s website with robots.txt respected, and scores and routes the lead with an LLM whose answer is validated against a schema and can be overruled by rules in code. Results go to HubSpot as a contact, company, deal and a note explaining the score; hot leads post to Slack, and unsure ones wait on a review page for a person. Runs on Azure free tiers with Terraform and GitHub Actions.',
+    impact: 'Every lead scored, deduplicated and in the CRM',
+    role: 'Solo — design, build, infrastructure and tests',
+    timeline: 'November 2026 — Present',
+    context:
+      'Automation roles ask for two things at once: n8n workflows that connect forms, inboxes and CRMs, and the code behind them that makes the result trustworthy. LeadLoom splits the work along that line, with the workflow committed as JSON and every step it calls tested in Python.',
+    approach: [
+      {
+        title: 'n8n for the plumbing, Python for the judgement',
+        detail:
+          'Three webhooks, routing, a Wait node that holds a run until a person decides, and the Slack alert live in n8n. Signature checks, dedupe, enrichment, scoring and the HubSpot writes live in a FastAPI service that n8n calls.',
+      },
+      {
+        title: 'The model scores, rules in code decide',
+        detail:
+          'The LLM returns fit, intent, a route and its confidence as a strict JSON schema, validated with Pydantic. Rules overrule it where the answer is known: a honeypot hit is spam, a booked meeting is a buying signal, a known customer is never spam, and low confidence or a prompt injection goes to a person.',
+      },
+      {
+        title: 'Idempotent from the webhook to the CRM',
+        detail:
+          'A redelivered webhook maps to the same lead. Each model and HubSpot call is a durable step in PostgreSQL, so a retry after an outage resumes where it stopped, without a second deal or a second Slack alert.',
+      },
+      {
+        title: 'Tested through the real workflow, graded in code',
+        detail:
+          'The end-to-end tests drive the exported n8n workflow itself, from a signed booking to an approval that resumes the waiting run, and a HubSpot outage that outlasts every retry. Twenty-four labeled leads, from an RFP to a prompt injection, are graded in code; all pass on Gemini 3.5 Flash-Lite at about $0.0005 a lead at list price.',
+      },
+    ],
+    outcomes: [
+      { value: '3', label: 'Lead sources through one n8n workflow' },
+      { value: '84', label: 'Unit and end-to-end tests' },
+      { value: '24/24', label: 'Eval leads passed on Gemini' },
+      { value: '6', label: 'Rules in code over the model' },
+    ],
+    tech: [
+      'n8n',
+      'Python',
+      'FastAPI',
+      'PostgreSQL',
+      'Gemini API',
+      'HubSpot API',
+      'Azure Container Apps',
+      'Terraform',
+      'Playwright',
+    ],
+    github: 'https://github.com/Zebbb01/leadloom',
+    live: 'https://ca-leadloom-8s6bzq-api.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
+    detailsUrl: '/projects/leadloom',
   },
 ];
 
@@ -654,9 +778,10 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     { src: '/project/Automation/automate_image (4).webp', caption: 'Follow-up sequence fired from a qualified form submission.' },
   ],
   'Body Tracker': [
-    { src: '/project/BodyTracker/dashboard.png', caption: 'Daily dashboard — calories, macros and the fasting window at a glance.' },
-    { src: '/project/BodyTracker/ai-scan.png', caption: 'Photo analysis — a vision model estimates macros, the user corrects them.' },
-    { src: '/project/BodyTracker/workout.png', caption: 'Workout log, written to IndexedDB first and synced when a connection returns.' },
+    { src: '/project/BodyTracker/dashboard.webp', caption: 'Today on a desktop: calories and macros left, what was eaten, today’s sets and the weight trend.' },
+    { src: '/project/BodyTracker/dashboard-phone.webp', caption: 'Today on a phone, above the bottom tabs: the whole day on one screen.' },
+    { src: '/project/BodyTracker/workout.webp', caption: 'The workout log: the next set starts as a copy of the last one, so logging it is one more tap.' },
+    { src: '/project/BodyTracker/progress.webp', caption: 'Progress: weight over 90 days, strength as the best estimated one-rep max, and weekly volume, each with a table view.' },
   ],
   LedgerLens: [
     {
@@ -672,6 +797,45 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     {
       src: '/project/LedgerLens/home.webp',
       caption: 'The home page: a real sample invoice with the check it fails, the read, check and approve steps, and sample documents to try.',
+    },
+  ],
+  ReplyPilot: [
+    {
+      src: '/project/ReplyPilot/review-blocked.webp',
+      caption:
+        'A reviewer adds "$500" to a draft: no such amount is in the order data, so the check fails and Approve locks. The agent trace and the ticket\'s cost sit beside it.',
+    },
+    {
+      src: '/project/ReplyPilot/sent.webp',
+      caption:
+        'An approved reply with the tool calls that produced it, the tokens of each model call, and the audit log from receipt to send.',
+    },
+    {
+      src: '/project/ReplyPilot/home.webp',
+      caption:
+        'The demo inbox: sample customer emails, including a prompt injection and a request for someone else\'s order, with each ticket\'s status and cost.',
+    },
+  ],
+  LeadLoom: [
+    {
+      src: '/project/LeadLoom/lead-synced.webp',
+      caption:
+        'A booked demo after the workflow ran: scored hot, the booked-meeting rule raised intent, the company website read, HubSpot contact, company, deal and note written, and the Slack alert in the audit log.',
+    },
+    {
+      src: '/project/LeadLoom/n8n-workflow.webp',
+      caption:
+        'The intake workflow in n8n: three webhooks, the calls to the Python service, the route on its decision, a Wait node that holds the run for a reviewer, and the Slack alert.',
+    },
+    {
+      src: '/project/LeadLoom/lead-review.webp',
+      caption:
+        'A message that tries to set its own score waits for a person, who can change the route and score before approving it, which resumes the waiting n8n run.',
+    },
+    {
+      src: '/project/LeadLoom/home.webp',
+      caption:
+        'The demo: sample leads, each sent through the real path in the format its sender uses, signed like Cal.com or authenticated like Postmark.',
     },
   ],
 };
