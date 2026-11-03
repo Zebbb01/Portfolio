@@ -682,7 +682,7 @@ export const projects: Project[] = [
       'Playwright',
     ],
     github: 'https://github.com/Zebbb01/leadloom',
-    live: '',
+    live: 'https://ca-leadloom-8s6bzq-api.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
     detailsUrl: '/projects/leadloom',
   },
 ];
