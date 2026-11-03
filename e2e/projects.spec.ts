@@ -40,16 +40,16 @@ test('the home page shows only the featured work as a bento grid, with a link to
 test('the projects page lists every project and filters them by type', async ({ page }) => {
   await page.goto('/projects');
   const cards = page.getByRole('main').getByRole('listitem').getByRole('heading', { level: 2 });
-  await expect(cards).toHaveCount(8);
+  await expect(cards).toHaveCount(9);
 
   await page.getByRole('button', { name: /^Automation/ }).click();
   await expect(page).toHaveURL(/\/projects\?type=automation$/);
   await expect(page.getByRole('button', { name: /^Automation/ })).toHaveAttribute('aria-pressed', 'true');
-  await expect(cards).toHaveText(['N8N Business Automation', 'LedgerLens', 'ReplyPilot']);
-  await expect(page.getByText('Showing 3 of 8 projects')).toBeVisible();
+  await expect(cards).toHaveText(['N8N Business Automation', 'LedgerLens', 'ReplyPilot', 'LeadLoom']);
+  await expect(page.getByText('Showing 4 of 9 projects')).toBeVisible();
 
   await page.getByRole('button', { name: /^All/ }).click();
-  await expect(cards).toHaveCount(8);
+  await expect(cards).toHaveCount(9);
 });
 
 test('a link with a type opens the projects page already filtered', async ({ page }) => {
