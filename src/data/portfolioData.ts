@@ -630,6 +630,66 @@ export const projects: Project[] = [
     live: '',
     detailsUrl: '/projects/replypilot',
   },
+  {
+    title: 'LeadLoom',
+    slug: 'leadloom',
+    types: ['ai', 'automation'],
+    category: 'Lead Intake & CRM Automation · n8n · Python · Azure',
+    isFeatured: false,
+    mediaType: 'image',
+    mediaSrc: '/project/LeadLoom/lead-synced.webp',
+    problem:
+      'Leads arrive from a website form, an inbox and a booking calendar, get typed into the CRM by hand, twice for the same person, and the hot ones wait in the queue with everything else.',
+    description:
+      'A lead-intake and CRM automation system built from a self-hosted n8n workflow and a Python (FastAPI) service. n8n receives every lead and orchestrates; the Python service does what n8n does badly: it checks who the lead already is, reads the company\'s website with robots.txt respected, and scores and routes the lead with an LLM whose answer is validated against a schema and can be overruled by rules in code. Results go to HubSpot as a contact, company, deal and a note explaining the score; hot leads post to Slack, and unsure ones wait on a review page for a person. Runs on Azure free tiers with Terraform and GitHub Actions.',
+    impact: 'Every lead scored, deduplicated and in the CRM',
+    role: 'Solo — design, build, infrastructure and tests',
+    timeline: 'November 2026 — Present',
+    context:
+      'Automation roles ask for two things at once: n8n workflows that connect forms, inboxes and CRMs, and the code behind them that makes the result trustworthy. LeadLoom splits the work along that line, with the workflow committed as JSON and every step it calls tested in Python.',
+    approach: [
+      {
+        title: 'n8n for the plumbing, Python for the judgement',
+        detail:
+          'Three webhooks, routing, a Wait node that holds a run until a person decides, and the Slack alert live in n8n. Signature checks, dedupe, enrichment, scoring and the HubSpot writes live in a FastAPI service that n8n calls.',
+      },
+      {
+        title: 'The model scores, rules in code decide',
+        detail:
+          'The LLM returns fit, intent, a route and its confidence as a strict JSON schema, validated with Pydantic. Rules overrule it where the answer is known: a honeypot hit is spam, a booked meeting is a buying signal, a known customer is never spam, and low confidence or a prompt injection goes to a person.',
+      },
+      {
+        title: 'Idempotent from the webhook to the CRM',
+        detail:
+          'A redelivered webhook maps to the same lead. Each model and HubSpot call is a durable step in PostgreSQL, so a retry after an outage resumes where it stopped, without a second deal or a second Slack alert.',
+      },
+      {
+        title: 'Tested through the real workflow, graded in code',
+        detail:
+          'The end-to-end tests drive the exported n8n workflow itself, from a signed booking to an approval that resumes the waiting run, and a HubSpot outage that outlasts every retry. Twenty-four labeled leads, from an RFP to a prompt injection, are graded in code; all pass on Gemini 3.5 Flash-Lite at about $0.0005 a lead at list price.',
+      },
+    ],
+    outcomes: [
+      { value: '3', label: 'Lead sources through one n8n workflow' },
+      { value: '84', label: 'Unit and end-to-end tests' },
+      { value: '24/24', label: 'Eval leads passed on Gemini' },
+      { value: '6', label: 'Rules in code over the model' },
+    ],
+    tech: [
+      'n8n',
+      'Python',
+      'FastAPI',
+      'PostgreSQL',
+      'Gemini API',
+      'HubSpot API',
+      'Azure Container Apps',
+      'Terraform',
+      'Playwright',
+    ],
+    github: 'https://github.com/Zebbb01/leadloom',
+    live: 'https://ca-leadloom-8s6bzq-api.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
+    detailsUrl: '/projects/leadloom',
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -748,6 +808,28 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
       src: '/project/ReplyPilot/home.webp',
       caption:
         'The demo inbox: sample customer emails, including a prompt injection and a request for someone else\'s order, with each ticket\'s status and cost.',
+    },
+  ],
+  LeadLoom: [
+    {
+      src: '/project/LeadLoom/lead-synced.webp',
+      caption:
+        'A booked demo after the workflow ran: scored hot, the booked-meeting rule raised intent, the company website read, HubSpot contact, company, deal and note written, and the Slack alert in the audit log.',
+    },
+    {
+      src: '/project/LeadLoom/n8n-workflow.webp',
+      caption:
+        'The intake workflow in n8n: three webhooks, the calls to the Python service, the route on its decision, a Wait node that holds the run for a reviewer, and the Slack alert.',
+    },
+    {
+      src: '/project/LeadLoom/lead-review.webp',
+      caption:
+        'A message that tries to set its own score waits for a person, who can change the route and score before approving it, which resumes the waiting n8n run.',
+    },
+    {
+      src: '/project/LeadLoom/home.webp',
+      caption:
+        'The demo: sample leads, each sent through the real path in the format its sender uses, signed like Cal.com or authenticated like Postmark.',
     },
   ],
 };
