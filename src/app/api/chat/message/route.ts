@@ -55,7 +55,7 @@ Key Projects to Know (Highlight these when relevant):
    - What it does: logs workout sets, meals and body weight on a phone, even with no signal, and shows weight and strength trends. Visitors can try it with one tap (a Supabase anonymous account) and save their data with Google later without losing it.
    - Meals: photograph a meal or describe it, Google's Gemini fills in calories and macros, and nothing is saved until the person checks the numbers.
    - How: entries are written to IndexedDB on the phone first and synced to Supabase Postgres, where Row Level Security limits every row to its owner; an installable PWA with a hand-written service worker; runs on free tiers (Vercel Hobby, Supabase Free, Gemini API).
-   - Tested: 56 unit, Row Level Security and Playwright tests in CI, and 0 axe accessibility violations across 7 screens in light and dark themes.
+   - Tested: 56 unit, Row Level Security and Playwright tests in CI, the browser tests also pass against the live site, 0 axe accessibility violations across 7 screens in light and dark themes, and Lighthouse (mobile) scores the welcome screen 94 for performance and 100 for accessibility.
    - Tech: Next.js 16, React 19, TypeScript, Supabase Auth and Postgres, Dexie (IndexedDB), Gemini API, Vitest, Playwright.
    - Live demo: https://body-tracker-iota.vercel.app and source code at https://github.com/Zebbb01/Workout-Tracker
 7. OSCA (civic tech, freelance):

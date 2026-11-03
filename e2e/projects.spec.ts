@@ -82,7 +82,7 @@ test('the LedgerLens case study opens from the projects page and links the repos
 test('the Body Tracker case study shows real screenshots, measured results and both links', async ({ page }) => {
   await page.goto('/projects/body-tracker');
   await expect(page.getByRole('heading', { name: 'Body Tracker', level: 1 })).toBeVisible();
-  for (const label of ['Accessibility violations, 7 screens, 2 themes', 'Unit, RLS and browser tests in CI', 'Taps to log the next set']) {
+  for (const label of ['Lighthouse performance, mobile', 'Accessibility violations, 7 screens, 2 themes', 'Unit, RLS and browser tests in CI']) {
     await expect(page.getByText(label, { exact: true })).toBeVisible();
   }
   await expect(page.getByRole('link', { name: 'Repository' })).toHaveAttribute('href', 'https://github.com/Zebbb01/Workout-Tracker');
