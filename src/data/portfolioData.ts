@@ -659,15 +659,15 @@ export const projects: Project[] = [
           'A redelivered webhook maps to the same lead. Each model and HubSpot call is a durable step in PostgreSQL, so a retry after an outage resumes where it stopped, without a second deal or a second Slack alert.',
       },
       {
-        title: 'Tested through the real workflow',
+        title: 'Tested through the real workflow, graded in code',
         detail:
-          'Unit tests run against a real PostgreSQL; the end-to-end tests drive the exported n8n workflow itself, from a signed booking to an approval that resumes the waiting run, and a HubSpot outage that outlasts every retry.',
+          'The end-to-end tests drive the exported n8n workflow itself, from a signed booking to an approval that resumes the waiting run, and a HubSpot outage that outlasts every retry. Twenty-four labeled leads, from an RFP to a prompt injection, are graded in code; all pass on Gemini 3.5 Flash-Lite at about $0.0005 a lead at list price.',
       },
     ],
     outcomes: [
       { value: '3', label: 'Lead sources through one n8n workflow' },
       { value: '83', label: 'Unit and end-to-end tests' },
-      { value: '24', label: 'Labeled leads in the eval set' },
+      { value: '24/24', label: 'Eval leads passed on Gemini' },
       { value: '6', label: 'Rules in code over the model' },
     ],
     tech: [
