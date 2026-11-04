@@ -632,7 +632,7 @@ export const projects: Project[] = [
       'Playwright',
     ],
     github: 'https://github.com/Zebbb01/replypilot',
-    live: '',
+    live: 'https://ca-replypilot-9z83ab.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
     detailsUrl: '/projects/replypilot',
   },
   {
