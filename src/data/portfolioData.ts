@@ -820,7 +820,7 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     {
       src: '/project/LeadLoom/lead-synced.webp',
       caption:
-        'A booked demo after the workflow ran: scored hot, the booked-meeting rule raised intent, the company website read, HubSpot contact, company, deal and note written, and the Slack alert in the audit log.',
+        'A booked demo on the live Azure deployment: Gemini scored it hot and said why, the company website was read, and the HubSpot contact, company, deal and note were written as durable, timed steps.',
     },
     {
       src: '/project/LeadLoom/n8n-workflow.webp',
