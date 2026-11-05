@@ -632,7 +632,7 @@ export const projects: Project[] = [
       'Playwright',
     ],
     github: 'https://github.com/Zebbb01/replypilot',
-    live: '',
+    live: 'https://ca-replypilot-9z83ab.salmonriver-2ba7975b.southeastasia.azurecontainerapps.io',
     detailsUrl: '/projects/replypilot',
   },
   {
@@ -796,31 +796,31 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     },
     {
       src: '/project/LedgerLens/home.webp',
-      caption: 'The home page: a real sample invoice with the check it fails, the read, check and approve steps, and sample documents to try.',
+      caption: 'The documents table: every bill this browser added, with its vendor, invoice number, total and check status.',
     },
   ],
   ReplyPilot: [
     {
       src: '/project/ReplyPilot/review-blocked.webp',
       caption:
-        'A reviewer adds "$500" to a draft: no such amount is in the order data, so the check fails and Approve locks. The agent trace and the ticket\'s cost sit beside it.',
+        'A reviewer adds "$500" to a draft: no such amount is in the order data, so the check fails and Approve locks. The verified order, the checks and the agent\'s trace sit in the side rail.',
     },
     {
       src: '/project/ReplyPilot/sent.webp',
       caption:
-        'An approved reply with the tool calls that produced it, the tokens of each model call, and the audit log from receipt to send.',
+        'An approved reply in the outbox, with the order the agent verified, the ticket\'s cost and the audit log from receipt to send.',
     },
     {
       src: '/project/ReplyPilot/home.webp',
       caption:
-        'The demo inbox: sample customer emails, including a prompt injection and a request for someone else\'s order, with each ticket\'s status and cost.',
+        'The inbox beside the New test email dialog: sample customers, including a prompt injection and a request for someone else\'s order.',
     },
   ],
   LeadLoom: [
     {
       src: '/project/LeadLoom/lead-synced.webp',
       caption:
-        'A booked demo after the workflow ran: scored hot, the booked-meeting rule raised intent, the company website read, HubSpot contact, company, deal and note written, and the Slack alert in the audit log.',
+        'A booked demo on the live Azure deployment: Gemini scored it hot and said why, the company website was read, and the HubSpot contact, company, deal and note were written as durable, timed steps.',
     },
     {
       src: '/project/LeadLoom/n8n-workflow.webp',
