@@ -1,6 +1,8 @@
-import { NextResponse } from 'next/server';
+import { after, NextResponse } from 'next/server';
 import { getSupabase } from '@/src/app/api/lib/db';
 import { sendChatNotificationEmail } from '@/src/app/api/lib/mail';
+
+const OFFLINE = 'Live chat is offline right now. Please use the contact form, which goes straight to Gerald.';
 
 export async function POST(req: Request) {
   try {
@@ -25,10 +27,12 @@ export async function POST(req: Request) {
         .select('id, created_at')
         .eq('ip_address', ip)
         .gt('created_at', threeMinutesAgo)
-        .limit(1);
+        .limit(1)
+        .retry(false); // The default backoff would hold the visitor for about 30 seconds.
 
       if (checkError) {
         console.error('Database rate limit check error:', checkError);
+        return NextResponse.json({ error: OFFLINE }, { status: 503 });
       }
 
       if (recentRooms && recentRooms.length > 0) {
@@ -54,7 +58,7 @@ export async function POST(req: Request) {
 
     if (roomError) {
       console.error('Error creating chat room:', roomError);
-      return NextResponse.json({ error: 'Failed to initialize conversation session.' }, { status: 500 });
+      return NextResponse.json({ error: OFFLINE }, { status: 503 });
     }
 
     // Create Initial System Welcome Message
@@ -73,16 +77,18 @@ export async function POST(req: Request) {
       console.error('Error creating initial welcome message:', msgError);
     }
 
-    // Send Gmail notification alert asynchronously so it doesn't block the client UI load
-    sendChatNotificationEmail({
-      name: guestName.trim(),
-      email: guestEmail.trim(),
-      roomId: roomData.id,
-    }).catch((e) => console.error('Failed to trigger email notification background job:', e));
+    // after() keeps the function alive for this: a promise left running is frozen on Vercel.
+    after(() =>
+      sendChatNotificationEmail({
+        name: guestName.trim(),
+        email: guestEmail.trim(),
+        roomId: roomData.id,
+      }),
+    );
 
     return NextResponse.json({ success: true, roomId: roomData.id });
   } catch (err) {
     console.error('Server error in chat/start API:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: OFFLINE }, { status: 503 });
   }
 }

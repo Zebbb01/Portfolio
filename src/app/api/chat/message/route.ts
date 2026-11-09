@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
+import { after, NextResponse } from 'next/server';
 import { getSupabase } from '@/src/app/api/lib/db';
+import { generateAiReply, type ChatTurn } from '@/src/app/api/lib/aiReply';
 
-async function generateAiReply(history: { role: string; content: string }[]) {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) {
-    console.warn('GITHUB_TOKEN environment variable is not set. Using fallback message.');
-    return "Thanks for reaching out! I've saved your message. I'm currently offline, but I'll review this and get back to you as soon as possible!";
-  }
+// The reply is written after the response, so the function has to outlive it.
+export const maxDuration = 30;
 
+const NOT_DELIVERED = 'Your message could not be delivered right now. Please try again, or use the contact form.';
+
+function writeReply(history: ChatTurn[]) {
   const systemInstruction = `You are the AI assistant representing Gerald Villaceran, a modern Full Stack Software Engineer and Web Developer.
 Your goal is to converse with visitors on Gerald's portfolio site, answer questions about his career, projects, and skills, capture lead interest, and help them schedule a meeting or leave a message.
 
@@ -41,6 +41,7 @@ Key Projects to Know (Highlight these when relevant):
    - Solution: Custom automated pipelines using n8n and Make linking CRM, webhooks, follow-up messages.
    - Tech: n8n, Make, Webhooks, GoHighLevel APIs.
    - Impact: 60% reduction in manual operations.
+   - More: the automation library at /automations shows 33 n8n workflows, searchable by tool and category: job search, lead generation, lead follow-up, content, and inbox and team operations.
 4. GHL Marketing Websites (Sales Funnels):
    - Problem: Poor user engagement and low conversions on generic landing pages.
    - Solution: Immersive marketing sites built inside GoHighLevel with custom web animations and nurture sequences.
@@ -71,6 +72,12 @@ Key Projects to Know (Highlight these when relevant):
    - Measured by script against answer keys for nine Mississippi watershed plans (2004 to 2021), three runs each: 80.3% F1 on goals, BMPs and activities, 78.6% on the six plans held out from tuning, 83.7% of numbers exact, and 0 extracted names that are not in the PDF.
    - Tech: Next.js 16, React 19, TypeScript, Anthropic SDK (Claude Haiku), Zod, pdf.js, Tesseract.js, Recharts, Vitest, Playwright, Netlify.
    - Live demo: https://watershed-extractor.netlify.app (the sample plans open instantly). The code belongs to ChowaCo, so never offer the source code.
+9. Job Hunt Automation (n8n, GERALD'S OWN PROJECT, running since 13 October 2026):
+   - What it does: six n8n workflows run his job search. Each day one reads eight job feeds, alert emails and Facebook groups, and Gemini checks every new posting against his CV. Each fit becomes a Trello card with a tailored CV and a cover note. Another reads employer replies, moves the card, converts the meeting time to Philippine time and writes the interview prep.
+   - Design: the model reports facts and code sets the score; a scam-risk job never becomes a card; job boards that ban bots still get one human click; an application is emailed only when the posting asks for email, within a daily cap.
+   - Measured from its own log, 13 October to 9 November 2026: 4,344 postings read, 1,173 checked by AI, 346 fits found.
+   - Tech: n8n, Gemini API, Trello API, Apify, JavaScript, Python, IMAP, SMTP.
+   - Case study: /projects/job-hunt-automation
 
 Conversation Guidelines:
 - Answer questions directly and concisely.
@@ -79,39 +86,7 @@ Conversation Guidelines:
 - Do not use emojis in your response, or use them very sparingly.
 - Keep your answers short (2-4 sentences max) to fit in chat bubbles.`;
 
-  try {
-    const res = await fetch("https://models.inference.ai.azure.com/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        messages: [
-          { role: "system", content: systemInstruction },
-          ...history
-        ],
-        model: "gpt-4o-mini",
-        temperature: 0.7,
-        max_tokens: 250
-      })
-    });
-
-    if (!res.ok) {
-      const errText = await res.text();
-      console.error("GitHub Models API error response:", errText);
-      throw new Error(`GitHub Models API returned status ${res.status}`);
-    }
-
-    const data = await res.json();
-    const text = data.choices?.[0]?.message?.content;
-    if (!text) throw new Error("Invalid GitHub Models API response structure");
-
-    return text.trim();
-  } catch (err) {
-    console.error("Error generating AI response:", err);
-    return "Thanks for your message! I'm processing it and Gerald will get back to you via email shortly.";
-  }
+  return generateAiReply(systemInstruction, history);
 }
 
 export async function POST(req: Request) {
@@ -148,7 +123,7 @@ export async function POST(req: Request) {
 
     if (msgError) {
       console.error('Error inserting chat message:', msgError);
-      return NextResponse.json({ error: 'Failed to deliver message.' }, { status: 500 });
+      return NextResponse.json({ error: NOT_DELIVERED }, { status: 503 });
     }
 
     // Update room's last activity timestamp
@@ -165,8 +140,8 @@ export async function POST(req: Request) {
 
     // Trigger AI Auto-Reply if enabled for this room
     if (roomData?.ai_enabled) {
-      // Execute asynchronously in background to return quick response to visitor
-      (async () => {
+      // after() keeps the function alive for this: a promise left running is frozen on Vercel.
+      after(async () => {
         try {
           // Delay briefly to make the "typing..." transition feel natural to the visitor
           await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -179,12 +154,12 @@ export async function POST(req: Request) {
             .order('created_at', { ascending: true });
 
           if (historyData) {
-            const history = historyData.map((m: any) => ({
+            const history = historyData.map((m: any): ChatTurn => ({
               role: m.sender === 'guest' ? 'user' : 'assistant',
               content: m.content || `[Sent attachment: ${m.media_type || 'media'}]`
             }));
 
-            const aiReply = await generateAiReply(history);
+            const aiReply = await writeReply(history);
 
             // Insert generated response as admin message
             const { error: aiMsgError } = await supabase
@@ -208,12 +183,12 @@ export async function POST(req: Request) {
         } catch (aiErr) {
           console.error('AI Auto-reply background error:', aiErr);
         }
-      })();
+      });
     }
 
     return NextResponse.json({ success: true, message: msgData });
   } catch (err) {
     console.error('Server error in chat/message API:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: NOT_DELIVERED }, { status: 503 });
   }
 }
