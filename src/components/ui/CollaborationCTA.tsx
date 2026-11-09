@@ -18,7 +18,7 @@ interface CollaborationCTAProps {
 
 export default function CollaborationCTA({ subject }: CollaborationCTAProps) {
   return (
-    <section className="relative py-20 md:py-28" aria-labelledby="collaborate-heading">
+    <section className="relative py-12 md:py-16" aria-labelledby="collaborate-heading">
       <div className="max-w-4xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}

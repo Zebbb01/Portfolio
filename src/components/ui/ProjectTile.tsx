@@ -64,7 +64,7 @@ export default function ProjectTile({ project, large, detailed, heading = 'h3', 
 
         <Heading className={`font-heading font-semibold text-[#F5F0E8] ${large ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
           <Link
-            href={project.detailsUrl}
+            href={project.opensAt ?? project.detailsUrl}
             className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none group-hover:text-[#F5F0E8]"
           >
             {project.title}

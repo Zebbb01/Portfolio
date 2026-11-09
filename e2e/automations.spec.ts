@@ -69,6 +69,17 @@ test('the original n8n case study keeps its work and links to the library', asyn
   await expect(page).toHaveURL(/\/automations$/);
 });
 
+test('the N8N card opens the library, and the old case study stays reachable from it', async ({ page }) => {
+  await page.goto('/projects?type=automation');
+  await page.getByRole('link', { name: 'N8N Business Automation' }).click();
+  await expect(page).toHaveURL(/\/automations$/);
+  await expect(page.getByRole('heading', { name: 'n8n workflows', level: 1 })).toBeVisible();
+
+  await page.getByRole('link', { name: /Earlier client work/ }).click();
+  await expect(page).toHaveURL(/\/projects\/n8n-automation$/);
+  await expect(page.getByRole('heading', { name: 'N8N Business Automation', level: 1 })).toBeVisible();
+});
+
 test('the projects page leads to the library, and the highlight has a case study', async ({ page }) => {
   await page.goto('/projects?type=automation');
   await expect(page.getByRole('link', { name: /Browse all 33 n8n workflows/ })).toBeVisible();
