@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { formatDuration, monthsSince, projects, projectScreenshots } from '../../../data/portfolioData';
+import workflows from '../../../data/workflows.json';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -325,7 +326,9 @@ const ProjectCaseStudy = () => {
                         alt={shot.caption}
                         fill
                         sizes={i === 0 ? '(max-width: 640px) 100vw, 900px' : '(max-width: 640px) 100vw, 450px'}
-                        className="object-cover object-top transition-transform duration-500 motion-safe:group-hover:scale-[1.03]"
+                        className={`transition-transform duration-500 motion-safe:group-hover:scale-[1.03] ${
+                          shot.fit === 'contain' ? 'object-contain p-3 bg-[#0E0E0E]' : 'object-cover object-top'
+                        }`}
                       />
                     )}
                     <span className="absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-lg bg-[#060606]/70 backdrop-blur-sm border border-[#1F1F1F] text-[#A09882] opacity-0 group-hover:opacity-100 transition-opacity">
@@ -339,6 +342,28 @@ const ProjectCaseStudy = () => {
               ))}
             </div>
           </div>
+        </section>
+      )}
+
+      {/* ── Automation library ──────────────────────────────────────── */}
+      {project.linksLibrary && (
+        <section className="relative border-b border-[#1F1F1F]">
+          <Link href="/automations" className="group block max-w-5xl mx-auto px-6 py-12 md:py-14">
+            <p className="section-label">Automation library</p>
+            <div className="flex items-center justify-between gap-6 mt-3">
+              <div>
+                <h2 className="font-heading text-2xl md:text-3xl font-semibold text-[#F5F0E8] group-hover:text-[#D4AF37] transition-colors tracking-[-0.01em]">
+                  See all {workflows.length} n8n workflows
+                </h2>
+                <p className="text-sm text-[#A09882] mt-2">Newer work, searchable by tool, category and what starts each one.</p>
+              </div>
+              <ArrowRight
+                size={28}
+                strokeWidth={1.5}
+                className="text-[#6B6355] shrink-0 group-hover:text-[#D4AF37] group-hover:translate-x-1 transition-all"
+              />
+            </div>
+          </Link>
         </section>
       )}
 
