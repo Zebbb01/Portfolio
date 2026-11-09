@@ -1,9 +1,10 @@
 'use client';
 
 // The workflow picked as the one that saves the most time, with its video and its logged results.
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { ArrowRight, Maximize2 } from 'lucide-react';
 import Link from 'next/link';
+import AutoVideo from '@/src/components/ui/AutoVideo';
 import { ImageGallery } from '@/src/components/ui/ImageGallery';
 import workflows from '@/src/data/workflows.json';
 import { projects } from '@/src/data/portfolioData';
@@ -15,26 +16,15 @@ const pictures = workflows
   .map((w) => ({ src: w.image, caption: `${w.title}: ${w.summary}` }));
 
 export default function WorkflowHighlight() {
-  const video = useRef<HTMLVideoElement>(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
-
-  useEffect(() => {
-    // Plays by itself only for people who have not asked their system to reduce motion.
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) video.current?.play().catch(() => {});
-  }, []);
 
   return (
     <section aria-labelledby="highlight" className="mt-10 grid gap-8 rounded-2xl border border-[#D4AF37]/25 bg-[#0E0E0E] p-4 sm:p-5 lg:grid-cols-12 lg:items-center lg:gap-10">
       <div className="lg:col-span-7 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#060606]">
-        <video
-          ref={video}
+        <AutoVideo
           src={`${MEDIA}.mp4`}
           poster={`${MEDIA}-poster.webp`}
-          muted
-          loop
-          playsInline
           controls
-          preload="metadata"
           aria-label="A walkthrough of the Find and score workflow, step by step."
           className="block aspect-video w-full object-cover"
         />

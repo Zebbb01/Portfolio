@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Suspense } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import BackLink from '@/src/components/ui/BackLink';
 import PageShell from '@/src/components/ui/PageShell';
 import ProjectsBrowser from '@/src/components/sections/ProjectsBrowser';
 
@@ -14,13 +13,7 @@ export const metadata: Metadata = {
 export default function ProjectsPage() {
   return (
     <PageShell>
-      <Link
-        href="/#projects"
-        className="fixed top-5 left-5 md:top-6 md:left-6 z-[100] flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#060606]/70 backdrop-blur-xl border border-[#1F1F1F] text-[#A09882] hover:border-[#D4AF37]/30 hover:text-[#D4AF37] transition-all group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
-      >
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" strokeWidth={1.5} aria-hidden="true" />
-        <span className="text-xs font-medium tracking-wide">Back to Portfolio</span>
-      </Link>
+      <BackLink />
 
       <main className="max-w-6xl mx-auto px-6 pt-28 pb-24 md:pt-36">
         <p className="section-label">Work</p>

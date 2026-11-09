@@ -79,6 +79,45 @@ test('the LedgerLens case study opens from the projects page and links the repos
   );
 });
 
+const CASE_STUDIES = [
+  'trusum',
+  'tamang-sahod',
+  'watershed-extractor',
+  'job-hunt-automation',
+  'n8n-automation',
+  'ghl-website',
+  'body-tracker',
+  'ledgerlens',
+  'replypilot',
+  'leadloom',
+];
+
+for (const slug of CASE_STUDIES) {
+  test(`${slug} shows the product and its results without scrolling`, async ({ page }) => {
+    // The size of the owner's laptop, the smallest common first screen.
+    await page.setViewportSize({ width: 1536, height: 700 });
+    await page.goto(`/projects/${slug}`);
+
+    const results = page.getByRole('region', { name: 'Results' });
+    await expect(page.getByRole('heading', { level: 1 })).toBeInViewport();
+    await expect(results.locator('video, img').first()).toBeInViewport({ ratio: 0.9 });
+    await expect(results.getByRole('heading', { level: 2 })).toBeInViewport();
+    await expect(results.locator('dd').first()).toBeInViewport();
+  });
+}
+
+test('every case study puts its screens before its reasoning, and the reasoning opens on demand', async ({ page }) => {
+  await page.goto('/projects/job-hunt-automation');
+
+  const headings = await page.getByRole('heading', { level: 2 }).allTextContents();
+  expect(headings.indexOf('Inside the product')).toBeLessThan(headings.indexOf('Why this exists'));
+
+  const decision = page.locator('details').filter({ hasText: 'A person still clicks Apply on job boards' });
+  await expect(decision.getByText('ban bots that apply for you')).toBeHidden();
+  await decision.locator('summary').click();
+  await expect(decision.getByText('ban bots that apply for you')).toBeVisible();
+});
+
 test('the Body Tracker case study shows real screenshots, measured results and both links', async ({ page }) => {
   await page.goto('/projects/body-tracker');
   await expect(page.getByRole('heading', { name: 'Body Tracker', level: 1 })).toBeVisible();
