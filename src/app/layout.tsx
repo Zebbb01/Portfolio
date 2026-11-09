@@ -4,6 +4,7 @@ import { Inter, Outfit } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import LiveChatWidget from '@/src/components/ui/LiveChatWidget';
+import PageTrailRecorder from '@/src/components/ui/PageTrailRecorder';
 import SourceGuard from '@/src/components/ui/SourceGuard';
 import { Toaster } from 'sonner';
 import './globals.css'
@@ -93,6 +94,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
+        <PageTrailRecorder />
         <SourceGuard />
         <LiveChatWidget />
         <Toaster theme="dark" position="bottom-right" richColors />

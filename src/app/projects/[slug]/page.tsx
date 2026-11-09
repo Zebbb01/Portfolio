@@ -3,12 +3,13 @@
 
 import { useState } from 'react';
 import { notFound, useParams } from 'next/navigation';
-import { ArrowLeft, ArrowRight, ChevronDown, ExternalLink, Github, Globe, Maximize2, Monitor } from 'lucide-react';
+import { ArrowRight, ChevronDown, ExternalLink, Github, Globe, Maximize2, Monitor } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatDuration, monthsSince, projects, projectScreenshots } from '../../../data/portfolioData';
 import workflows from '../../../data/workflows.json';
 import AutoVideo from '../../../components/ui/AutoVideo';
+import BackLink from '../../../components/ui/BackLink';
 import CollaborationCTA from '../../../components/ui/CollaborationCTA';
 import { ImageGallery } from '../../../components/ui/ImageGallery';
 import type { Screenshot } from '../../../types';
@@ -67,13 +68,7 @@ const ProjectCaseStudy = () => {
 
   return (
     <div className="bg-[#060606] min-h-screen text-[#F5F0E8]">
-      <Link
-        href="/#projects"
-        className="fixed top-5 left-5 md:top-6 md:left-6 z-[100] flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#060606]/70 backdrop-blur-xl border border-[#1F1F1F] text-[#A09882] hover:border-[#D4AF37]/30 hover:text-[#D4AF37] transition-all group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
-      >
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" strokeWidth={1.5} aria-hidden="true" />
-        <span className="text-xs font-medium tracking-wide">Back to Portfolio</span>
-      </Link>
+      <BackLink />
 
       <main className="max-w-6xl mx-auto px-6 pt-24 md:pt-24 pb-12">
         <div className="flex flex-wrap items-center gap-3">
