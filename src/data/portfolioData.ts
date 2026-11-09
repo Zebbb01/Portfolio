@@ -475,7 +475,7 @@ export const projects: Project[] = [
     mediaSrc: '/project/BodyTracker/dashboard.webp',
     problem: 'Fitness logging gets abandoned because it is slow, and gyms have no signal.',
     description:
-      'A phone-first tracker for workouts, meals and body weight that keeps working with no signal. A visitor is in with one tap through a Supabase anonymous account they can save with Google later, logs a set in two taps, photographs a meal and confirms the numbers Gemini fills in, and sees weight and strength trends. Every entry is written to IndexedDB on the phone first and synced to Supabase Postgres, where Row Level Security limits each row to its owner. Installable as an app, with a hand-written service worker, and run entirely on free tiers.',
+      'A phone-first tracker for workouts, meals and body weight that keeps working with no signal. A visitor is in with one tap through a Supabase anonymous account they can save with Google later, logs a set in two taps, looks up how any of 254 exercises is done from drawings of the movement, photographs a meal and confirms the numbers Gemini fills in, and sees weight and strength trends. Every entry is written to IndexedDB on the phone first and synced to Supabase Postgres, where Row Level Security limits each row to its owner. Installable as an app, with a hand-written service worker, and run entirely on free tiers.',
     impact: 'Try it in one tap, log with no signal',
     role: 'Solo — design, build, tests and deployment',
     timeline: 'February 2026 — November 2026',
@@ -504,9 +504,9 @@ export const projects: Project[] = [
       },
     ],
     outcomes: [
-      { value: '93', label: 'Lighthouse performance, mobile' },
-      { value: '0', label: 'Accessibility violations, 7 screens, 2 themes' },
-      { value: '58', label: 'Unit, RLS and browser tests in CI' },
+      { value: '85', label: 'Lighthouse performance, mobile' },
+      { value: '0', label: 'Accessibility violations, 10 screens, 2 themes' },
+      { value: '105', label: 'Unit, RLS and browser tests in CI' },
     ],
     tech: ['Next.js 16', 'React 19', 'TypeScript', 'Supabase Auth', 'Postgres RLS', 'IndexedDB', 'Service Worker', 'Gemini API', 'Playwright'],
     github: 'https://github.com/Zebbb01/Workout-Tracker',
@@ -781,6 +781,7 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     { src: '/project/BodyTracker/dashboard.webp', caption: 'Today on a desktop: calories and macros left, what was eaten, today’s sets and the weight trend.' },
     { src: '/project/BodyTracker/dashboard-phone.webp', caption: 'Today on a phone, above the bottom tabs: the whole day on one screen.' },
     { src: '/project/BodyTracker/workout.webp', caption: 'The workout log: the next set starts as a copy of the last one, so logging it is one more tap.' },
+    { src: '/project/BodyTracker/guide-phone.webp', caption: 'The exercise guide: 254 exercises found by body part or plain words, each drawn in two positions, with short steps and one tap to log it. Drawings adapted from Everkinetic, CC BY-SA 4.0.' },
     { src: '/project/BodyTracker/progress.webp', caption: 'Progress: weight over 90 days, strength as the best estimated one-rep max, and weekly volume, each with a table view.' },
   ],
   LedgerLens: [
