@@ -470,6 +470,7 @@ export const projects: Project[] = [
     github: '',
     live: '',
     detailsUrl: '/projects/n8n-automation',
+    opensAt: '/automations',
   },
   {
     title: 'GHL Marketing Websites',

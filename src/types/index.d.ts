@@ -43,6 +43,8 @@ export interface Project {
   outcomes?: { value: string; label: string }[];
   /** Adds a link to the automation library after the walkthrough. */
   linksLibrary?: boolean;
+  /** Where the project's card leads, when that is not its case study. */
+  opensAt?: string;
   description: string;
   problem: string;
   impact: string;
