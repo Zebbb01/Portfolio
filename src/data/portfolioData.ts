@@ -506,7 +506,7 @@ export const projects: Project[] = [
     outcomes: [
       { value: '85', label: 'Lighthouse performance, mobile' },
       { value: '0', label: 'Accessibility violations, 10 screens, 2 themes' },
-      { value: '107', label: 'Unit, RLS and browser tests in CI' },
+      { value: '117', label: 'Unit, RLS and browser tests in CI' },
     ],
     tech: ['Next.js 16', 'React 19', 'TypeScript', 'Supabase Auth', 'Postgres RLS', 'IndexedDB', 'Service Worker', 'Gemini API', 'Playwright'],
     github: 'https://github.com/Zebbb01/Workout-Tracker',
