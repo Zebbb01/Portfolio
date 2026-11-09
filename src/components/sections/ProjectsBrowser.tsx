@@ -1,30 +1,16 @@
 'use client';
 
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { projects } from '@/src/data/portfolioData';
+import workflows from '@/src/data/workflows.json';
 import { PROJECT_TYPES, countByType, filterProjects, isProjectType } from '@/src/lib/projectFilters';
+import FilterChip from '@/src/components/ui/FilterChip';
 import ProjectTile from '@/src/components/ui/ProjectTile';
 import type { ProjectType } from '@/src/types';
 
 const counts = countByType(projects);
-
-function Chip({ label, count, active, onClick }: { label: string; count: number; active: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37] ${
-        active
-          ? 'border-[#D4AF37] bg-[#D4AF37]/[0.08] text-[#D4AF37]'
-          : 'border-[#1F1F1F] text-[#A09882] hover:border-[#D4AF37]/30 hover:text-[#F5F0E8]'
-      }`}
-    >
-      {label}
-      <span className={`text-xs tabular-nums ${active ? 'text-[#D4AF37]/80' : 'text-[#6B6355]'}`}>{count}</span>
-    </button>
-  );
-}
 
 export default function ProjectsBrowser() {
   const router = useRouter();
@@ -39,15 +25,28 @@ export default function ProjectsBrowser() {
   return (
     <>
       <div role="group" aria-label="Filter projects by type" className="mt-10 flex flex-wrap gap-2">
-        <Chip label="All" count={projects.length} active={!type} onClick={() => choose(null)} />
+        <FilterChip label="All" count={projects.length} active={!type} onClick={() => choose(null)} />
         {PROJECT_TYPES.map((t) => (
-          <Chip key={t.id} label={t.label} count={counts[t.id]} active={type === t.id} onClick={() => choose(t.id)} />
+          <FilterChip key={t.id} label={t.label} count={counts[t.id]} active={type === t.id} onClick={() => choose(t.id)} />
         ))}
       </div>
 
       <p className="mt-4 text-sm text-[#6B6355]" aria-live="polite">
         {type ? `Showing ${shown.length} of ${projects.length} projects` : `Showing all ${projects.length} projects`}
       </p>
+
+      {(!type || type === 'automation') && (
+        <Link
+          href="/automations"
+          className="group mt-6 flex items-center justify-between gap-4 rounded-2xl border border-[#D4AF37]/20 bg-[#D4AF37]/[0.04] px-5 py-4 transition-colors hover:border-[#D4AF37]/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4AF37]"
+        >
+          <span>
+            <span className="block text-sm font-medium text-[#F5F0E8]">Browse all {workflows.length} n8n workflows</span>
+            <span className="block text-xs text-[#A09882] mt-0.5">Search by tool, category or what starts them</span>
+          </span>
+          <ArrowRight size={18} strokeWidth={1.5} className="shrink-0 text-[#D4AF37] transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        </Link>
+      )}
 
       {shown.length === 0 ? (
         <div className="mt-8 rounded-2xl border border-dashed border-[#1F1F1F] p-10 text-center">

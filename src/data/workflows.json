@@ -1,0 +1,537 @@
+[
+  {
+    "slug": "job-hunt-find-and-score",
+    "title": "Job Hunt · Find and score",
+    "category": "job-search",
+    "summary": "Reads eight job feeds a day, checks each new posting against my CV, and turns the fits into Trello cards with a tailored CV and cover note.",
+    "steps": 30,
+    "triggers": [
+      "manual",
+      "schedule"
+    ],
+    "tools": [
+      "Trello",
+      "SMTP",
+      "Gemini",
+      "Python"
+    ],
+    "image": "/project/Automation/workflows/job-hunt-find-and-score.webp"
+  },
+  {
+    "slug": "job-hunt-replies",
+    "title": "Job Hunt · Replies",
+    "category": "job-search",
+    "summary": "Matches employer emails to their cards, moves each card, puts meeting times in Philippine time, and writes the interview prep.",
+    "steps": 21,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "IMAP",
+      "Gemini",
+      "Google Calendar",
+      "Python"
+    ],
+    "image": "/project/Automation/workflows/job-hunt-replies.webp"
+  },
+  {
+    "slug": "job-hunt-read-alerts",
+    "title": "Job Hunt · Read job alerts",
+    "category": "job-search",
+    "summary": "Watches the inbox for Seek, Indeed and LinkedIn alert emails and queues every job in them for scoring.",
+    "steps": 6,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "IMAP",
+      "Gmail",
+      "Gemini"
+    ],
+    "image": "/project/Automation/workflows/job-hunt-read-alerts.webp"
+  },
+  {
+    "slug": "job-hunt-facebook-groups",
+    "title": "Job Hunt · Facebook groups",
+    "category": "job-search",
+    "summary": "Twice a day, reads the newest posts in public groups, including their photos, and queues the real job posts.",
+    "steps": 11,
+    "triggers": [
+      "schedule",
+      "manual"
+    ],
+    "tools": [
+      "Apify",
+      "Gemini"
+    ],
+    "image": "/project/Automation/workflows/job-hunt-facebook-groups.webp"
+  },
+  {
+    "slug": "job-hunt-cvs",
+    "title": "Job Hunt · CVs for open cards",
+    "category": "job-search",
+    "summary": "Run by hand: gives every open card that has no CV one tailored to that job.",
+    "steps": 6,
+    "triggers": [
+      "manual"
+    ],
+    "tools": [
+      "Trello",
+      "Python"
+    ],
+    "image": "/project/Automation/workflows/job-hunt-cvs.webp"
+  },
+  {
+    "slug": "job-hunt-gemini-fallback",
+    "title": "Job Hunt · Gemini fallback",
+    "category": "job-search",
+    "summary": "A webhook that lets a local AI tool reach Gemini when its own model fails, so the key stays inside n8n.",
+    "steps": 3,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "Gemini"
+    ],
+    "image": "/project/Automation/workflows/job-hunt-gemini-fallback.webp"
+  },
+  {
+    "slug": "ai-job-tracker",
+    "title": "AI job tracker · Tailor resume",
+    "category": "job-search",
+    "summary": "When a job row is marked Prepare, writes a tailored resume and cover letter as Google Docs and updates the tracker.",
+    "steps": 17,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "Google Sheets",
+      "Google Docs",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/ai-job-tracker.webp"
+  },
+  {
+    "slug": "job-search-collector",
+    "title": "Job search collector",
+    "category": "job-search",
+    "summary": "Runs a LinkedIn jobs search, keeps the relevant new postings, and adds them to a tracking sheet.",
+    "steps": 9,
+    "triggers": [
+      "manual"
+    ],
+    "tools": [
+      "Google Sheets",
+      "Apify"
+    ],
+    "image": "/project/Automation/workflows/job-search-collector.webp"
+  },
+  {
+    "slug": "google-maps-leads",
+    "title": "Google Maps lead scraper",
+    "category": "leads",
+    "summary": "Finds local businesses by trade, audits each one online with AI, writes outreach scripts, and files the leads by industry.",
+    "steps": 56,
+    "triggers": [
+      "schedule"
+    ],
+    "tools": [
+      "Apify",
+      "Google Sheets",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/google-maps-leads.webp"
+  },
+  {
+    "slug": "instagram-following",
+    "title": "Instagram following scraper",
+    "category": "leads",
+    "summary": "Saves new accounts daily, enriches each profile, reads text from images, and maps the result into a lead database.",
+    "steps": 31,
+    "triggers": [
+      "schedule",
+      "manual"
+    ],
+    "tools": [
+      "Google Sheets",
+      "OpenAI",
+      "Apify",
+      "OCR.space"
+    ],
+    "image": "/project/Automation/workflows/instagram-following.webp"
+  },
+  {
+    "slug": "instagram-followers",
+    "title": "Instagram followers scraper",
+    "category": "leads",
+    "summary": "Collects new followers every 12 hours, then enriches each profile and places it by country with AI.",
+    "steps": 19,
+    "triggers": [
+      "schedule"
+    ],
+    "tools": [
+      "Google Sheets",
+      "Apify",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/instagram-followers.webp"
+  },
+  {
+    "slug": "facebook-following",
+    "title": "Facebook following scraper",
+    "category": "leads",
+    "summary": "Collects new accounts daily, separates people from pages, and maps each into a lead sheet.",
+    "steps": 30,
+    "triggers": [
+      "schedule",
+      "manual"
+    ],
+    "tools": [
+      "Google Sheets",
+      "Apify"
+    ],
+    "image": "/project/Automation/workflows/facebook-following.webp"
+  },
+  {
+    "slug": "twitter-following",
+    "title": "Twitter following scraper",
+    "category": "leads",
+    "summary": "Collects new accounts daily, removes those already saved, and maps each profile into a lead sheet.",
+    "steps": 28,
+    "triggers": [
+      "schedule",
+      "manual"
+    ],
+    "tools": [
+      "Google Sheets",
+      "Apify"
+    ],
+    "image": "/project/Automation/workflows/twitter-following.webp"
+  },
+  {
+    "slug": "apify-puppeteer",
+    "title": "Apify Puppeteer scraper",
+    "category": "leads",
+    "summary": "Starts a scrape on a schedule, polls until it finishes, then cleans the results into a sheet.",
+    "steps": 11,
+    "triggers": [
+      "schedule"
+    ],
+    "tools": [
+      "Google Sheets",
+      "Apify"
+    ],
+    "image": "/project/Automation/workflows/apify-puppeteer.webp"
+  },
+  {
+    "slug": "trademe-scraper",
+    "title": "TradeMe property scraper",
+    "category": "leads",
+    "summary": "Takes property searches by form or email, removes duplicate listings, and saves what a trader needs to Airtable.",
+    "steps": 41,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "OpenAI",
+      "Gmail",
+      "Airtable",
+      "FireCrawl"
+    ],
+    "image": "/project/Automation/workflows/trademe-scraper.webp"
+  },
+  {
+    "slug": "trademe-filter",
+    "title": "TradeMe listing filter and analysis",
+    "category": "leads",
+    "summary": "Pages through a property search, and has AI pull out what makes each listing a good deal, into a sheet.",
+    "steps": 19,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "Gmail",
+      "OpenAI",
+      "Google Sheets",
+      "FireCrawl"
+    ],
+    "image": "/project/Automation/workflows/trademe-filter.webp"
+  },
+  {
+    "slug": "instagram-follow-up",
+    "title": "Three-day follow-up and lead tracker",
+    "category": "follow-up",
+    "summary": "Tracks every new lead, checks the inbox for replies, drafts messages with AI, and sends a reminder when a follow-up is due.",
+    "steps": 40,
+    "triggers": [
+      "schedule",
+      "event"
+    ],
+    "tools": [
+      "Google Sheets",
+      "Gmail",
+      "Instagram",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/instagram-follow-up.webp"
+  },
+  {
+    "slug": "ai-call-agent",
+    "title": "AI call agent",
+    "category": "follow-up",
+    "summary": "Places an AI voice call to each lead in a sheet and records the outcome from the call webhook.",
+    "steps": 12,
+    "triggers": [
+      "schedule",
+      "event",
+      "manual"
+    ],
+    "tools": [
+      "Google Sheets",
+      "Retell AI"
+    ],
+    "image": "/project/Automation/workflows/ai-call-agent.webp"
+  },
+  {
+    "slug": "ai-remarks-leads",
+    "title": "AI audits for trade leads",
+    "category": "follow-up",
+    "summary": "Audits the online presence of each HVAC, plumbing and roofing lead, in a detailed and a simplified version.",
+    "steps": 25,
+    "triggers": [
+      "manual"
+    ],
+    "tools": [
+      "Google Sheets",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/ai-remarks-leads.webp"
+  },
+  {
+    "slug": "ai-remarks-provider",
+    "title": "AI audits for social leads",
+    "category": "follow-up",
+    "summary": "Reviews the website and social presence of Instagram and Facebook leads, and writes the gaps back to the sheet.",
+    "steps": 23,
+    "triggers": [
+      "manual",
+      "schedule"
+    ],
+    "tools": [
+      "Google Sheets",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/ai-remarks-provider.webp"
+  },
+  {
+    "slug": "trusum-autopost",
+    "title": "Trusum LinkedIn autopost",
+    "category": "content",
+    "summary": "Publishes the next draft with its screenshot at a weekday lunch or dinner slot, at most once a day.",
+    "steps": 19,
+    "triggers": [
+      "schedule",
+      "manual"
+    ],
+    "tools": [
+      "Trello",
+      "LinkedIn",
+      "Playwright"
+    ],
+    "image": "/project/Automation/workflows/trusum-autopost.webp"
+  },
+  {
+    "slug": "trusum-editor",
+    "title": "Trusum LinkedIn editor",
+    "category": "content",
+    "summary": "Has AI review the next draft against the playbook and leaves suggestions on a Trello card. It never posts.",
+    "steps": 13,
+    "triggers": [
+      "schedule",
+      "manual"
+    ],
+    "tools": [
+      "Trello",
+      "Gemini"
+    ],
+    "image": "/project/Automation/workflows/trusum-editor.webp"
+  },
+  {
+    "slug": "trusum-alerts",
+    "title": "Trusum automation alerts",
+    "category": "content",
+    "summary": "When a marketing workflow fails, opens one Trello card naming the failure instead of failing silently.",
+    "steps": 5,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "Trello"
+    ],
+    "image": "/project/Automation/workflows/trusum-alerts.webp"
+  },
+  {
+    "slug": "youtube-to-linkedin",
+    "title": "YouTube to social posts",
+    "category": "content",
+    "summary": "Turns a YouTube transcript into posts for LinkedIn, Facebook and TikTok, from a form.",
+    "steps": 12,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "OpenAI",
+      "RapidAPI"
+    ],
+    "image": "/project/Automation/workflows/youtube-to-linkedin.webp"
+  },
+  {
+    "slug": "linkedin-research-rewrite",
+    "title": "LinkedIn content research and rewrite",
+    "category": "content",
+    "summary": "Finds posts that perform well, researches each topic, writes a new version with AI, and publishes on a schedule.",
+    "steps": 31,
+    "triggers": [
+      "manual",
+      "schedule"
+    ],
+    "tools": [
+      "Google Sheets",
+      "OpenAI",
+      "LinkedIn",
+      "Apify"
+    ],
+    "image": "/project/Automation/workflows/linkedin-research-rewrite.webp"
+  },
+  {
+    "slug": "facebook-multi-image",
+    "title": "Facebook multi-image posts",
+    "category": "content",
+    "summary": "Turns a Drive folder of photos into AI-captioned album posts, three times a week.",
+    "steps": 31,
+    "triggers": [
+      "event",
+      "schedule"
+    ],
+    "tools": [
+      "Google Drive",
+      "Google Sheets",
+      "Facebook",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/facebook-multi-image.webp"
+  },
+  {
+    "slug": "facebook-single-image",
+    "title": "Facebook single-image posts",
+    "category": "content",
+    "summary": "Brands each new image, writes a caption with AI, and posts it to the page on schedule.",
+    "steps": 19,
+    "triggers": [
+      "event",
+      "schedule"
+    ],
+    "tools": [
+      "Google Drive",
+      "Google Sheets",
+      "Facebook",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/facebook-single-image.webp"
+  },
+  {
+    "slug": "facebook-content-ai",
+    "title": "Facebook content creation",
+    "category": "content",
+    "summary": "Drafts posts from a form, then rewrites them from revision notes in a sheet and improves its own prompt.",
+    "steps": 23,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "Google Sheets",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/facebook-content-ai.webp"
+  },
+  {
+    "slug": "wordpress-blog",
+    "title": "WordPress blog writer",
+    "category": "content",
+    "summary": "Writes an SEO blog post for a home-services company from a topic and publishes it to WordPress.",
+    "steps": 5,
+    "triggers": [
+      "manual"
+    ],
+    "tools": [
+      "WordPress",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/wordpress-blog.webp"
+  },
+  {
+    "slug": "gmail-email-manager",
+    "title": "Gmail manager and reply drafts",
+    "category": "inbox",
+    "summary": "Sorts every new email into labels and leaves a reply draft in the thread when one is needed.",
+    "steps": 18,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "OpenAI",
+      "Gmail"
+    ],
+    "image": "/project/Automation/workflows/gmail-email-manager.webp"
+  },
+  {
+    "slug": "email-brief-to-images",
+    "title": "Email brief to image concepts",
+    "category": "inbox",
+    "summary": "Reads a client brief from email, plans three design concepts with AI, generates the images, and logs them in a sheet.",
+    "steps": 14,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "Gmail",
+      "Google Drive",
+      "Google Sheets",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/email-brief-to-images.webp"
+  },
+  {
+    "slug": "slack-task-management",
+    "title": "Slack task management",
+    "category": "inbox",
+    "summary": "Turns Slack mentions into tasks in Notion and a sheet, and sends a reminder three days before each is due.",
+    "steps": 32,
+    "triggers": [
+      "event",
+      "schedule"
+    ],
+    "tools": [
+      "Slack",
+      "OpenAI",
+      "Google Sheets",
+      "Notion"
+    ],
+    "image": "/project/Automation/workflows/slack-task-management.webp"
+  },
+  {
+    "slug": "slack-mentions-to-tasks",
+    "title": "Slack mentions to tasks",
+    "category": "inbox",
+    "summary": "Turns each Slack mention into a task with a description and a due date, and posts it back to the channel.",
+    "steps": 11,
+    "triggers": [
+      "event"
+    ],
+    "tools": [
+      "Slack",
+      "OpenAI"
+    ],
+    "image": "/project/Automation/workflows/slack-mentions-to-tasks.webp"
+  }
+]

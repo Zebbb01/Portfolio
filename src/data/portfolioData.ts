@@ -371,6 +371,58 @@ export const projects: Project[] = [
     detailsUrl: '/projects/watershed-extractor',
   },
   {
+    title: 'Job Hunt Automation',
+    slug: 'job-hunt-automation',
+    types: ['automation', 'ai'],
+    category: 'Workflow Automation · n8n · Gemini',
+    isFeatured: false,
+    mediaType: 'image',
+    mediaSrc: '/project/Automation/workflows/job-hunt-hero.webp',
+    status: 'active',
+    startedAt: '2026-10-13',
+    problem: 'Finding remote jobs that fit meant reading more than a hundred new postings a day, then tailoring a CV and a note for each.',
+    description:
+      "Six n8n workflows run my job search. One reads eight job feeds, alert emails and Facebook groups, and has Gemini check every new posting against my CV. Each fit becomes a Trello card with a tailored CV and a cover note that answers the posting's own questions. Another reads employer replies, moves the card, converts the meeting time and writes the interview prep.",
+    impact: '4,344 postings read, 346 fits found',
+    role: 'Automation Engineer',
+    timeline: 'Oct 2026 — Present',
+    context:
+      'I built this for my own search. Reading every posting is the slowest part of looking for work, and most of them rule themselves out in the first few lines. It has run since 13 October 2026 and is still running.',
+    approach: [
+      {
+        title: 'The model reports facts, code sets the score',
+        detail:
+          'Gemini says what a posting requires: must-haves, visa sponsorship, country and scam risk. The score is computed from those answers in code, so a persuasive posting cannot talk its way up, and a scam-risk job never becomes a card.',
+      },
+      {
+        title: 'A person still clicks Apply on job boards',
+        detail:
+          'Seek, Indeed and OnlineJobs.ph ban bots that apply for you, so their jobs stop at a card with the CV attached, ready for one human click.',
+      },
+      {
+        title: 'Tightened after the first live run',
+        detail:
+          'The first run emailed four employers and only one was a real fit. Now an application is emailed only when the posting asks for email, the role matches my stack and level, and a daily cap has room. Anything else waits on its card for me to decide.',
+      },
+      {
+        title: 'Failures show themselves',
+        detail:
+          'Every run logs which feeds failed, a busy model gets retried later the same day, and a watchdog restarts any trigger that did not start.',
+      },
+    ],
+    outcomes: [
+      { value: '4,344', label: 'Postings read' },
+      { value: '1,173', label: 'Checked by AI' },
+      { value: '346', label: 'Fits found' },
+      { value: '92%', label: 'Filtered before I read one' },
+    ],
+    linksLibrary: true,
+    tech: ['n8n', 'Gemini API', 'Trello API', 'Apify', 'JavaScript', 'Python', 'IMAP', 'SMTP'],
+    github: '',
+    live: '',
+    detailsUrl: '/projects/job-hunt-automation',
+  },
+  {
     title: 'N8N Business Automation',
     slug: 'n8n-automation',
     types: ['automation'],
@@ -413,6 +465,7 @@ export const projects: Project[] = [
       { value: '10+', label: 'Services connected' },
       { value: '24/7', label: 'Unattended running' },
     ],
+    linksLibrary: true,
     tech: ['n8n', 'Make', 'Webhooks', 'API Integration', 'GoHighLevel', 'OCR'],
     github: '',
     live: '',
@@ -769,6 +822,32 @@ export const projectScreenshots: Record<string, Screenshot[]> = {
     { src: '/project/GHL/ghl-1.mp4', caption: 'Landing page with scroll-triggered micro-animations cueing the next action.' },
     { src: '/project/GHL/ghl-2.mp4', caption: 'Funnel step — one decision per screen, no competing calls to action.' },
     { src: '/project/GHL/ghl-3.mp4', caption: 'Multi-step qualification form feeding the CRM follow-up sequence.' },
+  ],
+  'Job Hunt Automation': [
+    {
+      src: '/project/Automation/workflows/job-hunt-find-and-score.mp4',
+      caption: 'A walkthrough of Find and score, moving over the real workflow. The figures are from its own log, 13 October to 9 November 2026.',
+    },
+    {
+      src: '/project/Automation/workflows/job-hunt-find-and-score.webp',
+      caption: 'Find and score: the feeds come in on the left, then the scoring, the Trello card, the tailored CV and the gated email.',
+      fit: 'contain',
+    },
+    {
+      src: '/project/Automation/workflows/job-hunt-replies.webp',
+      caption: 'Replies: each employer email is matched to its card, and a first interview starts the prep note and answer scripts.',
+      fit: 'contain',
+    },
+    {
+      src: '/project/Automation/workflows/job-hunt-read-alerts.webp',
+      caption: 'Read job alerts: Seek, Indeed and LinkedIn alert emails become jobs in the same queue.',
+      fit: 'contain',
+    },
+    {
+      src: '/project/Automation/workflows/job-hunt-facebook-groups.webp',
+      caption: 'Facebook groups: the newest posts, photos included, read twice a day on a free plan.',
+      fit: 'contain',
+    },
   ],
   'N8N Business Automation': [
     { src: '/project/Automation/automate_image.webp', caption: 'Multi-step pipeline connecting CRM, mail and payment events.' },
