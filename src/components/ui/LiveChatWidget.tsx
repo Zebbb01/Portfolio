@@ -26,6 +26,10 @@ export default function LiveChatWidget() {
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
 
+  // Whether the chat's database can be reached; the form is pointless when it cannot.
+  const [chatOffline, setChatOffline] = useState(false);
+  const [checkingChat, setCheckingChat] = useState(false);
+
   // Media states
   const [isRecording, setIsRecording] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
@@ -43,6 +47,22 @@ export default function LiveChatWidget() {
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const channelRef = useRef<any>(null);
+
+  const checkChat = async () => {
+    setCheckingChat(true);
+    try {
+      const res = await fetch('/api/chat/status');
+      setChatOffline(!res.ok);
+    } catch {
+      setChatOffline(true);
+    } finally {
+      setCheckingChat(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) checkChat();
+  }, [isOpen]);
 
   // Load room session from localStorage on mount
   useEffect(() => {
@@ -191,8 +211,13 @@ export default function LiveChatWidget() {
 
       const data = await res.json();
 
+      if (res.status >= 500) {
+        setChatOffline(true);
+        return;
+      }
+
       if (!res.ok) {
-        toast.error(data.error || 'Failed to start chat session.');
+        toast.error(data.error || 'Your chat could not start. Please try again.');
         return;
       }
 
@@ -204,8 +229,9 @@ export default function LiveChatWidget() {
         localStorage.setItem('portfolio_chat_guest_email', guestEmail.trim());
       }
     } catch (err: any) {
+      // Also catches an error page where JSON was expected.
       console.error('Error starting chat:', err);
-      toast.error('An error occurred. Please try again later.');
+      setChatOffline(true);
     } finally {
       setLoading(false);
     }
@@ -241,10 +267,16 @@ export default function LiveChatWidget() {
 
       if (!res.ok) {
         console.error('Error sending message:', data.error);
-        toast.error(data.error || 'Failed to send message.');
+        setNewMessage(textToSend);
+        toast.error(data.error || 'Your message did not send. Please try again.');
+      } else if (data.message) {
+        // Shown now, so a slow realtime connection cannot make it look lost.
+        setMessages((prev) => (prev.some((m) => m.id === data.message.id) ? prev : [...prev, data.message]));
       }
     } catch (err) {
       console.error('Error sending message:', err);
+      setNewMessage(textToSend);
+      toast.error('Your message did not send. Check your connection and try again.');
     } finally {
       setSending(false);
     }
@@ -425,13 +457,13 @@ export default function LiveChatWidget() {
             {/* Header */}
             <div className="p-4 border-b border-[#1F1F1F] bg-[#161616] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <div className={`w-2.5 h-2.5 rounded-full ${chatOffline ? 'bg-[#6B6355]' : 'bg-emerald-500 animate-pulse'}`} />
                 <div>
                   <h4 className="text-xs font-semibold text-[#F5F0E8] tracking-wide">Gerald Villaceran</h4>
-                  <p className="text-[10px] text-[#6B6355] uppercase tracking-wider">Live Chat Support</p>
+                  <p className="text-[10px] text-[#A09882] uppercase tracking-wider">{chatOffline ? 'Chat offline' : 'Live Chat Support'}</p>
                 </div>
               </div>
-              {roomId && (
+              {roomId && !chatOffline && (
                 <button
                   onClick={handleResetSession}
                   className="text-[9px] text-[#6B6355] hover:text-[#D4AF37] uppercase tracking-wider transition-colors"
@@ -443,7 +475,32 @@ export default function LiveChatWidget() {
 
             {/* Chat Body */}
             <div className="flex-1 overflow-y-auto p-4 flex flex-col min-h-0">
-              {!roomId ? (
+              {chatOffline ? (
+                <div role="status" className="h-full flex flex-col items-center justify-center text-center gap-4 px-2">
+                  <AlertCircle className="w-7 h-7 text-[#D4AF37]" aria-hidden="true" />
+                  <div>
+                    <h5 className="text-sm font-semibold text-[#F5F0E8]">Live chat is offline</h5>
+                    <p className="text-xs text-[#A09882] mt-1.5 leading-relaxed">
+                      You can still reach Gerald. The contact form goes straight to his email.
+                    </p>
+                  </div>
+                  <a
+                    href="/#contact"
+                    onClick={() => setIsOpen(false)}
+                    className="w-full py-3 bg-[#D4AF37] hover:bg-[#E8D48B] text-[#060606] font-semibold text-xs tracking-wide rounded-xl text-center transition-all"
+                  >
+                    Open the contact form
+                  </a>
+                  <button
+                    type="button"
+                    onClick={checkChat}
+                    disabled={checkingChat}
+                    className="min-h-11 px-3 text-xs text-[#A09882] hover:text-[#D4AF37] transition-colors disabled:opacity-50"
+                  >
+                    {checkingChat ? 'Checking...' : 'Try the chat again'}
+                  </button>
+                </div>
+              ) : !roomId ? (
                 /* Lead Capture Form */
                 <form onSubmit={handleStartChat} className="h-full flex flex-col justify-center space-y-4">
                   <div className="text-center mb-2">

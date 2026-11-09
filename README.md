@@ -39,7 +39,7 @@ Copy the variables below into `.env.local`. The site renders without them, but t
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key (RLS-protected) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-side key for chat and contact routes |
-| `GITHUB_TOKEN` | GitHub Models token for AI auto-reply; without it the widget falls back to a canned offline message |
+| `GEMINI_API_KEY` | Gemini API key for AI auto-reply; without it the widget falls back to a canned offline message |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | Outbound mail for contact and chat alerts |
 | `ADMIN_EMAIL` | Where contact-form and new-chat alerts are sent |
 | `NEXT_PUBLIC_SITE_URL` | Canonical origin used by metadata, `sitemap.xml` and `robots.txt` |
