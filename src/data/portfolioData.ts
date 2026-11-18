@@ -221,6 +221,7 @@ export const projects: Project[] = [
     startedAt: '2026-03-29',
     mediaType: 'image',
     mediaSrc: '/project/SaaS/trusum-dashboard.webp',
+    walkthrough: '/videos/trusum.mp4',
     problem:
       'Philippine businesses run their books in spreadsheets, then rebuild everything by hand at filing time.',
     description:
@@ -278,6 +279,7 @@ export const projects: Project[] = [
     startedAt: '2026-09-28',
     mediaType: 'image',
     mediaSrc: '/project/TamangSahod/holiday-v2.webp',
+    walkthrough: '/videos/tamang-sahod.mp4',
     problem:
       'Owners of 1–20-person businesses guess at holiday pay, 13th month and contributions, and a wrong guess underpays a worker.',
     description:
@@ -378,6 +380,7 @@ export const projects: Project[] = [
     isFeatured: false,
     mediaType: 'image',
     mediaSrc: '/project/Automation/workflows/job-hunt-hero.webp',
+    walkthrough: '/videos/job-hunt-automation.mp4',
     status: 'active',
     startedAt: '2026-10-13',
     problem: 'Finding remote jobs that fit meant reading more than a hundred new postings a day, then tailoring a CV and a note for each.',

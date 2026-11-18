@@ -28,6 +28,11 @@ export interface Project {
   isFeatured: boolean;
   mediaType: 'image' | 'video';
   mediaSrc: string;
+  /**
+   * A narrated walkthrough of the real product (/videos/<slug>.mp4, its poster beside it as .jpg).
+   * It leads the project page; the tile on the grids keeps mediaSrc, so no grid plays a video.
+   */
+  walkthrough?: string;
   /** Marks a project as still under active development. */
   status?: 'active';
   /** ISO date of the first commit; drives the live "N months" badge. */
