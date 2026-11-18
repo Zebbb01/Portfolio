@@ -530,6 +530,7 @@ export const projects: Project[] = [
     isFeatured: true,
     mediaType: 'image',
     mediaSrc: '/project/BodyTracker/dashboard.webp',
+    walkthrough: '/videos/body-tracker.mp4',
     problem: 'Fitness logging gets abandoned because it is slow, and gyms have no signal.',
     description:
       'A phone-first tracker for workouts, meals and body weight that keeps working with no signal. A visitor is in with one tap through a Supabase anonymous account they can save with Google later, logs a set in two taps, looks up how any of 250+ exercises is done from drawings of the movement, photographs a meal and confirms the numbers Gemini fills in, and sees weight and strength trends. Every entry is written to IndexedDB on the phone first and synced to Supabase Postgres, where Row Level Security limits each row to its owner. Installable as an app, with a hand-written service worker, and run entirely on free tiers.',
@@ -578,6 +579,7 @@ export const projects: Project[] = [
     isFeatured: false,
     mediaType: 'image',
     mediaSrc: '/project/LedgerLens/review-blocked.webp',
+    walkthrough: '/videos/ledgerlens.mp4',
     problem: 'Supplier bills are keyed into the books by hand, and a misread total or a duplicate gets paid.',
     description:
       'Reads invoices and receipts with Azure AI Document Intelligence, then checks every number in code (totals, line items, 12% Philippine VAT, dates, the vendor TIN and duplicates) before a bill can be approved and exported. A failed check blocks approval until a person fixes the field. Runs entirely on Azure free tiers: a Next.js app and a KEDA-scaled queue worker on Container Apps, Blob and Queue Storage, and Cosmos DB for MongoDB, provisioned with Terraform and deployed by GitHub Actions over OpenID Connect.',
@@ -641,6 +643,7 @@ export const projects: Project[] = [
     isFeatured: false,
     mediaType: 'image',
     mediaSrc: '/project/ReplyPilot/review-blocked.webp',
+    walkthrough: '/videos/replypilot.mp4',
     problem:
       'An AI that answers store support email on its own can show one customer another customer\'s order, or promise a refund nobody approved.',
     description:
