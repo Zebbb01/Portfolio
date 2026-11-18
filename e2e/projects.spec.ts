@@ -130,3 +130,36 @@ test('the Body Tracker case study shows real screenshots, measured results and b
     expect((await page.request.get(`/project/BodyTracker/${src}`)).status(), src).toBe(200);
   }
 });
+
+// The projects whose page opens on a narrated walkthrough of the real product
+const WALKTHROUGHS = [
+  ['Trusum Accounting', 'trusum'],
+  ['TamangSahod', 'tamang-sahod'],
+  ['Job Hunt Automation', 'job-hunt-automation'],
+];
+
+for (const [title, slug] of WALKTHROUGHS) {
+  test(`${title}'s page opens on its walkthrough, and the grid keeps a picture`, async ({ page }) => {
+    await page.goto(`/projects/${slug}`);
+    const video = page.getByLabel(`A video of ${title}.`);
+    await expect(video).toHaveAttribute('src', `/videos/${slug}.mp4`);
+    await expect(video).toHaveAttribute('poster', `/videos/${slug}.jpg`);
+    await expect(video).toHaveAttribute('controls', '');
+    for (const file of [`/videos/${slug}.mp4`, `/videos/${slug}.jpg`]) {
+      expect((await page.request.get(file)).status(), file).toBe(200);
+    }
+
+    // A grid of tiles never plays a video: each tile keeps its still picture
+    await page.goto('/projects');
+    const tile = page.getByRole('main').getByRole('listitem').filter({ has: page.getByRole('heading', { name: title, exact: true }) });
+    await expect(tile.locator('img')).toHaveCount(1);
+    await expect(tile.locator('video')).toHaveCount(0);
+  });
+}
+
+test('when a walkthrough will not load, its page still shows the poster and the results', async ({ page }) => {
+  await page.route('**/videos/tamang-sahod.mp4', (route) => route.fulfill({ status: 503, body: '' }));
+  await page.goto('/projects/tamang-sahod');
+  await expect(page.getByLabel('A video of TamangSahod.')).toHaveAttribute('poster', '/videos/tamang-sahod.jpg');
+  await expect(page.getByRole('region', { name: 'Results' }).getByText('Results', { exact: true })).toBeVisible();
+});

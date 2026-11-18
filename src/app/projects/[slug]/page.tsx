@@ -46,9 +46,13 @@ const ProjectCaseStudy = () => {
   const hasLive = Boolean(project.live && project.live !== '#');
   const hasRepo = Boolean(project.github && project.github !== '#');
 
-  // A project's own video leads when it has one, otherwise its first screenshot.
+  // A narrated walkthrough leads when the project has one; else its own video, else its first screenshot.
   const fromMedia: Screenshot = { src: project.mediaSrc, caption: '' };
-  const lead = project.mediaType === 'video' ? shots.find((s) => s.src === project.mediaSrc) ?? fromMedia : shots[0] ?? fromMedia;
+  const lead = project.walkthrough
+    ? { src: project.walkthrough, caption: '' }
+    : project.mediaType === 'video' ? shots.find((s) => s.src === project.mediaSrc) ?? fromMedia : shots[0] ?? fromMedia;
+  // The walkthrough's poster is its opening frame, the hook, shown until the video plays
+  const poster = project.walkthrough?.replace(/\.mp4$/, '.jpg');
   const leadIndex = shots.indexOf(lead);
   const others = shots.filter((shot) => shot !== lead);
 
@@ -97,7 +101,7 @@ const ProjectCaseStudy = () => {
         >
           <div className="lg:col-span-7 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#060606]">
             {isVideo(lead.src) ? (
-              <AutoVideo src={lead.src} controls aria-label={`A video of ${project.title}.`} className="block aspect-video w-full object-cover" />
+              <AutoVideo src={lead.src} poster={poster} controls aria-label={`A video of ${project.title}.`} className="block aspect-video w-full object-cover" />
             ) : leadIndex >= 0 ? (
               <button
                 type="button"
