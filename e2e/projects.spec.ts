@@ -136,6 +136,9 @@ const WALKTHROUGHS = [
   ['Trusum Accounting', 'trusum'],
   ['TamangSahod', 'tamang-sahod'],
   ['Job Hunt Automation', 'job-hunt-automation'],
+  ['ReplyPilot', 'replypilot'],
+  ['Body Tracker', 'body-tracker'],
+  ['LedgerLens', 'ledgerlens'],
 ];
 
 for (const [title, slug] of WALKTHROUGHS) {
